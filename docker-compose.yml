@@ -1,0 +1,28 @@
+version: '2'
+services:
+  hntApi:
+    image: hnt-api:v1.0
+    container_name: hntapi
+    ports:
+      - "8999:8080"
+    environment:
+      - spring.profiles.active=dev
+    restart: always
+
+  hntVue:
+    image: hnt-vue:v1.0
+    container_name: hntvue
+#    network_mode: "host"
+#    depends_on:
+#      - hntApi
+    ports:
+      - "80:80"
+    restart: always
+
+  api:
+    restart: always
+    build:
+      context: ./
+      dockerfile: ApiDockerfile
+    ports:
+      - "6789:8080"

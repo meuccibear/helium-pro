@@ -1,6 +1,7 @@
 {
   "name": "fast-api-vue",
   "version": "1.2.2",
+  "homepage": "./",
   "description": "fast-api-vue基于vue、element-ui构建开发，实现fast-api后台管理前端功能，提供一套更优的前端解决方案。",
   "author": "daxiong.yang <daxiong.yang@qq.com>",
   "private": true,

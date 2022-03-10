@@ -1,7 +1,7 @@
 version: '2'
 services:
   helium-fast:
-    image: zhuozhuang/helium-fast
+    image: zhuozhuang/helium-fast:1.1.3
     container_name: helium-fast
     ports:
       - "8081:8080"
@@ -9,20 +9,12 @@ services:
       - spring.profiles.active=prod
     restart: always
 
-  hntVue:
-    image: hnt-vue:v1.0
-    container_name: hntvue
+  helium-vue:
+    image: helium-vue:1.1.4
+    container_name: helium-vue
 #    network_mode: "host"
 #    depends_on:
 #      - hntApi
     ports:
       - "80:80"
     restart: always
-
-  api:
-    restart: always
-    build:
-      context: ./
-      dockerfile: ApiDockerfile
-    ports:
-      - "6789:8080"

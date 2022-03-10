@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.renren</groupId>
 	<artifactId>helium-fast</artifactId>
-	<version>1.1.3</version>
+	<version>1.1.4</version>
 	<packaging>jar</packaging>
 	<description>helium-fast</description>
 
@@ -326,6 +326,7 @@
 					<!--</execution>-->
 				<!--</executions>-->
 				<configuration>
+<!--					<pushImage>true</pushImage>-->
 					<imageName>zhuozhuang/helium-fast:${project.version}</imageName>
 					<dockerDirectory>${project.basedir}</dockerDirectory>
 					<resources>
@@ -335,6 +336,8 @@
 							<include>${project.build.finalName}.jar</include>
 						</resource>
 					</resources>
+
+<!--					<serverId>docker-hub</serverId>-->
 				</configuration>
 				<!-- 运行命令 mvn clean package docker:build 打包并生成docker镜像 -->
 			</plugin>

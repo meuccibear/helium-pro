@@ -92,6 +92,11 @@ public class BusinessHotspottyEntity implements Serializable {
     /**
      * 创建者ID
      */
+    private Long groupId;
+
+    /**
+     * 创建者ID
+     */
     private Long createUserId;
     /**
      * 创建时间
@@ -125,12 +130,14 @@ public class BusinessHotspottyEntity implements Serializable {
 
     public void setUpdateDevice(long id, Device device) {
         setHotspottyId(id);
+        setName(device.getName().replaceAll("-", " "));
         setOnline(device.getStatus().getOnline());
         setCountry(device.getGeocode().getLong_country());
         setCity(device.getGeocode().getLong_city());
         setStreet(device.getGeocode().getLong_street());
         setHex(device.getLocation_hex());
         setTotal24h(device.getTotal());
+        setOwner(device.getOwner());
         setUpdateTime(new Date());
         setStatus(1);
     }

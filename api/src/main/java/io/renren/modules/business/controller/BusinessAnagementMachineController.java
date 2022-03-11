@@ -1,9 +1,11 @@
 package io.renren.modules.business.controller;
 
+import io.renren.common.utils.Constant;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.modules.business.entity.BusinessAnagementMachineEntity;
 import io.renren.modules.business.service.BusinessAnagementMachineService;
+import io.renren.modules.sys.controller.AbstractController;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +23,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("business/businessanagementmachine")
-public class BusinessAnagementMachineController {
+public class BusinessAnagementMachineController extends AbstractController {
     @Autowired
     private BusinessAnagementMachineService businessAnagementMachineService;
 
@@ -31,6 +33,11 @@ public class BusinessAnagementMachineController {
     @RequestMapping("/list")
     @RequiresPermissions("business:businessanagementmachine:list")
     public R list(@RequestParam Map<String, Object> params){
+        //只有超级管理员，才能查看所有管理员列表
+        if(getUserId() != Constant.SUPER_ADMIN){
+            params.put("createUserId", getUserId());
+        }
+
         PageUtils page = businessAnagementMachineService.queryPage(params);
 
         return R.ok().put("page", page);
@@ -54,6 +61,7 @@ public class BusinessAnagementMachineController {
     @RequestMapping("/save")
     @RequiresPermissions("business:businessanagementmachine:save")
     public R save(@RequestBody BusinessAnagementMachineEntity businessAnagementMachine){
+        businessAnagementMachine.setCreateUserId(getUserId());
 		businessAnagementMachineService.save(businessAnagementMachine);
 
         return R.ok();

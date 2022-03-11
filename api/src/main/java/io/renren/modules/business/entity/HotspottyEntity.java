@@ -88,6 +88,7 @@ public class HotspottyEntity implements Serializable {
     /**
      * 创建者ID
      */
+    private Long groupId;
     private Long createUserId;
     /**
      * 创建时间

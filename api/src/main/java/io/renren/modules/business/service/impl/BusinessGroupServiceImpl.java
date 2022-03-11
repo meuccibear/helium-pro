@@ -19,9 +19,11 @@ public class BusinessGroupServiceImpl extends ServiceImpl<BusinessGroupDao, Busi
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        Long createUserId = (Long)params.get("createUserId");
+
         IPage<BusinessGroupEntity> page = this.page(
                 new Query<BusinessGroupEntity>().getPage(params),
-                new QueryWrapper<BusinessGroupEntity>()
+                new QueryWrapper<BusinessGroupEntity>().eq(createUserId != null,"create_user_id", createUserId)
         );
 
         return new PageUtils(page);

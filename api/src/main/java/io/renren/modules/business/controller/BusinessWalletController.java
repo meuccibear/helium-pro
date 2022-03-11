@@ -2,6 +2,7 @@ package io.renren.modules.business.controller;
 
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.PageRRVO;
+import io.renren.common.utils.Constant;
 import io.renren.common.utils.R;
 import io.renren.modules.business.entity.BusinessWalletEntity;
 import io.renren.modules.business.service.BusinessWalletService;
@@ -41,6 +42,10 @@ public class BusinessWalletController extends AbstractController {
     @RequestMapping("/list")
     @RequiresPermissions("business:businesswallet:list")
     public R list(@ModelAttribute WalletDTO walletDTO) {
+        //如果不是超级管理员，则只查询自己创建的角色列表
+        if(getUserId() != Constant.SUPER_ADMIN){
+            walletDTO.setCreateUserId(getUserId());
+        }
         PageRRVO page = businessWalletService.getAll(walletDTO);
         return R.ok().put("page", page);
     }

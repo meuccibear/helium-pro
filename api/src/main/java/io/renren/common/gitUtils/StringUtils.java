@@ -103,7 +103,7 @@ public class StringUtils {
             stringBuffer.append(str);
             stringBuffer.append(clo);
         }
-        return stringBuffer.substring(1, stringBuffer.length());
+        return stringBuffer.toString();
     }
 
 

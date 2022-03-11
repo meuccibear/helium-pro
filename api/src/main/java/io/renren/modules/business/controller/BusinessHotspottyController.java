@@ -1,6 +1,7 @@
 package io.renren.modules.business.controller;
 
 import io.renren.common.gitUtils.PageRRVO;
+import io.renren.common.utils.Constant;
 import io.renren.common.utils.R;
 import io.renren.modules.business.entity.BusinessHotspottyEntity;
 import io.renren.modules.business.service.BusinessHotspottyService;
@@ -45,6 +46,10 @@ public class BusinessHotspottyController extends AbstractController {
     @RequestMapping("/list")
     @RequiresPermissions("business:businesshotspotty:list")
     public R list(@ModelAttribute HotspottyDTO hotspottyDTO){
+        //如果不是超级管理员，则只查询自己创建的角色列表
+        if(getUserId() != Constant.SUPER_ADMIN){
+            hotspottyDTO.setCreateUserId(getUserId());
+        }
         PageRRVO pageUtils = businessHotspottyService.getAll(hotspottyDTO);
         return R.ok().put("page", pageUtils);
     }

@@ -22,6 +22,7 @@
         `owner`,
         address,
         remarks,
+        group_id,
         create_user_id,
         create_time,
         update_time,
@@ -45,6 +46,7 @@
         bh.`owner`,
         bh.address,
         bh.remarks,
+        bh.group_id,
         bh.create_user_id,
         bh.create_time,
         bh.update_time,
@@ -69,6 +71,7 @@
         <result property="owner" column="owner"/>
         <result property="address" column="address"/>
         <result property="remarks" column="remarks"/>
+        <result property="groupId" column="group_id"/>
         <result property="createUserId" column="create_user_id"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
@@ -92,6 +95,7 @@
         <result property="owner" column="owner"/>
         <result property="address" column="address"/>
         <result property="remarks" column="remarks"/>
+        <result property="groupId" column="group_id"/>
         <result property="createUserId" column="create_user_id"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
@@ -162,6 +166,9 @@
             <if test="remarks != null">
                 remarks,
             </if>
+            <if test="groupId != null">
+                group_id,
+            </if>
             <if test="createUserId != null">
                 create_user_id,
             </if>
@@ -228,6 +235,9 @@
             <if test="remarks != null">
                 #{remarks},
             </if>
+            <if test="groupId != null">
+                #{groupId},
+            </if>
             <if test="createUserId != null">
                 #{createUserId},
             </if>
@@ -249,8 +259,7 @@
         <include refid="join_Column_List">
         </include>
         from business_hotspotty bh
-        LEFT JOIN business_wallet bw ON bh.`owner` = bw.`owner`
-        LEFT JOIN business_group bg ON bg.group_id = bw.group_id
+        LEFT JOIN business_group bg ON bg.group_id = bh.group_id
         <where>
             <if test="owner != null">
                 and bh.`owner`=#{owner}

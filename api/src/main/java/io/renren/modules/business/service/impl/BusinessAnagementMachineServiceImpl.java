@@ -18,9 +18,12 @@ public class BusinessAnagementMachineServiceImpl extends ServiceImpl<BusinessAna
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        Long createUserId = (Long)params.get("createUserId");
+
+
         IPage<BusinessAnagementMachineEntity> page = this.page(
                 new Query<BusinessAnagementMachineEntity>().getPage(params),
-                new QueryWrapper<BusinessAnagementMachineEntity>()
+                new QueryWrapper<BusinessAnagementMachineEntity>().eq(createUserId != null,"create_user_id", createUserId)
         );
 
         return new PageUtils(page);

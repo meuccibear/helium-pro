@@ -1,9 +1,11 @@
 package io.renren.modules.business.controller;
 
+import io.renren.common.utils.Constant;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.modules.business.entity.BusinessGroupEntity;
 import io.renren.modules.business.service.BusinessGroupService;
+import io.renren.modules.sys.controller.AbstractController;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +24,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("business/businessgroup")
-public class BusinessGroupController {
+public class BusinessGroupController extends AbstractController {
     @Autowired
     private BusinessGroupService businessGroupService;
 
@@ -32,6 +34,10 @@ public class BusinessGroupController {
     @RequestMapping("/list")
     @RequiresPermissions("business:businessgroup:list")
     public R list(@RequestParam Map<String, Object> params){
+        //只有超级管理员，才能查看所有管理员列表
+        if(getUserId() != Constant.SUPER_ADMIN){
+            params.put("createUserId", getUserId());
+        }
         PageUtils page = businessGroupService.queryPage(params);
 
         return R.ok().put("page", page);

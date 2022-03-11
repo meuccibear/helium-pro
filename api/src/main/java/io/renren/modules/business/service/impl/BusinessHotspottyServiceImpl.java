@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.PageRRVO;
+import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 import io.renren.modules.business.dao.BusinessHotspottyDao;
@@ -12,6 +13,7 @@ import io.renren.modules.business.entity.BusinessHotspottyEntity;
 import io.renren.modules.business.entity.HotspottyEntity;
 import io.renren.modules.business.service.BusinessHotspottyService;
 import io.renren.modules.domain.dto.HotspottyDTO;
+import io.renren.modules.helium.HeliumUtils;
 import io.renren.modules.helium.domain.Device;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,32 @@ public class BusinessHotspottyServiceImpl extends ServiceImpl<BusinessHotspottyD
         System.out.println(device.getAddress());
         Long id = baseMapper.findHotspottyIdByAddress(device.getAddress());
         BusinessHotspottyEntity businessHotspotty = new BusinessHotspottyEntity();
+
+        if (ObjectUtils.notIsEmpty(id)) {
+            System.out.println("修改");
+            businessHotspotty.setUpdateDevice(id, device);
+            updateById(businessHotspotty);
+        } else {
+            System.out.println("新增");
+            businessHotspotty.setAddDevice(device);
+            businessHotspotty.setHotspottyId(null);
+            baseMapper.insertSelective(businessHotspotty);
+        }
+    }
+
+
+
+
+    @Override
+    public void addNewHotsPotty(Long groupId, Long createUserId, String address) throws MsgException {
+
+        Device device = HeliumUtils.getHotspotsById(address);
+        device.setTotal(HeliumUtils.getHotspotsTotal(2, device.getAddress()));
+        Long id = baseMapper.findHotspottyIdByAddress(device.getAddress());
+
+        BusinessHotspottyEntity businessHotspotty = new BusinessHotspottyEntity();
+        businessHotspotty.setCreateUserId(createUserId);
+        businessHotspotty.setGroupId(groupId);
 
         if (ObjectUtils.notIsEmpty(id)) {
             System.out.println("修改");

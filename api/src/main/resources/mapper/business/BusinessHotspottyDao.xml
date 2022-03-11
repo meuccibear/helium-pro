@@ -267,6 +267,7 @@
             <if test="createUserId != null">
                 and bh.create_user_id=#{createUserId}
             </if>
+            and status = 1
         </where>
         limit #{pageConvertLine} , #{limit}
     </select>
@@ -282,7 +283,7 @@
             <if test="createUserId != null">
                 and create_user_id=#{createUserId}
             </if>
-            status = 1
+            and status = 1
         </where>
     </select>
 

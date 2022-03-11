@@ -8,6 +8,8 @@
 
 package io.renren;
 
+import io.renren.modules.business.dao.BusinessHotspottyDao;
+import io.renren.modules.business.entity.BusinessHotspottyEntity;
 import io.renren.service.DynamicDataSourceTestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +35,7 @@ public class DynamicDataSourceTest {
         dynamicDataSourceTestService.updateUser(id);
         dynamicDataSourceTestService.updateUserBySlave1(id);
         dynamicDataSourceTestService.updateUserBySlave2(id);
+
     }
 
 }

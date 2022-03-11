@@ -99,7 +99,7 @@
         LEFT JOIN business_group bg ON bg.group_id = bw.group_id
         <where>
             <if test="createUserId != null">
-                and create_user_id=#{createUserId}
+                and bw.create_user_id=#{createUserId}
             </if>
         </where>
         limit #{pageConvertLine} , #{limit}
@@ -111,7 +111,7 @@
         LEFT JOIN business_group bg ON bg.group_id = bw.group_id
         <where>
             <if test="createUserId != null">
-                and create_user_id=#{createUserId}
+                and bw.create_user_id=#{createUserId}
             </if>
         </where>
     </select>

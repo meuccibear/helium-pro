@@ -1,10 +1,8 @@
-package io.renren.business;
+package io.renren.common.gitUtils;
 
 import com.alibaba.fastjson.JSONObject;
-import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +17,29 @@ import java.util.List;
  **/
 public class ExcelUtils {
 
+
+
+    public static void main(String[] args) throws MsgException {
+//        List<JSONObject> jsonArray = readFile("./devices3.txt");
+//
+//        jsonArray.forEach(jsonO -> {
+//            JSONObject jsonObject = (JSONObject) jsonO;
+////            getHotspotsById();
+//            System.out.println(jsonObject.get("address"));
+//        });
+
+
+        System.out.println(System.getProperty("user.dir"));
+//        System.out.println(toTempStr("0000000000000000", "100"));
+
+    }
+
+
+    public static String toTempStr(String tempStr, String str) {
+        int num = tempStr.length() - str.length();
+        return tempStr.substring(0, num) + str;
+    }
+
     public static String toTempStr1(String tempStr, int num) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < num; i++) {
@@ -26,6 +47,7 @@ public class ExcelUtils {
         }
         return sb.toString();
     }
+
 
     public static List<JSONObject> readFile(String path) throws MsgException {
         List<String> strings = FileUtils.readLines(path);

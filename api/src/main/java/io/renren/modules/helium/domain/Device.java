@@ -50,6 +50,7 @@ public class Device extends BasicBean {
     private String address;
     private double total;
     private Long createUserId;
+    private Long groupId;
 
     public LocalDateTime getTimestampAdded() {
         if (timestamp_added instanceof String) {

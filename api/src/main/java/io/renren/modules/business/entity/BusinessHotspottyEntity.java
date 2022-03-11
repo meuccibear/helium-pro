@@ -128,6 +128,7 @@ public class BusinessHotspottyEntity implements Serializable {
     }
 
 
+
     public void setUpdateDevice(long id, Device device) {
         setHotspottyId(id);
         setName(device.getName().replaceAll("-", " "));

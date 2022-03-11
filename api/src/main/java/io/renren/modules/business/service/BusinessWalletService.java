@@ -20,6 +20,7 @@ public interface BusinessWalletService extends IService<BusinessWalletEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
 
+
     PageRRVO getAll(WalletDTO walletDTO);
 
     /**

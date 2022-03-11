@@ -2,6 +2,7 @@ package io.renren.modules.business.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.gitUtils.PageRRVO;
+import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.business.entity.BusinessHotspottyEntity;
 import io.renren.modules.domain.dto.HotspottyDTO;
@@ -23,7 +24,12 @@ public interface BusinessHotspottyService extends IService<BusinessHotspottyEnti
 
     void addHotsPotty(Device device);
 
+    void addNewHotsPotty(Long groupId, Long createUserId, String address) throws MsgException;
+
     PageRRVO getAll(HotspottyDTO hotspottyDTO);
+
+
+//    void addNewHotspotty(Long groupId, Long createUserId, String address) throws MsgException;
 
 
 }

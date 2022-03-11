@@ -266,24 +266,25 @@
             </if>
             <if test="createUserId != null">
                 and bh.create_user_id=#{createUserId}
-            </if>
-            and status = 1
+            </if>and bh.status = 1
         </where>
+
         limit #{pageConvertLine} , #{limit}
     </select>
 
     <select id="findAllByOwnerAndCreateUserIdCount" resultType="java.lang.Integer">
         select
         count(*)
-        from business_hotspotty
+        from business_hotspotty bh
+        LEFT JOIN business_group bg ON bg.group_id = bh.group_id
         <where>
             <if test="owner != null">
-                and `owner`=#{owner}
+                and bh.`owner`=#{owner}
             </if>
             <if test="createUserId != null">
-                and create_user_id=#{createUserId}
+                and bh.create_user_id=#{createUserId}
             </if>
-            and status = 1
+            and bh.status = 1
         </where>
     </select>
 

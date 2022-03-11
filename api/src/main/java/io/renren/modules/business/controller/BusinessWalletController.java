@@ -7,6 +7,7 @@ import io.renren.common.utils.R;
 import io.renren.modules.business.entity.BusinessWalletEntity;
 import io.renren.modules.business.service.BusinessWalletService;
 import io.renren.modules.domain.dto.WalletDTO;
+import io.renren.modules.helium.HeliumUtils;
 import io.renren.modules.sys.controller.AbstractController;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,5 +103,17 @@ public class BusinessWalletController extends AbstractController {
 
         return R.ok();
     }
+
+
+//    public void asd(){
+//        HeliumUt
+//
+//
+//        ils.getHotspotsByWalletId();
+//
+//
+//
+//    }
+
 
 }

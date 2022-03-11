@@ -87,6 +87,18 @@ public class HeliumUtils {
         return device;
     }
 
+    public static List<Device> getWalletById(String wallId) throws MsgException {
+
+        get(String.format("https://helium-api.stakejoy.com/v1/accounts/%s/hotspots", wallId));
+
+        Result result = BeanUtils.toJavaObject(null, new TypeReference<Result>() {
+        });
+        List<Device> devices = BeanUtils.toJavaObject(result.getData(), new TypeReference<List<Device>>() {
+        });
+        return devices;
+    }
+
+
     public static List<Device> getHotspotsByWalletId(String wallId) throws MsgException {
 
         Result result = BeanUtils.toJavaObject(get(String.format("https://helium-api.stakejoy.com/v1/accounts/%s/hotspots", wallId)), new TypeReference<Result>() {

@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.gitUtils.PageRRVO;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.utils.PageUtils;
+import io.renren.modules.business.dao.Select;
 import io.renren.modules.business.entity.BusinessHotspottyEntity;
 import io.renren.modules.domain.dto.HotspottyDTO;
 import io.renren.modules.helium.domain.Device;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,6 +30,7 @@ public interface BusinessHotspottyService extends IService<BusinessHotspottyEnti
 
     PageRRVO getAll(HotspottyDTO hotspottyDTO);
 
+    List<Select> findOnlines();
 
 //    void addNewHotspotty(Long groupId, Long createUserId, String address) throws MsgException;
 

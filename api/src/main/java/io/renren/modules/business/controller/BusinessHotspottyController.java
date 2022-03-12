@@ -31,14 +31,10 @@ public class BusinessHotspottyController extends AbstractController {
     /**
      * 列表
      */
-//    @RequestMapping("/list")
-//    @RequiresPermissions("business:businesshotspotty:list")
-//    public R list(@RequestParam Map<String, Object> params){
-//        PageUtils page = businessHotspottyService.queryPage(params);
-//
-//        return R.ok().put("page", page);
-//    }
-
+    @RequestMapping("/onlines")
+    public R findOnlines(){
+        return R.ok().put("onlines", businessHotspottyService.findOnlines());
+    }
 
     /**
      * 列表

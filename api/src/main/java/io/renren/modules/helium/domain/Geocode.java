@@ -23,16 +23,16 @@ public class Geocode {
     private String short_country;
     private String short_city;
     /**
-     * 街道
+     * 琛楅亾
      */
     private String long_street;
     private String long_state;
     /**
-     * 国家
+     * 鍥藉
      */
     private String long_country;
     /**
-     * 城市
+     * 鍩庡競
      */
     private String long_city;
     private String city_id;

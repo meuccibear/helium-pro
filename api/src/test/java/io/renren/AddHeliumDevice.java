@@ -41,12 +41,15 @@ public class AddHeliumDevice {
     @SneakyThrows
     @Test
     public void test() {
+        // 成都-程总  2, 2, "./data/cd-cz.txt"
+        // 成都-李总  3, 3, "./data/cd-lz.txt"
+        // 湖南-陈总  4, 4, "./data/hn-cz.txt"
+        // 湖南-陈总-罗总  4, 4, "./data/hn-cz_l-z.txt"
+        // 湖南-陈总-杨举  4, 4, "./data/hn-cz_yj.txt"
+        // 深圳-谢总  5, 5, "./data/sz-xz.txt"
+        // 上海-陈总  6, 6, "./data/sh-cz.txt"
 
-        // 成都李总  2, 2, "./data/hn-cz.txt"
-        // 成都李总  3, 3, "./data/cd-lz.txt"
-
-        addNewHotspotty(3, 3, "./data/cd-lz.txt");
-
+        addNewHotspotty(4, 4, "./data/hn-cz_yj.txt");
     }
 
     public void addNewHotspotty(int groupId, int createUserId, String path) throws MsgException {

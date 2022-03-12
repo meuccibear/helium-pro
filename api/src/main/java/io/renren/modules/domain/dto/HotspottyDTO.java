@@ -1,6 +1,9 @@
 package io.renren.modules.domain.dto;
 
 import io.renren.common.gitUtils.PageRRDTO;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @program: helium-pro
@@ -11,8 +14,13 @@ import io.renren.common.gitUtils.PageRRDTO;
  * @create: 2022-03-09 10:42
  * @Version 1.0
  **/
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class HotspottyDTO extends PageRRDTO {
 
     String owner;
+
+    String online;
 
 }

@@ -3,6 +3,7 @@ package io.renren.business;
 import com.alibaba.fastjson.JSONObject;
 import io.renren.business.domin.device.CompletedRewardsBean;
 import io.renren.common.gitUtils.BeanUtils;
+import io.renren.common.gitUtils.ExcelUtils;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 
@@ -34,7 +35,7 @@ public class HexUtils {
     }
 
     /**
-     * ªÒ»°Hex
+     * Ëé∑ÂèñHex
      *
      * @param path
      */

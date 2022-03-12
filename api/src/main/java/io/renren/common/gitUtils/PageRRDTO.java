@@ -21,6 +21,10 @@ public class PageRRDTO implements Serializable {
 
     @ApiParam(defaultValue = "10", value = "当前页展示数量(不填默认10)")
     private Integer limit;
+
+    @ApiParam(defaultValue = "", value = "筛选")
+    private String key;
+
 //    private String path;
 
     /**

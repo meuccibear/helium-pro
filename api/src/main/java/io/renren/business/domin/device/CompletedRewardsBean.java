@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CompletedRewardsBean {
     private int days;
+    private String hex;
     private List<String> hotspotIds;
-
 }
+

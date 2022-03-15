@@ -1,4 +1,4 @@
-package io.renren.business;
+package io.renren.modules.helium;
 
 /**
  * @program: HNTD

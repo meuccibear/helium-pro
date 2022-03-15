@@ -312,6 +312,9 @@
                 concat(online,' 【', count(*), '】') as 'label', `online` as 'value'
         FROM
                 business_hotspotty
+            <where>
+                create_user_id = #{userId}
+            </where>
         GROUP BY
                 `online`
     </select>

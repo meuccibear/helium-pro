@@ -4,15 +4,20 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.uber.h3core.H3Core;
+import com.uber.h3core.util.GeoCoord;
+import io.renren.business.domin.device.CompletedRewardsBean;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.DateUtils;
+import io.renren.common.gitUtils.ObjectUtils;
+import io.renren.common.gitUtils.StringUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
 import io.renren.modules.helium.domain.Device;
 import io.renren.modules.helium.domain.HotspotsProfit;
 import io.renren.modules.helium.domain.Result;
-
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;
@@ -87,6 +92,7 @@ public class HeliumUtils {
         return device;
     }
 
+
     public static List<Device> getWalletById(String wallId) throws MsgException {
 
         get(String.format("https://helium-api.stakejoy.com/v1/accounts/%s/hotspots", wallId));
@@ -96,6 +102,39 @@ public class HeliumUtils {
         List<Device> devices = BeanUtils.toJavaObject(result.getData(), new TypeReference<List<Device>>() {
         });
         return devices;
+    }
+
+    /**
+     * 查看该区域是否有设备
+     *
+     * @param hex
+     * @return
+     * @throws MsgException
+     */
+    public static boolean notDevice(String hex) throws MsgException {
+
+        get(String.format("https://helium-api.stakejoy.com/v1/hotspots/hex/%s", hex));
+
+        Result result = BeanUtils.toJavaObject(null, new TypeReference<Result>() {
+        });
+        List<Device> devices = BeanUtils.toJavaObject(result.getData(), new TypeReference<List<Device>>() {
+        });
+        return devices.size() > 0;
+    }
+
+    public static GeoCoord lookAround(String hex)  {
+        String resultHex = "";
+        for (Object o : HexUtils.hex8Offset.keySet().toArray()) {
+            try {
+                resultHex = HexUtils.offset(hex, (String) o, 8);
+                if(notDevice(resultHex)){
+                    return H3Core.newInstance().h3ToGeo(resultHex);
+                }
+            } catch (MsgException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
 
@@ -139,7 +178,42 @@ public class HeliumUtils {
     }
 
 
+    /**
+     * 随机设备【递归|单用】
+     *
+     * @param completedRewardsBean
+     * @return
+     * @throws MsgException
+     */
+    public static GeoCoord getRandomDevice(CompletedRewardsBean completedRewardsBean) throws MsgException {
+        if (ObjectUtils.notIsEmpty(completedRewardsBean) && ObjectUtils.notIsEmpty(completedRewardsBean.getHotspotIds())) {
+            String id = completedRewardsBean.getHotspotIds().get(NumUtils.intervalRandom(completedRewardsBean.getHotspotIds().size()));
+            completedRewardsBean.getHotspotIds().remove(id);
+            Device device = getHotspotsById(id);
+//            if (ObjectUtils.isEmpty(device) && ObjectUtils.isEmpty(device.getReward_scale())) {
+            GeoCoord geoCoord = lookAround(device.getLocation_hex());
+//            if (ObjectUtils.isEmpty(device) || ObjectUtils.isEmpty(geoCoord) || device.getStatus().getOnline().equals("")) {
+            System.out.println("\t\t\t【reward_scale】 "+device.getReward_scale());
+            if (ObjectUtils.isEmpty(device) || ObjectUtils.isEmpty(geoCoord) || device.getStatus().getOnline().equals("")) {
+                if (ObjectUtils.isEmpty(device.getReward_scale())) {
+                    StringUtils.writeList("\t", device.getStatus().getOnline(), device.getAddress());
+                }
+                return getRandomDevice(completedRewardsBean);
+            }
+            return geoCoord;
+        }
+
+        throw new MsgException("没有可以使用的位置设备了 " + completedRewardsBean.getHex());
+    }
+
+
+
     public static void main(String[] args) throws MsgException {
-        System.out.println(JSON.toJSONString(getHotspotsByWalletId("14AhgRBQewe9CJwW6fQ9Dz1NEniUxP2bZem7wmPwsXobfDSHXob")));
+//        System.out.println(JSON.toJSONString(getHotspotsByWalletId("14AhgRBQewe9CJwW6fQ9Dz1NEniUxP2bZem7wmPwsXobfDSHXob")));
+        HexUtils hexUtils = new HexUtils("./data/Hexs_shcz.txt");
+        CompletedRewardsBean completedRewardsBean = hexUtils.getHex("85180cdbfffffff");
+        GeoCoord geoCoord = getRandomDevice(completedRewardsBean);
+
+        System.out.println(geoCoord.toString());
     }
 }

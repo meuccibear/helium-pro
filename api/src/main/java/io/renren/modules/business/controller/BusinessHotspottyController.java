@@ -33,7 +33,7 @@ public class BusinessHotspottyController extends AbstractController {
      */
     @RequestMapping("/onlines")
     public R findOnlines(){
-        return R.ok().put("onlines", businessHotspottyService.findOnlines());
+        return R.ok().put("onlines", businessHotspottyService.findOnlines(getUserId()));
     }
 
     /**

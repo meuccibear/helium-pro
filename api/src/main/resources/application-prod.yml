@@ -4,9 +4,10 @@ spring:
         type: com.alibaba.druid.pool.DruidDataSource
         druid:
             driver-class-name: com.mysql.cj.jdbc.Driver
-            url: jdbc:mysql://183.6.57.245:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+#            url: jdbc:mysql://183.6.57.245:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+            url: jdbc:mysql://103.149.26.144:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
             username: root
-            password: root
+            password: Zp1949@@
             initial-size: 10
             max-active: 100
             min-idle: 10
@@ -16,10 +17,13 @@ spring:
             time-between-eviction-runs-millis: 60000
             min-evictable-idle-time-millis: 300000
             #Oracle需要打开注释
-            #validation-query: SELECT 1 FROM DUAL
+#            validation-query: SELECT 1 FROM DUAL
+#            test-on-borrow: false
+#            test-on-return: false
+            validation-query: SELECT 1
             test-while-idle: true
-            test-on-borrow: false
-            test-on-return: false
+            test-on-borrow: true
+            test-on-return: true
             stat-view-servlet:
                 enabled: true
                 url-pattern: /druid/*

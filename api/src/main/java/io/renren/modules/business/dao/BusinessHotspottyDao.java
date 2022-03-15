@@ -29,6 +29,6 @@ public interface BusinessHotspottyDao extends BaseMapper<BusinessHotspottyEntity
 
     List<BusinessHotspottyEntity> findAll();
 
-    List<Select> findOnlines();
+    List<Select> findOnlines(long userId);
 
 }

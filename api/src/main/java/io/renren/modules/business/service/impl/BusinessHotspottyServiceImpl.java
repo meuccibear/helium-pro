@@ -89,8 +89,8 @@ public class BusinessHotspottyServiceImpl extends ServiceImpl<BusinessHotspottyD
     }
 
     @Override
-    public List<Select> findOnlines() {
-        return baseMapper.findOnlines();
+    public List<Select> findOnlines(Long userId) {
+        return baseMapper.findOnlines(userId);
     }
 
 }

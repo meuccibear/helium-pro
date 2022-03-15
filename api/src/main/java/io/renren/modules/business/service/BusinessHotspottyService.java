@@ -30,7 +30,7 @@ public interface BusinessHotspottyService extends IService<BusinessHotspottyEnti
 
     PageRRVO getAll(HotspottyDTO hotspottyDTO);
 
-    List<Select> findOnlines();
+    List<Select> findOnlines(Long userId);
 
 //    void addNewHotspotty(Long groupId, Long createUserId, String address) throws MsgException;
 

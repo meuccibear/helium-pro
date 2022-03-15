@@ -49,7 +49,7 @@ public class AddHeliumDevice {
         // 深圳-谢总  5, 5, "./data/sz-xz.txt"
         // 上海-陈总  6, 6, "./data/sh-cz.txt"
 
-        addNewHotspotty(4, 4, "./data/hn-cz_yj.txt");
+        addNewHotspotty(7, 7, "./data/gz-hz.txt");
     }
 
     public void addNewHotspotty(int groupId, int createUserId, String path) throws MsgException {

@@ -12,6 +12,8 @@ import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
+import io.renren.modules.helium.HexUtils;
+import io.renren.modules.helium.NumUtils;
 
 import java.util.ArrayList;
 import java.util.List;

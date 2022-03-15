@@ -76,7 +76,7 @@ public class BusinessWalletServiceImpl extends ServiceImpl<BusinessWalletDao, Bu
         Device device;
         BusinessHotspottyEntity hotspotty;
         for (BusinessHotspottyEntity businessHotspottyEntity : all) {
-            device = HeliumUtils.getHotspotsById(businessHotspottyEntity.getAddress());
+            device = HeliumUtils.getHotspotsByAddress(businessHotspottyEntity.getAddress());
 
             device.setCreateUserId(businessHotspottyEntity.getCreateUserId());
             device.setTotal(HeliumUtils.getHotspotsTotal(2, device.getAddress()));
@@ -95,10 +95,10 @@ public class BusinessWalletServiceImpl extends ServiceImpl<BusinessWalletDao, Bu
         for (BusinessWalletEntity wallet : wallets) {
             System.out.println("wallet " + wallet);
             try {
-                device = HeliumUtils.getHotspotsById(wallet.getOwner());
+                device = HeliumUtils.getHotspotsByAddress(wallet.getOwner());
                 System.out.println(device.getAddress() + " => " + device.getOwner());
             } catch (Exception e) {
-                System.out.println(String.format("getHotspotsById(%s) %s", wallet, e.getMessage()));
+                System.out.println(String.format("getHotspotsByAddress(%s) %s", wallet, e.getMessage()));
             }
 
             baseMapper.updateOwnerByOwner(device.getOwner(), wallet.getOwner());

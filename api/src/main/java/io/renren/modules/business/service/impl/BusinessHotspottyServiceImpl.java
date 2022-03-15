@@ -57,7 +57,7 @@ public class BusinessHotspottyServiceImpl extends ServiceImpl<BusinessHotspottyD
     @Override
     public void addNewHotsPotty(Long groupId, Long createUserId, String address) throws MsgException {
 
-        Device device = HeliumUtils.getHotspotsById(address);
+        Device device = HeliumUtils.getHotspotsByAddress(address);
         if (ObjectUtils.notIsEmpty(device)) {
             device.setTotal(HeliumUtils.getHotspotsTotal(2, device.getAddress()));
             Long id = baseMapper.findHotspottyIdByAddress(device.getAddress());

@@ -84,8 +84,6 @@ public class HexUtils {
         }
     }
 
-
-
     /**
      * 经纬差距
      *
@@ -113,10 +111,13 @@ public class HexUtils {
         return h3.geoToH3Address(geoCoord.lat, geoCoord.lng, res);
     }
 
-    public void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
+
+        H3Core h3Core = H3Core.newInstance();
 
         System.out.println(offset("883091364bfffff", "rightLower", 8));
 
+        h3Core.h3ToCenterChild("85180cdbfffffff", 8);
 
 //        h3.h3ToGeo("88309c4adbfffff");
 

@@ -6,6 +6,7 @@ import com.alibaba.fastjson.TypeReference;
 import io.renren.business.domin.starsharks.vo.Shark;
 import io.renren.business.domin.starsharks.vo.StarsharksResult;
 import io.renren.common.gitUtils.BeanUtils;
+import io.renren.common.gitUtils.JSONUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
@@ -33,8 +34,8 @@ public class Market {
 
     public StarsharksResult starsharks(int page, int page_size) {
         JSONObject result = new Market().sharks(page, page_size);
-        JSONObject data = BeanUtils.getJSONObject(result, "data");
-        JSONArray sharks = BeanUtils.getJSONArray(data, "sharks");
+        JSONObject data = JSONUtils.getJSONObject(result, "data");
+        JSONArray sharks = JSONUtils.getJSONArray(data, "sharks");
 
         JSONObject jsonObject;
 

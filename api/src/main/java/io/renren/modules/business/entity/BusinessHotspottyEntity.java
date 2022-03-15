@@ -62,7 +62,7 @@ public class BusinessHotspottyEntity implements Serializable {
      */
     private String street;
     /**
-     * Hex
+     * Location
      */
     private String hex;
     /**

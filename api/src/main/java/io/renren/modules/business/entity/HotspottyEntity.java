@@ -58,7 +58,7 @@ public class HotspottyEntity implements Serializable {
      */
     private String street;
     /**
-     * Hex
+     * Location
      */
     private String hex;
     /**

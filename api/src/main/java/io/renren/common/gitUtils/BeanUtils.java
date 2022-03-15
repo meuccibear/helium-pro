@@ -107,7 +107,6 @@ public class BeanUtils {
         } else {
             text = JSON.toJSONString(obj);
         }
-
         return JSONObject.parseObject(text, type);
     }
 
@@ -177,31 +176,5 @@ public class BeanUtils {
         return 0.00;
     }
 
-    public static JSONObject getJSONObject(JSONObject jsonObject, String str) {
-        String[] colNames = str.split("\\.");
-
-        JSONObject resultData = null;
-        for (int i = 0; i < colNames.length; i++) {
-            resultData = jsonObject.getJSONObject(colNames[i]);
-        }
-        return resultData;
-    }
-
-    public static JSONArray getJSONArray(JSONObject jsonObject, String str) {
-        String[] colNames = str.split("\\.");
-        JSONObject resultData = null;
-        for (int i = 0; i < colNames.length; i++) {
-            if (i + 1 == colNames.length) {
-                if(ObjectUtils.notIsEmpty(resultData)){
-                    return resultData.getJSONArray(colNames[i]);
-                }else{
-                    return jsonObject.getJSONArray(colNames[i]);
-                }
-            } else {
-                resultData = jsonObject.getJSONObject(colNames[i]);
-            }
-        }
-        return new JSONArray();
-    }
 
 }

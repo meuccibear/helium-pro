@@ -28,4 +28,58 @@ public class JSONUtils {
 
     }
 
+
+
+
+    /**
+     * 获取 集合
+     * @param jsonObject
+     * @param str
+     * @return
+     */
+    public static JSONArray getJSONArray(JSONObject jsonObject, String str) {
+        String[] colNames = str.split("\\.");
+        JSONObject resultData = null;
+        for (int i = 0; i < colNames.length; i++) {
+            if (i + 1 == colNames.length) {
+                if(ObjectUtils.notIsEmpty(resultData)){
+                    return resultData.getJSONArray(colNames[i]);
+                }else{
+                    return jsonObject.getJSONArray(colNames[i]);
+                }
+            } else {
+                resultData = jsonObject.getJSONObject(colNames[i]);
+            }
+        }
+        return new JSONArray();
+    }
+
+
+
+    public static Object getObjectBycol(JSONObject jsonObject, String... keys) {
+        if (null != keys) {
+            String key = "";
+            for (int i = 0; i < keys.length; i++) {
+                key = keys[i];
+                if (i < keys.length) {
+                    return jsonObject.get(key);
+                } else {
+                    jsonObject = jsonObject.getJSONObject(key);
+                }
+            }
+        }
+        return jsonObject;
+    }
+
+
+    public static JSONObject getJSONObject(JSONObject jsonObject, String str) {
+        String[] colNames = str.split("\\.");
+
+        JSONObject resultData = null;
+        for (int i = 0; i < colNames.length; i++) {
+            resultData = jsonObject.getJSONObject(colNames[i]);
+        }
+        return resultData;
+    }
+
 }

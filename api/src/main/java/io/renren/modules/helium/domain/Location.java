@@ -1,14 +1,14 @@
 package io.renren.modules.helium.domain;
 
+import io.renren.modules.helium.GeoCoord;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 /**
  * @program: HNTD
- * @ClassName Hex
+ * @ClassName Location
  * @description:
  * @author: Mr.Lv
  * @email: lvzhuozhuang@foxmail.com
@@ -18,8 +18,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Hex {
+public class Location {
     String hex ;
-
-    List<String> hotspotIds ;
+    String address ;
+    List<GeoCoord> geoCoords ;
 }

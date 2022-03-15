@@ -24,7 +24,7 @@ public class ExcelUtils {
 //
 //        jsonArray.forEach(jsonO -> {
 //            JSONObject jsonObject = (JSONObject) jsonO;
-////            getHotspotsById();
+////            getHotspotsByAddress();
 //            System.out.println(jsonObject.get("address"));
 //        });
 

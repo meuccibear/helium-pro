@@ -22,8 +22,6 @@ import java.util.Map;
 public interface BusinessHotspottyService extends IService<BusinessHotspottyEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
-
-
     void addHotsPotty(Device device);
 
     void addNewHotsPotty(Long groupId, Long createUserId, String address) throws MsgException;

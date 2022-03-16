@@ -11,12 +11,7 @@ package io.renren;
 import com.alibaba.fastjson.JSONObject;
 import io.renren.common.gitUtils.ExcelUtils;
 import io.renren.common.gitUtils.exception.MsgException;
-import io.renren.modules.business.dao.BusinessHotspottyDao;
-import io.renren.modules.business.entity.BusinessHotspottyEntity;
 import io.renren.modules.business.service.BusinessHotspottyService;
-import io.renren.modules.helium.HeliumUtils;
-import io.renren.modules.helium.domain.Device;
-import io.renren.service.DynamicDataSourceTestService;
 import lombok.SneakyThrows;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +44,7 @@ public class AddHeliumDevice {
         // 深圳-谢总  5, 5, "./data/sz-xz.txt"
         // 上海-陈总  6, 6, "./data/sh-cz.txt"
 
-        addNewHotspotty(7, 7, "./data/gz-hz.txt");
+        addNewHotspotty(8, 7, "./data/sh-cz5.txt");
     }
 
     public void addNewHotspotty(int groupId, int createUserId, String path) throws MsgException {

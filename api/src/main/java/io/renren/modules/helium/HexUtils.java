@@ -1,5 +1,6 @@
 package io.renren.modules.helium;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.uber.h3core.H3Core;
 import com.uber.h3core.util.GeoCoord;
@@ -7,6 +8,7 @@ import io.renren.business.domin.device.CompletedRewardsBean;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.ExcelUtils;
 import io.renren.common.gitUtils.exception.MsgException;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +54,8 @@ public class HexUtils {
 
     Map<String, CompletedRewardsBean> hexMap = new HashMap<>();
 
-    public HexUtils() {}
+    public HexUtils() {
+    }
 
     public HexUtils(String path) {
         importHexsFile(path);
@@ -112,14 +115,18 @@ public class HexUtils {
     }
 
     public static void main(String[] args) throws IOException {
+        String hex5 = h3.h3ToParentAddress("8c180cc000001ff", 5);
+        System.out.println(hex5);
+        System.out.println(h3.h3ToCenterChild(hex5,12));
 
-        H3Core h3Core = H3Core.newInstance();
-
-        System.out.println(offset("883091364bfffff", "rightLower", 8));
-
-        h3Core.h3ToCenterChild("85180cdbfffffff", 8);
-
-//        h3.h3ToGeo("88309c4adbfffff");
+//        System.out.println(offset("883091364bfffff", "rightLower", 8));
+//
+//        h3Core.h3ToCenterChild("85180cdbfffffff", 8);
+//        {"lat":-0.002408089057290397,"lng":-6.898403577189072E-4}
+//        System.out.println(JSON.toJSONString(getDistanceGeoCoord( "8c180cd8c9fffff","8c180cd8c8e35ff")));
+//        System.out.println(JSON.toJSONString(h3.h3ToGeo("88309c4b5dfffff")));
+//        System.out.println(JSON.toJSONString(h3.geoToH3Address(31.78586221, 119.6810115, 12)));
+//        System.out.println(JSON.toJSONString(h3.h3ToGeo("8c309c4b5c001ff")));
 
 //        H3Core h3 = H3Core.newInstance();
 //

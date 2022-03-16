@@ -100,8 +100,8 @@ public class StringUtils {
     public static String outStr(String str, Object... clos) {
         StringBuffer stringBuffer = new StringBuffer();
         for (Object clo : clos) {
-            stringBuffer.append(str);
             stringBuffer.append(clo);
+            stringBuffer.append(str);
         }
         return stringBuffer.toString();
     }

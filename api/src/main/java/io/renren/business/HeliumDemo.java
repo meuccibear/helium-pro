@@ -3,7 +3,6 @@ package io.renren.business;
 import com.alibaba.fastjson.TypeReference;
 import io.renren.business.domin.Result;
 import io.renren.business.domin.device.CompletedRewardsBean;
-import io.renren.business.domin.device.Device;
 import io.renren.business.domin.deviceConfig.Gateway;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.ObjectUtils;
@@ -14,6 +13,7 @@ import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
 import io.renren.modules.helium.HexUtils;
 import io.renren.modules.helium.NumUtils;
+import io.renren.modules.helium.domain.Device;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +104,7 @@ public class HeliumDemo {
      * @return
      * @throws MsgException
      */
-    public static List<Device> getRandomDevices( String hex, int num) throws MsgException {
+    public static List<Device> getRandomDevices(String hex, int num) throws MsgException {
 //        System.out.println(path);
 //        String jsonStr = FileUtils.readLine(String.format(initRandomDevicePath, path));
 //        System.out.println(jsonStr);

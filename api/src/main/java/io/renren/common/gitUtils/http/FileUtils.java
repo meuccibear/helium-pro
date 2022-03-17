@@ -1,5 +1,6 @@
 package io.renren.common.gitUtils.http;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.ObjectUtils;
@@ -17,6 +18,7 @@ public class FileUtils {
 
 
     public static void write(String filePath, String context) throws MsgException {
+        createTxt(filePath);
         try {
             org.apache.commons.io.FileUtils.write(getFile(filePath), context, "UTF-8", false);
         } catch (IOException e) {
@@ -25,6 +27,7 @@ public class FileUtils {
     }
 
     public static void writeln(String filePath, String context, boolean notExistCreateFile, boolean append) throws MsgException {
+        createTxt(filePath);
         write(filePath, context + "\n", notExistCreateFile, append);
     }
 
@@ -46,7 +49,7 @@ public class FileUtils {
         for (String string : strings) {
             sb.append(string);
         }
-        if(ObjectUtils.notIsEmpty(sb.toString())){
+        if (ObjectUtils.notIsEmpty(sb.toString())) {
             return sb.toString();
         }
         return "";
@@ -102,7 +105,7 @@ public class FileUtils {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                throw new MsgException("IO异常~ "+e.getMessage());
+                throw new MsgException("IO异常~ " + e.getMessage());
             }
         } else {
             file.mkdir();
@@ -116,8 +119,34 @@ public class FileUtils {
         if (exceptionThrow) {
             throw new MsgException(msg);
         } else {
-            logger.error(msg);
+            logger.info(msg);
         }
     }
+
+
+    public static void createTxt(String path) {
+        path = path.replaceAll("\\\\", "/");
+        String[] files = path.split("/");
+        String createFilder = "";
+        for (int i = 0; i < files.length; i++) {
+
+            if (i == (files.length - 1)) {
+                new File(createFilder).mkdirs();
+                try {
+                    System.out.println("\t" + createFilder + files[i]);
+                    new File(createFilder += files[i]).createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                createFilder += files[i] + "/";
+            }
+            System.out.println(createFilder);
+        }
+    }
+
+//    public static void main(String[] args) {
+//        createTxt("./data\\asdasd/asd");
+//    }
 
 }

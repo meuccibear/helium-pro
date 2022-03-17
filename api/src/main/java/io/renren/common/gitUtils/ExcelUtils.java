@@ -1,5 +1,6 @@
 package io.renren.common.gitUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
@@ -35,6 +36,7 @@ public class ExcelUtils {
     }
 
 
+
     public static String toTempStr(String tempStr, String str) {
         int num = tempStr.length() - str.length();
         return tempStr.substring(0, num) + str;
@@ -67,6 +69,37 @@ public class ExcelUtils {
                     jsonObject = new JSONObject();
                     for (int i1 = 0; i1 < cols.length; i1++) {
                         jsonObject.put(cols[i1], vals[i1]);
+                    }
+                    jsonArray.add(jsonObject);
+                }
+            }
+        }
+        return jsonArray;
+    }
+
+    public static List<JSONObject> readTxt(String path) throws MsgException {
+        String [] strings = path.split("\n");
+
+        JSONObject jsonObject;
+        List<JSONObject> jsonArray = new ArrayList<>();
+        String tempStr;
+        String[] cols = new String[0];
+        String[] vals;
+        for (int i = 0; i < strings.length; i++) {
+            tempStr = strings[i];
+            System.out.println(tempStr);
+            if (ObjectUtils.notIsEmpty(tempStr)) {
+                if (0 == i) {
+                    cols = tempStr.split("\t");
+                } else {
+                    vals = tempStr.split("\t");
+                    jsonObject = new JSONObject();
+                    System.out.println(JSON.toJSONString(cols));
+
+                    for (int i1 = 0; i1 < cols.length; i1++) {
+                        if(i1<vals.length){
+                            jsonObject.put(cols[i1], vals[i1]);
+                        }
                     }
                     jsonArray.add(jsonObject);
                 }

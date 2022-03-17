@@ -132,7 +132,7 @@ public class HeliumUtils {
     public static boolean notIsDevice(String hex) throws MsgException {
         Result result = BeanUtils.toJavaObject(get(String.format("v1/hotspots/hex/%s", hex)), new TypeReference<Result>() {
         });
-        System.out.println(JSON.toJSONString(result.getData()));
+//        System.out.println("notIsDevice:\t"+JSON.toJSONString(result.getData()));
         return ObjectUtils.notIsEmpty(result.getData());
     }
 
@@ -291,6 +291,37 @@ public class HeliumUtils {
 
 
     /**
+     * @throws
+     * @title 指定数量获取位置
+     * @description
+     * @author Mr.Lv lvzhuozhuang@foxmail.com
+     * @updateTime 2022/3/15 7:42
+     * @return
+     */
+    public static Map<String, List<GeoCoord>> getLocations(String address, int num) throws MsgException {
+        List<String> cHexs = getCHexsByHex(address, 5);
+        Location location = new Location();
+        Map<String,List<GeoCoord>> geoMap = new HashMap<>();
+        String hex3 = HexUtils.h3.h3ToParentAddress(cHexs.get(0), 5);
+        if (ObjectUtils.notIsEmpty(cHexs)) {
+//            if (num < cHexs.size()) {
+//                throw new MsgException(String.format("该地区不够%d个位置~", num));
+//            }
+            System.out.println(cHexs.size());
+            List<GeoCoord> geoCoords = new ArrayList<>();
+            for (int i = 0; i < num; i++) {
+                geoCoords.add(getRandomDevice(cHexs));
+//            System.out.println(String.format("hex\treward_scale: %s address: %s", device.getReward_scale(), device.getAddress()));
+//            System.out.println(String.format("%s\t%s address: %s", hex, device.getReward_scale(), device.getAddress()));
+            }
+            geoMap.put(hex3, geoCoords);
+//            location.json = new Location(hex3, address, geoCoords);
+        }
+        return geoMap;
+    }
+
+
+    /**
      * 根据设备地址及分辨率获取设备
      *
      * @param address 设备地址
@@ -337,6 +368,20 @@ public class HeliumUtils {
             }
         }
         return cHex;
+    }
+
+    public void saveLocations(String text) throws MsgException {
+        List<List<String>> groupTable = StringUtils.toTableList(text);
+
+        Map<String, Location> locationNums = new HashMap<>();
+
+        for (List<String> lines : groupTable) {
+            if (lines.size() >= 2) {
+                locationNums.put(lines.get(0), HeliumUtils.getLocation(lines.get(0), ObjectUtils.toInt(lines.get(0))));
+            }
+        }
+
+//        FileUtils.write("./data/locations", JSON.toJSONString(locations));
     }
 
     //筛选 空的位置

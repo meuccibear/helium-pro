@@ -1,8 +1,9 @@
 package io.renren.common.gitUtils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 
-import java.util.Iterator;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,7 +14,7 @@ import java.util.regex.Pattern;
  * @create: 2020-01-06 16:20
  */
 
-public class StringUtils {
+public class StringUtils<resultMap> {
 
     public static Boolean isEmpty(Object value) {
         return !notIsEmpty(value);
@@ -118,7 +119,6 @@ public class StringUtils {
 
 
     /**
-     *
      * @param tempStr
      * @param str
      * @return
@@ -126,6 +126,40 @@ public class StringUtils {
     public static String toTempStr(String tempStr, String str) {
         int num = tempStr.length() - str.length();
         return tempStr.substring(0, num) + str;
+    }
+
+
+    /**
+     * @param groupStr
+     * @return
+     */
+    public static List<List<String>> toTableList(String groupStr) {
+        String[] vals;
+        List<List<String>> table = new ArrayList<>();
+        for (String group : ArrUtils.split("\n", groupStr)) {
+            vals = group.split("\t");
+//            StringUtils.writeList(" ", vals);
+            table.add(BeanUtils.toJavaObject(vals, new TypeReference<List<String>>() {
+            }));
+        }
+        return table;
+    }
+
+
+    /**
+     * @param groupStr
+     * @return
+     */
+    public static Map<String, String> toTableMap(String groupStr) {
+        String[] vals;
+        Map<String, String> resultMap = new HashMap<>();
+        for (String group : ArrUtils.split("\n", groupStr)) {
+            vals = group.split("\t");
+            if (ObjectUtils.notIsEmpty(vals)) {
+                resultMap.put(vals[0], vals[1]);
+            }
+        }
+        return resultMap;
     }
 
 }

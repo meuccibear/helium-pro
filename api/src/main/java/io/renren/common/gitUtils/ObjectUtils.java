@@ -27,7 +27,9 @@ public class ObjectUtils {
         if (value == null) {
             return false;
         } else if (value instanceof String) {
-            return ((String) value).length() > 0;
+
+        } else if (value instanceof String[]) {
+            return ((String[]) value).length > 0;
         } else if (value instanceof Long) {
             return (Long) value > 0;
         } else if (value instanceof Integer) {
@@ -40,6 +42,11 @@ public class ObjectUtils {
             return map.size() > 0;
         }
         return true;
+    }
+
+
+    public static void main(String[] args) {
+        notIsEmpty(new String[]{});
     }
 
     /**

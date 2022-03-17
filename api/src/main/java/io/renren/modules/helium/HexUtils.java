@@ -142,7 +142,8 @@ public class HexUtils {
 //        System.out.println(cenGeoCoord.lng - rightGeoCoord.lng);
 //        GeoCoord geoCoord = new GeoCoord(cenGeoCoord.lat + lat, cenGeoCoord.lng + lng);
 //
-//        System.out.println(h3.geoToH3Address(geoCoord.lat, geoCoord.lng, 5));
+        //51.568910 -9.170066
+        System.out.println(h3.geoToH3Address(51.568910, -9.170066, 12));
     }
 
 }

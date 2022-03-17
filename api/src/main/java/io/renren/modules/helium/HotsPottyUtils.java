@@ -11,6 +11,7 @@ import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
 import io.renren.modules.helium.domain.Result;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,8 @@ public class HotsPottyUtils {
      * @updateTime 2022/3/15 5:52
      */
     public static List<String> getHotspotHexByCHex(String hex) throws MsgException {
-        Result result = BeanUtils.toJavaObject(get(String.format("api/v1/hotspots/search-lean/?proximity_hex=%s", hex)), new TypeReference<Result>() {
+        Result result = null;
+        result = BeanUtils.toJavaObject(get(String.format("api/v1/hotspots/search-lean/?proximity_hex=%s", hex)), new TypeReference<Result>() {
         });
         StringUtils.writeList("\t", "【data】", JSON.toJSONString(result.getData()));
         JSONArray datas = JSONUtils.getJSONArray(BeanUtils.toJSON(result), "data");
@@ -46,6 +48,19 @@ public class HotsPottyUtils {
             hotsPottyIds.add((String) JSONUtils.getObjectBycol(data, "l"));
         }
         return hotsPottyIds;
+    }
+
+    public static List<String> getHotspotHexByCHexErr(String hex) throws MsgException {
+
+        for (int i = 0; i < 3; i++) {
+            System.out.println(String.format("【网络错误】 %s 正在进行%d重试", hex, i));
+            try {
+                return getHotspotHexByCHex(hex);
+            } catch (MsgException e) {
+                e.printStackTrace();
+            }
+        }
+        throw new MsgException("请求错误 IP存在被拉黑风险~~~");
     }
 
     /**
@@ -71,7 +86,7 @@ public class HotsPottyUtils {
 
     public static String get(String url) throws MsgException {
         String headersStr = "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36";
-        HttpResultData httpResultData = HttpUtils.get(WWW +url, HttpUtils.getHeadres(headersStr));
+        HttpResultData httpResultData = HttpUtils.get(WWW + url, HttpUtils.getHeadres(headersStr));
         return httpResultData.getResult();
     }
 

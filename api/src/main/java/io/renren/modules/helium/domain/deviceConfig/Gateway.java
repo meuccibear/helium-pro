@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +25,8 @@ public class Gateway {
     private String grName;
     private GeoCoord geoCoord;
     private Device mYDevice;
+    private String owner;
+    private String name;
 
     /**
      * internal  output
@@ -37,6 +41,17 @@ public class Gateway {
         this.index = index;
         this.geoCoord = geoCoord;
         this.mYDevice = mYDevice;
+    }
+
+    public Gateway(Integer index, String hex, String ip, String address, String grName, GeoCoord geoCoord, String name, String owner) {
+        this.hex = hex;
+        this.ip = ip;
+        this.address = address;
+        this.grName = grName;
+        this.index = index;
+        this.geoCoord = geoCoord;
+        this.name = name;
+        this.owner = owner;
     }
 
     public Gateway(Integer index, String hex, String ip, String address, String grName, GeoCoord geoCoord) {
@@ -77,15 +92,16 @@ public class Gateway {
      * @author Mr.Lv lvzhuozhuang@foxmail.com
      * @updateTime 2022/3/15 17:03
      */
-    public void saveExcelFile(String logPath, String ownerCode) throws MsgException {
+    public void saveExcelFile(String logPath, Map<String, String> ownerMap) throws MsgException {
         String script = "./change_position_core.sh %f %f %s %s";
-        FileUtils.writeln(logPath + "script.txt", String.format(script, getGeoCoord().getLat(), getGeoCoord().getLng(), getMYDevice().getAddress(), ownerCode), true, true);
+        FileUtils.writeln(logPath + "script.txt", String.format(script, getGeoCoord().getLat(), getGeoCoord().getLng(), getMYDevice().getAddress(),
+                ObjectUtils.notIsEmpty(getMYDevice()) ? ownerMap.get(getMYDevice().getOwner()) : ""), true, true);
 
         if (ObjectUtils.notIsEmpty(getMYDevice())) {
             FileUtils.writeln(logPath + "exec.txt",
                     StringUtils.outStr("\t",
                             getIndex(),
-                            getMYDevice().getAddress(),
+                            getAddress(),
                             getMYDevice().getName(),
                             getIp(),
                             getMYDevice().getOwner(),
@@ -100,6 +116,24 @@ public class Gateway {
                     "",
                     getGrName()), true, true);
         }
+    }
+
+
+    public void saveExcelFiles(String logPath, Map<String, String> ownerMap) throws MsgException {
+
+        String ownerName = ownerMap.get(getOwner());
+        String script = "./change_position_core.sh %f %f %s %s";
+        FileUtils.writeln(logPath + "script.txt", String.format(script, getGeoCoord().getLat(), getGeoCoord().getLng(), getAddress(),
+                ownerName), true, true);
+        FileUtils.writeln(logPath + "exec.txt",
+                StringUtils.outStr("\t",
+                        getIndex(),
+                        getAddress(),
+                        getName(),
+                        getIp(),
+                        ownerName,
+                        getGrName()
+                ), true, true);
     }
 
 

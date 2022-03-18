@@ -39,7 +39,7 @@
 </template>
 
 <script>
-  import { isEmail, isMobile } from '@/utils/validate'
+  import { isEmail } from '@/utils/validate'
   export default {
     data () {
       var validatePassword = (rule, value, callback) => {
@@ -65,13 +65,13 @@
           callback()
         }
       }
-      var validateMobile = (rule, value, callback) => {
-        if (!isMobile(value)) {
-          callback(new Error('手机号格式错误'))
-        } else {
-          callback()
-        }
-      }
+      // var validateMobile = (rule, value, callback) => {
+      //   if (!isMobile(value)) {
+      //     callback(new Error('手机号格式错误'))
+      //   } else {
+      //     callback()
+      //   }
+      // }
       return {
         visible: false,
         roleList: [],
@@ -99,11 +99,12 @@
           email: [
             { required: true, message: '邮箱不能为空', trigger: 'blur' },
             { validator: validateEmail, trigger: 'blur' }
-          ],
-          mobile: [
-            { required: true, message: '手机号不能为空', trigger: 'blur' },
-            { validator: validateMobile, trigger: 'blur' }
           ]
+          // ,
+          // mobile: [
+          //   { required: true, message: '手机号不能为空', trigger: 'blur' },
+          //   { validator: validateMobile, trigger: 'blur' }
+          // ]
         }
       }
     },

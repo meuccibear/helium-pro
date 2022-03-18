@@ -75,10 +75,12 @@ img {
   .site-sidebar__inner,
   .el-menu.site-sidebar__menu {
     width: 64px;
+    //width: 84px;
   }
   .site-navbar__body,
   .site-content__wrapper {
     margin-left: 64px;
+    //margin-left: 84px;
   }
   .site-navbar__brand {
     &-lg {
@@ -98,6 +100,7 @@ img {
   }
   .site-content--tabs > .el-tabs > .el-tabs__header {
     left: 64px;
+    //left: 64px;
   }
 }
 // animation

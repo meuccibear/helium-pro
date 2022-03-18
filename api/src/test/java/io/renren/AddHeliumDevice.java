@@ -43,8 +43,10 @@ public class AddHeliumDevice {
         // 湖南-陈总-杨举  4, 4, "./data/hn-cz_yj.txt"
         // 深圳-谢总  5, 5, "./data/sz-xz.txt"
         // 上海-陈总  6, 6, "./data/sh-cz.txt"
+        // 上海-陈总  10, 6, "./data/hn-cz-86.txt"
+        // 上海-陈总  12, 6, "./data/hn-cz-86.txt"
 
-        addNewHotspotty(8, 7, "./data/sh-cz5.txt");
+        addNewHotspotty(12, 6, "./data/hn-cz-86.txt");
     }
 
     public void addNewHotspotty(int groupId, int createUserId, String path) throws MsgException {

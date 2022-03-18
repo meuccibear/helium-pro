@@ -2,7 +2,17 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.key" placeholder="组名" clearable></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="dataForm.online" placeholder="设备状态" clearable :value="dataForm.online">
+          <el-option
+            v-for="item in onlines"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -10,6 +20,7 @@
         <el-button v-if="isAuth('business:businesshotspotty:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
+<!--    sortable-->
     <el-table
       :data="dataList"
       border
@@ -29,10 +40,15 @@
         label="编号">
       </el-table-column>
       <el-table-column
-        prop="name"
         header-align="center"
         align="center"
+        width="240vm"
         label="名称">
+        <template slot-scope="scope">
+          <a :href= "'https://explorer.helium.com/hotspots/' + scope.row.address"
+             target="_blank"
+             class="buttonText">{{scope.row.name}}</a>
+        </template>
       </el-table-column>
       <el-table-column
         prop="groupName"
@@ -44,6 +60,7 @@
         prop="privateIp"
         header-align="center"
         align="center"
+        width="160vm"
         label="内网IP">
       </el-table-column>
       <!--<el-table-column
@@ -68,7 +85,13 @@
         prop="online"
         header-align="center"
         align="center"
-        label="设备状态">
+        label="设备状态"
+      >
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.online === 'online' ? 'success' : 'primary'"
+            disable-transitions>{{scope.row.online}}</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         prop="country"
@@ -95,9 +118,12 @@
         label="Hex">
       </el-table-column>-->
       <el-table-column
-        prop="total24h"
         header-align="center"
         align="center"
+        prop="total24h"
+        sortable
+        width="120vm"
+        :sort-method="sortMethod"
         label="24小时收益">
       </el-table-column>
 <!--      <el-table-column
@@ -146,6 +172,7 @@
         prop="updateTime"
         header-align="center"
         align="center"
+        width="160vm"
         label="修改时间">
       </el-table-column>
       <el-table-column
@@ -174,7 +201,7 @@
       @size-change="sizeChangeHandle"
       @current-change="currentChangeHandle"
       :current-page="pageIndex"
-      :page-sizes="[10, 20, 50, 100]"
+      :page-sizes="pageSizes"
       :page-size="pageSize"
       :total="totalPage"
       layout="total, sizes, prev, pager, next, jumper">
@@ -188,17 +215,22 @@
   import AddOrUpdate from './businesshotspotty-add-or-update'
   export default {
     data () {
+      var sizes = [50, 100, 200, 500, 1000]
       return {
         dataForm: {
-          key: ''
+          key: '',
+          sort: {},
+          online: null
         },
         dataList: [],
+        pageSizes: sizes,
         pageIndex: 1,
-        pageSize: 10,
+        pageSize: sizes[0],
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
-        addOrUpdateVisible: false
+        addOrUpdateVisible: false,
+        onlines: []
       }
     },
     components: {
@@ -212,22 +244,31 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/business/businesshotspotty/list'),
+          url: this.$http.adornUrl('/business/businesshotspotty/onlines'),
           method: 'get',
-          params: this.$http.adornParams({
-            'page': this.pageIndex,
-            'limit': this.pageSize,
-            'key': this.dataForm.key
-          })
+          params: this.$http.adornParams()
         }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
-          } else {
-            this.dataList = []
-            this.totalPage = 0
-          }
-          this.dataListLoading = false
+          this.onlines = data.onlines
+        }).then(() => {
+          this.$http({
+            url: this.$http.adornUrl('/business/businesshotspotty/list'),
+            method: 'get',
+            params: this.$http.adornParams({
+              'page': this.pageIndex,
+              'limit': this.pageSize,
+              'key': this.dataForm.key,
+              'online': this.dataForm.online
+            })
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.dataList = data.page.list
+              this.totalPage = data.page.totalCount
+            } else {
+              this.dataList = []
+              this.totalPage = 0
+            }
+            this.dataListLoading = false
+          })
         })
       },
       // 每页数
@@ -281,6 +322,14 @@
             }
           })
         })
+      },
+      changeSort (val) {
+        console.log(val)
+        this.dataForm.sort[val.prop] = val.order.substring(0, val.order.length - 6)
+        console.log(JSON.stringify(this.dataForm.sort))
+      },
+      sortMethod (a, b) {
+        return a.total24h - b.total24h
       }
     }
   }

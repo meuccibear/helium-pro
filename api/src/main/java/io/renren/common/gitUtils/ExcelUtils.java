@@ -68,7 +68,9 @@ public class ExcelUtils {
                     vals = tempStr.split("\t");
                     jsonObject = new JSONObject();
                     for (int i1 = 0; i1 < cols.length; i1++) {
-                        jsonObject.put(cols[i1], vals[i1]);
+                        if(i1 < vals.length){
+                            jsonObject.put(cols[i1], vals[i1]);
+                        }
                     }
                     jsonArray.add(jsonObject);
                 }

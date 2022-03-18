@@ -14,7 +14,7 @@ module.exports = {
     // 代理列表, 是否开启代理通过[./dev.env.js]配置
     proxyTable: devEnv.OPEN_PROXY === false ? {} : {
       '/proxyApi': {
-        target: 'http://103.149.26.144:8081/fast-api',
+        target: 'http://127.0.0.1:8081',
         changeOrigin: true,
         pathRewrite: {
           '^/proxyApi': '/'
@@ -70,7 +70,7 @@ module.exports = {
     /**
      * Source Maps
      */
-    host: '103.149.26.144',
+
     productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',

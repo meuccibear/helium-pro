@@ -158,6 +158,9 @@ public class DateUtils {
             case 5:
                 pattern = "yyyy-MM-ddHH:mm-ss";
                 break;
+            case 6:
+                pattern = "yyyyMMddHH";
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + typeId);
         }

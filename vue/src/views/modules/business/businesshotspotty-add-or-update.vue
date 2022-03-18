@@ -7,6 +7,17 @@
 <!--    <el-form-item label="名称" prop="name">
       <el-input v-model="dataForm.name" placeholder="名称"></el-input>
     </el-form-item>-->
+    <el-form-item label="分组" prop="groupId">
+      <!--      <el-input v-model="dataForm.groupId" placeholder="分组"></el-input>-->
+      <el-select v-model="dataForm.groupId" placeholder="请选择" :value="dataForm.groupId">
+        <el-option
+          v-for="item in groupList"
+          :key="item.groupId"
+          :label="item.groupName"
+          :value="item.groupId">
+        </el-option>
+      </el-select>
+    </el-form-item>
     <el-form-item label="内网IP" prop="privateIp">
       <el-input v-model="dataForm.privateIp" placeholder="内网IP"></el-input>
     </el-form-item>
@@ -58,8 +69,8 @@
     <el-form-item label="创建时间" prop="createTime">
       <el-input v-model="dataForm.createTime" placeholder="创建时间"></el-input>
     </el-form-item>-->
-    <el-form-item label="修改时间" prop="updateTime">
-      <el-input v-model="dataForm.updateTime" placeholder="修改时间"></el-input>
+    <el-form-item label="修改时间" prop="updateTime" >
+      <el-input v-model="dataForm.updateTime" placeholder="修改时间" :disabled="true"></el-input>
     </el-form-item>
       <el-form-item label="状态" size="mini" prop="status">
         <el-radio-group v-model="dataForm.status">
@@ -82,6 +93,7 @@
         visible: false,
         dataForm: {
           hotspottyId: 0,
+          groupId: null,
           name: '',
           privateIp: '',
           publicIp: '',
@@ -107,9 +119,9 @@
           // name: [
           //   { required: true, message: '名称不能为空', trigger: 'blur' }
           // ],
-          privateIp: [
-            { required: true, message: '内网IP不能为空', trigger: 'blur' }
-          ],
+          // privateIp: [
+          //   { required: true, message: '内网IP不能为空', trigger: 'blur' }
+          // ],
           // publicIp: [
           //   { required: true, message: '公网IP不能为空', trigger: 'blur' }
           // ],
@@ -164,45 +176,59 @@
           status: [
             { required: true, message: '状态  0：禁用   1：正常不能为空', trigger: 'blur' }
           ]
-        }
+        },
+        groupList: []
       }
     },
     methods: {
       init (id) {
         this.dataForm.hotspottyId = id || 0
         this.visible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].resetFields()
-          if (this.dataForm.hotspottyId) {
-            this.$http({
-              url: this.$http.adornUrl(`/business/businesshotspotty/info/${this.dataForm.hotspottyId}`),
-              method: 'get',
-              params: this.$http.adornParams()
-            }).then(({data}) => {
-              if (data && data.code === 0) {
-                this.dataForm.name = data.businessHotspotty.name
-                this.dataForm.privateIp = data.businessHotspotty.privateIp
-                this.dataForm.publicIp = data.businessHotspotty.publicIp
-                this.dataForm.brand = data.businessHotspotty.brand
-                this.dataForm.room = data.businessHotspotty.room
-                this.dataForm.online = data.businessHotspotty.online
-                this.dataForm.country = data.businessHotspotty.country
-                this.dataForm.city = data.businessHotspotty.city
-                this.dataForm.street = data.businessHotspotty.street
-                this.dataForm.hex = data.businessHotspotty.hex
-                this.dataForm.total24h = data.businessHotspotty.total24h
-                this.dataForm.total1d = data.businessHotspotty.total1d
-                this.dataForm.total30d = data.businessHotspotty.total30d
-                this.dataForm.owner = data.businessHotspotty.owner
-                this.dataForm.address = data.businessHotspotty.address
-                this.dataForm.remarks = data.businessHotspotty.remarks
-                this.dataForm.createUserId = data.businessHotspotty.createUserId
-                this.dataForm.createTime = data.businessHotspotty.createTime
-                this.dataForm.updateTime = data.businessHotspotty.updateTime
-                this.dataForm.status = data.businessHotspotty.status
-              }
-            })
-          }
+        this.$http({
+          url: this.$http.adornUrl('/business/businessgroup/select'),
+          method: 'get',
+          params: this.$http.adornParams()
+        }).then(({data}) => {
+          this.groupList = data.groupList
+        }).then(() => {
+          this.visible = true
+          this.$nextTick(() => {
+            this.$refs['dataForm'].resetFields()
+          })
+        }).then(() => {
+          this.$nextTick(() => {
+            this.$refs['dataForm'].resetFields()
+            if (this.dataForm.hotspottyId) {
+              this.$http({
+                url: this.$http.adornUrl(`/business/businesshotspotty/info/${this.dataForm.hotspottyId}`),
+                method: 'get',
+                params: this.$http.adornParams()
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                  this.dataForm.name = data.businessHotspotty.name
+                  this.dataForm.privateIp = data.businessHotspotty.privateIp
+                  this.dataForm.publicIp = data.businessHotspotty.publicIp
+                  this.dataForm.brand = data.businessHotspotty.brand
+                  this.dataForm.room = data.businessHotspotty.room
+                  this.dataForm.online = data.businessHotspotty.online
+                  this.dataForm.country = data.businessHotspotty.country
+                  this.dataForm.city = data.businessHotspotty.city
+                  this.dataForm.street = data.businessHotspotty.street
+                  this.dataForm.hex = data.businessHotspotty.hex
+                  this.dataForm.total24h = data.businessHotspotty.total24h
+                  this.dataForm.total1d = data.businessHotspotty.total1d
+                  this.dataForm.total30d = data.businessHotspotty.total30d
+                  this.dataForm.owner = data.businessHotspotty.owner
+                  this.dataForm.address = data.businessHotspotty.address
+                  this.dataForm.remarks = data.businessHotspotty.remarks
+                  this.dataForm.createUserId = data.businessHotspotty.createUserId
+                  this.dataForm.createTime = data.businessHotspotty.createTime
+                  this.dataForm.updateTime = data.businessHotspotty.updateTime
+                  this.dataForm.status = data.businessHotspotty.status
+                }
+              })
+            }
+          })
         })
       },
       // 表单提交
@@ -214,6 +240,7 @@
               method: 'post',
               data: this.$http.adornData({
                 'hotspottyId': this.dataForm.hotspottyId || undefined,
+                'groupId': this.dataForm.groupId,
                 'name': this.dataForm.name,
                 'privateIp': this.dataForm.privateIp,
                 'publicIp': this.dataForm.publicIp,

@@ -120,11 +120,18 @@ public class Gateway {
 
 
     public void saveExcelFiles(String logPath, Map<String, String> ownerMap) throws MsgException {
+        saveExcelFiles(logPath, ownerMap, false);
+    }
+
+    public void saveExcelFiles(String logPath, Map<String, String> ownerMap, boolean bug) throws MsgException {
 
         String ownerName = ownerMap.get(getOwner());
         String script = "./change_position_core.sh %f %f %s %s";
-        FileUtils.writeln(logPath + "script.txt", String.format(script, getGeoCoord().getLat(), getGeoCoord().getLng(), getAddress(),
-                ownerName), true, true);
+        if (!bug) {
+            FileUtils.writeln(logPath + "script.txt", String.format(script, getGeoCoord().getLat(), getGeoCoord().getLng(), getAddress(),
+                    ownerName), true, true);
+        }
+
         FileUtils.writeln(logPath + "exec.txt",
                 StringUtils.outStr("\t",
                         getIndex(),
@@ -132,7 +139,8 @@ public class Gateway {
                         getName(),
                         getIp(),
                         ownerName,
-                        getGrName()
+                        getGrName(),
+                        bug ? "有问题没上的" : ""
                 ), true, true);
     }
 
@@ -148,6 +156,10 @@ public class Gateway {
      * @updateTime 2022/3/15 16:20
      */
     public String saveConfigFile(String filderPath, String gateway_ID, int port) throws MsgException {
+        return saveConfigFile(filderPath, gateway_ID, port, false);
+    }
+
+    public String saveConfigFile(String filderPath, String gateway_ID, int port, boolean bug) throws MsgException {
 
         String json = "{\n" +
                 "  \"gateway_conf\": {\n" +
@@ -160,7 +172,7 @@ public class Gateway {
                 "  }\n" +
                 "}\n";
 
-        FileUtils.write(String.format(filderPath + "gateway_%s_%s.json", getGrName(), getIp().replaceAll("\\.", "_")), json);
+        FileUtils.write(String.format(filderPath +"cinfig/"+ (bug ? "bak/" : "") + "gateway_%s_%s.json", getGrName(), getIp().replaceAll("\\.", "_")), json);
         return json;
     }
 

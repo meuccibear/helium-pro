@@ -175,7 +175,15 @@ public class HeliumUtils {
     }
 
 
-    public boolean denylist(String address) throws MsgException {
+    /**
+     * @return true 黑 false 白
+     * @throws
+     * @title
+     * @description
+     * @author Mr.Lv lvzhuozhuang@foxmail.com
+     * @updateTime 2022/3/18 20:06
+     */
+    public static boolean denylist(String address) throws MsgException {
         JSONObject jsonO = JSON.parseObject(get("https://denylist-api.herokuapp.com/", "api/hotspots/" + address));
         return jsonO.getJSONArray("denylists").size() > 0;
     }
@@ -291,17 +299,17 @@ public class HeliumUtils {
 
 
     /**
+     * @return
      * @throws
      * @title 指定数量获取位置
      * @description
      * @author Mr.Lv lvzhuozhuang@foxmail.com
      * @updateTime 2022/3/15 7:42
-     * @return
      */
     public static Map<String, List<GeoCoord>> getLocations(String address, int num) throws MsgException {
         List<String> cHexs = getCHexsByHex(address, 5);
         Location location = new Location();
-        Map<String,List<GeoCoord>> geoMap = new HashMap<>();
+        Map<String, List<GeoCoord>> geoMap = new HashMap<>();
         String hex3 = HexUtils.h3.h3ToParentAddress(cHexs.get(0), 5);
         if (ObjectUtils.notIsEmpty(cHexs)) {
 //            if (num < cHexs.size()) {
@@ -644,8 +652,9 @@ public class HeliumUtils {
                 "112oAt69WMJnMbipmESZeQ88sZSzRWi8t3AiDecdSuXnzkyBrfoh\n" +
                 "112GeTr7jbKzsK5c7NVSYBXGDfYHkT1XbaH1B7vzCygNxJgGM7E3\n" +
                 "112oP463uu4WKAbLzucvWhENw9crcWG6AK7aXDNMBqnAx47acB8d\n";
+        String time = String.valueOf(System.currentTimeMillis());
         for (String s : str.split("\n")) {
-            FileUtils.writeln("F:\\tmp\\denylist_国家.txt", String.format("%s\t%s\t%s", s, !denylist(s) ? "白" : "黑", getHotspotsByAddress(s).getGeocode().getLong_country()), true, true);
+            FileUtils.writeln("F:\\tmp\\denylist" + time + ".txt", String.format("%s\t%s\t%s", s, denylist(s) ? "黑" : "白", getHotspotsByAddress(s).getGeocode().getLong_country()), true, true);
 //            System.out.println(String.format("%s-%s-%s", s, !denylist(s) ? "白" : "黑", JSON.toJSONString(getHotspotsByAddress(s))));
         }
     }

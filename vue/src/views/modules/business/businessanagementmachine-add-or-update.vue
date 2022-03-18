@@ -11,7 +11,7 @@
       <el-input v-model="dataForm.networkSegment" placeholder="网段"></el-input>
     </el-form-item>
     <el-form-item label="内容" prop="content">
-      <el-input v-model="dataForm.content" placeholder="内容"></el-input>
+      <el-input v-model="dataForm.content" placeholder="内容" type="textarea"></el-input>
     </el-form-item>
 <!--    <el-form-item label="创建者ID" prop="createUserId">
       <el-input v-model="dataForm.createUserId" placeholder="创建者ID"></el-input>

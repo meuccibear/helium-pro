@@ -3,14 +3,14 @@ package io.renren.modules.business.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.gitUtils.PageRRVO;
 import io.renren.common.gitUtils.exception.MsgException;
-import io.renren.common.utils.PageUtils;
+import io.renren.common.gitUtils.vue.domain.OptionBean;
 import io.renren.modules.business.dao.Select;
 import io.renren.modules.business.entity.BusinessHotspottyEntity;
+import io.renren.modules.business.entity.HotspottyEntity;
 import io.renren.modules.domain.dto.HotspottyDTO;
 import io.renren.modules.helium.domain.Device;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 设备管理
@@ -21,17 +21,21 @@ import java.util.Map;
  */
 public interface BusinessHotspottyService extends IService<BusinessHotspottyEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
     void addHotsPotty(Device device);
 
     void addNewHotsPotty(Long groupId, Long createUserId, String address) throws MsgException;
 
+    boolean insertHotspotty(BusinessHotspottyEntity businessHotspottyEntity);
+
     PageRRVO getAll(HotspottyDTO hotspottyDTO);
 
-    List<Select> findOnlines(Long userId);
+    List<Select> findOnlines(HotspottyDTO hotspottyDTO);
 
-//    void addNewHotspotty(Long groupId, Long createUserId, String address) throws MsgException;
+    List<OptionBean> findHotspottyIdAndNameAndOwner(Long userId);
 
+    List<HotspottyEntity> getHotspottyToGroup(Long groupId);
+
+    void dataRefresh() throws MsgException;
 
 }
 

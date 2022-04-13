@@ -112,12 +112,16 @@ public class DateUtils {
     }
 
     public static LocalDateTime asLocalDateTime(Date date) {
-        return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        if(ObjectUtils.notIsEmpty(date)){
+            return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        }
+        return null;
     }
 
 
     public static String asStr(LocalDateTime localDateTime) {
-        return asStr(0, localDateTime);
+//        return asStr(0, localDateTime);
+        return asStr(4, localDateTime);
     }
 
     /**

@@ -25,10 +25,16 @@ public interface BusinessHotspottyDao extends BaseMapper<BusinessHotspottyEntity
 
     Long findHotspottyIdByAddress(@Param("address")String address);
 
-    int insertSelective(BusinessHotspottyEntity businessHotspottyEntity);
+    Long insertSelective(BusinessHotspottyEntity businessHotspottyEntity);
 
     List<BusinessHotspottyEntity> findAll();
 
-    List<Select> findOnlines(long userId);
+    List<Select> findOnlines(HotspottyDTO hotspottyDTO);
+
+    List<OwnerHotspottySelect> findHotspottyIdAndNameAndOwner(@Param("createUserId") Long createUserId);
+
+   List<HotspottyEntity> findAllByGoupId(@Param("groupId")Long groupId);
+
+   List<BusinessHotspottyEntity> dataRefresh();
 
 }

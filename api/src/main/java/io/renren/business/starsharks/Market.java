@@ -9,7 +9,7 @@ import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.JSONUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.HttpResultData;
-import io.renren.common.gitUtils.http.HttpUtils;
+import io.renren.common.gitUtils.http.HttpUtilsx;
 import org.apache.http.conn.HttpHostConnectException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,12 @@ public class Market {
 
     public StarsharksResult starsharks(int page, int page_size) {
         JSONObject result = new Market().sharks(page, page_size);
-        JSONObject data = JSONUtils.getJSONObject(result, "data");
+        JSONObject data = null;
+        try {
+            data = (JSONObject) JSONUtils.getJSONObject(result, "data");
+        } catch (MsgException e) {
+            e.printStackTrace();
+        }
         JSONArray sharks = JSONUtils.getJSONArray(data, "sharks");
 
         JSONObject jsonObject;
@@ -81,9 +86,9 @@ public class Market {
 
         String data = "{\"class\":[],\"star\":0,\"pureness\":0,\"hp\":[0,200],\"speed\":[0,200],\"skill\":[0,200],\"morale\":[0,200],\"body\":[],\"parts\":[],\"rent_cyc\":0,\"rent_except_gain\":[0,0],\"skill_id\":[0,0,0,0],\"page\":%d,\"filter\":\"rent\",\"sort\":\"PriceAsc\",\"page_size\":36}";
         try {
-            Map<String, String> headres = HttpUtils.getHeadres(headStr);
+            Map<String, String> headres = HttpUtilsx.getHeadres(headStr);
 //            HttpUtils.setProxyAddr("127.0.0.1:8866");
-            HttpResultData resultData = HttpUtils.post("https://starsharks.com/go/api/market/sharks", String.format(data, page), headres);
+            HttpResultData resultData = HttpUtilsx.post("https://starsharks.com/go/api/market/sharks", String.format(data, page), headres);
             return BeanUtils.toJavaObject(resultData.getResult(), new TypeReference<JSONObject>() {
             });
 

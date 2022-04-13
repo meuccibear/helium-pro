@@ -1,12 +1,10 @@
 package io.renren.common.gitUtils;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +87,7 @@ public class BeanUtils {
     /**
      * Object 转 任意实体类 或者 Map
      * eg:
-     * Data result = BeanUtils.toJavaObject(xprinterResult.getResult(), new TypeReference<Data>() {});
+     * LeanData result = BeanUtils.toJavaObject(xprinterResult.getResult(), new TypeReference<LeanData>() {});
      *
      * @param obj  实体类
      * @param type 类型

@@ -3,7 +3,9 @@ package io.renren.modules.helium.domain;
 import com.alibaba.fastjson.JSONObject;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.DateUtils;
+import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.StringUtils;
+import io.renren.modules.business.entity.BusinessDeviceEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,6 +52,11 @@ public class Device extends BasicBean {
     private long block;
     private String address;
     private double total;
+    private int dbStatus;
+    /**
+     * 是否进入黑名单 0.正常 1.黑鸡
+     */
+    private int depllist;
     private Long createUserId;
     private Long groupId;
 
@@ -90,5 +98,23 @@ public class Device extends BasicBean {
 //                getTotal() + "",
 //                getOwner() + "",
 //                JSON.toJSONString(getStatus().getListen_addrs()));
+    }
+
+    public BusinessDeviceEntity toDBDeviceEntity() {
+        BusinessDeviceEntity businessDeviceEntity = new BusinessDeviceEntity();
+//        businessDeviceEntity.setAddress(getAddress());
+        businessDeviceEntity.setName(getName().replaceAll("-", " "));
+        businessDeviceEntity.setOnline(getStatus().getOnline());
+        businessDeviceEntity.setCountry(getGeocode().getLong_country());
+
+        businessDeviceEntity.setCity(StringUtils.outStr(" ", getGeocode().getLong_city(), getGeocode().getLong_state()));
+        businessDeviceEntity.setStreet(getGeocode().getLong_street());
+        businessDeviceEntity.setHex(getLocation_hex());
+        businessDeviceEntity.setTotal24h(getTotal());
+        businessDeviceEntity.setOwner(getOwner());
+        businessDeviceEntity.setUpdateTime(new Date());
+        businessDeviceEntity.setDepllist(getDepllist());
+        businessDeviceEntity.setScale(getReward_scale());
+        return businessDeviceEntity;
     }
 }

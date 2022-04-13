@@ -3,7 +3,10 @@ package io.renren.modules.business.entity;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.renren.modules.helium.domain.Device;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,6 +19,8 @@ import java.util.Date;
  */
 @Data
 @TableName("business_hotspotty")
+@AllArgsConstructor
+@NoArgsConstructor
 public class BusinessHotspottyEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -89,7 +94,7 @@ public class BusinessHotspottyEntity implements Serializable {
      */
     private String remarks;
     /**
-     * 创建者ID
+     * 分组名称
      */
     private Long groupId;
 

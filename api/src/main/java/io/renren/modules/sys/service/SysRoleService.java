@@ -31,7 +31,8 @@ public interface SysRoleService extends IService<SysRoleEntity> {
 
 	void deleteBatch(Long[] roleIds);
 
-	
+	List<SysRoleEntity> querySelect(long userId);
+
 	/**
 	 * 查询用户创建的角色ID列表
 	 */

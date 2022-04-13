@@ -12,6 +12,8 @@ import io.renren.common.validator.group.AliyunGroup;
 import io.renren.common.validator.group.QcloudGroup;
 import io.renren.common.validator.group.QiniuGroup;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -25,6 +27,22 @@ public class Constant {
      * 超级管理员ID
      */
     public static final int SUPER_ADMIN = 1;
+
+    public static final List<Long> SUPER_ADMINS = new ArrayList<Long>() {{
+        add(1L);
+        for (int i = 9990; i < 9999; i++) {
+            add(Long.valueOf(i));
+        }
+    }};
+
+    public static boolean isNotAdmin(long id) {
+        return !isAdmin(id);
+    }
+
+    public static boolean isAdmin(long id) {
+        return SUPER_ADMINS.contains(id);
+    }
+
     /**
      * 当前页码
      */

@@ -1,6 +1,7 @@
 package io.renren.common.gitUtils.appium;
 
 import io.renren.common.gitUtils.ObjectUtils;
+import io.renren.common.gitUtils.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -221,11 +222,18 @@ public class Web {
     public Web until(By by, long timeoutInSeconds) {
         try {
             webElement = new WebDriverWait(driver, timeoutInSeconds).until(ExpectedConditions.presenceOfElementLocated(by));
+            outLog("\t\t\t【until】\t" +
+                    StringUtils.outStr("\t",
+                            by.toString(),
+                            "【" + webElement.getText() + "】"));
         } catch (Exception e) {
             msg("err", e.getMessage());
         }
         return this;
     }
 
+    public void outLog(String str){
+        System.out.println(str);
+    }
 
 }

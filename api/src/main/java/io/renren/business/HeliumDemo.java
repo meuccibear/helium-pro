@@ -1,20 +1,17 @@
 package io.renren.business;
 
-import com.alibaba.fastjson.TypeReference;
-import io.renren.business.domin.Result;
 import io.renren.business.domin.device.CompletedRewardsBean;
 import io.renren.business.domin.deviceConfig.Gateway;
-import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.StringUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
 import io.renren.common.gitUtils.http.HttpResultData;
-import io.renren.common.gitUtils.http.HttpUtils;
+import io.renren.common.gitUtils.http.HttpUtilsx;
+import io.renren.modules.helium.HeliumUtils;
 import io.renren.modules.helium.HexUtils;
 import io.renren.modules.helium.NumUtils;
 import io.renren.modules.helium.domain.Device;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,7 +132,7 @@ public class HeliumDemo {
         if (ObjectUtils.notIsEmpty(completedRewardsBean) && ObjectUtils.notIsEmpty(completedRewardsBean.getHotspotIds())) {
             String id = completedRewardsBean.getHotspotIds().get(NumUtils.intervalRandom(completedRewardsBean.getHotspotIds().size()));
             completedRewardsBean.getHotspotIds().remove(id);
-            Device device = getDevice(id);
+            Device device = HeliumUtils.getHotspotsByAddress(id);
 //            if (ObjectUtils.isEmpty(device) && ObjectUtils.isEmpty(device.getReward_scale())) {
             if (ObjectUtils.isEmpty(device) && device.getStatus().getOnline().equals("")) {
                 if (ObjectUtils.isEmpty(device.getReward_scale())) {
@@ -150,20 +147,6 @@ public class HeliumDemo {
     }
 
     /**
-     * 获取
-     *
-     * @param id
-     * @return
-     * @throws MsgException
-     */
-    public static Device getDevice(String id) throws MsgException {
-        Result result = BeanUtils.toJavaObject(get(String.format("https://helium-api.stakejoy.com/v1/hotspots/%s", id)), new TypeReference<Result>() {
-        });
-        return BeanUtils.toJavaObject(result.getData(), new TypeReference<Device>() {
-        });
-    }
-
-    /**
      * get请求
      *
      * @param url 链接
@@ -171,7 +154,7 @@ public class HeliumDemo {
      * @throws MsgException
      */
     public static String get(String url) throws MsgException {
-        HttpResultData httpResultData = HttpUtils.get(url);
+        HttpResultData httpResultData = HttpUtilsx.get(url);
         return httpResultData.getResult();
     }
 

@@ -10,9 +10,11 @@ server:
     context-path: /
 
 spring:
+  application:
+    name: Helium
   # 环境 dev|test|prod
   profiles:
-    active: prod
+    active: dev
   # jackson时间格式化
   jackson:
     time-zone: GMT+8
@@ -74,3 +76,43 @@ renren:
     # token有效时长，7天，单位秒
     expire: 604800
     header: token
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    io:
+      renren:
+        modules:
+          business:
+            dao: debug
+knife4j:
+  enable: true
+  setting:
+    language: zh-CN
+    enableSwaggerModels: true
+    enableDocumentManage: true
+    swaggerModelName: 实体类列表
+    enableVersion: false
+    enableReloadCacheParameter: false
+    enableAfterScript: true
+    enableFilterMultipartApiMethodType: POST
+    enableFilterMultipartApis: true
+    enableRequestCache: true
+    enableHost: false
+    enableHostText: 192.168.0.193:8000
+    enableHomeCustom: true
+    homeCustomLocation: classpath:markdown/home.md
+    enableSearch: false
+    enableFooter: true
+    enableFooterCustom: true
+    footerCustomContent: Apache License 2.0 | Copyright  2019-[浙江八一菜刀股份有限公司](https://gitee.com/xiaoym/knife4j)
+    enableDynamicParameter: false
+    enableDebug: true
+    enableOpenApi: false
+    enableGroup: true
+  cors: false
+  production: false
+  basic:
+    enable: true
+    username: xiaozhuang
+    password: xiaozhuang

@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import io.renren.common.gitUtils.exception.MsgException;
 
 import java.math.BigDecimal;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +25,7 @@ public class ObjectUtils {
         if (value == null) {
             return false;
         } else if (value instanceof String) {
-
+            return ((String) value).length() > 0;
         } else if (value instanceof String[]) {
             return ((String[]) value).length > 0;
         } else if (value instanceof Long) {
@@ -195,19 +193,100 @@ public class ObjectUtils {
     }
 
 
-    public static Integer toInt(String aaa) throws MsgException {
-        if (isEmpty(aaa)) {
-            return 0;
-        }
-//        if (Pattern.matches("^-?\\d+$", aaa)) {
-            return Integer.parseInt(aaa);
-//        } else {
-//            System.out.println("不是正整数");
-//            throw new MsgException("不是正整数");
-//        }
+    //"^\\d+$"　　//非负整数（正整数   +   0）
+    //  "^[0-9]*[1-9][0-9]*$"　　//正整数
+    //  "^((-\\d+)|(0+))$"　　//非正整数（负整数   +   0）
+    //  "^-[0-9]*[1-9][0-9]*$"　　//负整数
+    //  "^-?\\d+$"　　　　//整数
+    //  "^\\d+(\\.\\d+)?$"　　//非负浮点数（正浮点数   +   0）
+    //  "^(([0-9]+\\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\\.[0-9]+)|([0-9]*[1-9][0-9]*))$"　　//正浮点数
+    //  "^((-\\d+(\\.\\d+)?)|(0+(\\.0+)?))$"　　//非正浮点数（负浮点数   +   0）
+    //  "^(-(([0-9]+\\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\\.[0-9]+)|([0-9]*[1-9][0-9]*)))$"　　//负浮点数
+    //  "^(-?\\d+)(\\.\\d+)?$"　　//浮点数
 
+    static Map<String,String> map = new HashMap<String,String>(){{
+        put("isInteger", "^-?\\d+$");
+    }};
+
+    /**
+     *
+     * @param key
+     * @param content
+     * @return
+     */
+    public static boolean valueVerification(String key, String content){
+        return Pattern.matches(map.get(key), content);
+    }
+
+    public static Integer toInt(String value, Integer defaultValue) throws MsgException {
+        if(ObjectUtils.notIsEmpty(value)){
+            return toInt(value);
+        }
+        return defaultValue;
+    }
+    public static Integer toInt(String value) throws MsgException {
+        if (valueVerification("isInteger", value)) {
+            return Integer.parseInt(value);
+        }
+        throw new MsgException("不是数字");
     }
 
     //        result = result.replaceAll("\\n|\\t","");
 
+
+
+    public void sort(){
+        String ip_str = "192.168.10.34 127.0.0.1 3.3.3.3 105.70.11.55";
+
+        // 为了让IP可以按字符串顺序比较，每一位需要0补充
+        ip_str = ip_str.replaceAll("(\\d+)", "00$1");
+        System.out.println(ip_str);
+
+        // 然后每一个保留3位
+        ip_str = ip_str.replaceAll("0*(\\d{3})", "$1");
+        System.out.println(ip_str);
+
+        // IP地址分割并排序
+        String[] ips = ip_str.split(" +");
+        Set<String> set = new TreeSet<String>();
+        for (String ip : ips) {
+            set.add(ip);
+        }
+
+        for (String ip : set) {
+            System.out.println(ip.replaceAll("0*(\\d+)", "$1"));
+        }
+    }
+
+    public static List<List<String>> averageAssign(List<String> data, int n) {
+        List<List<String>> datas = new ArrayList<>();
+
+        if (ObjectUtils.notIsEmpty(data)) {
+            int average = data.size() / n;
+            int surplus = data.size() % n;
+            Map<Integer, Integer> itemSSize = new HashMap<>();
+            for (int i = 0; i < n; i++) {
+                itemSSize.put(i, average);
+            }
+            while (surplus > 0) {
+//                System.out.println(String.format("[while]%d", surplus));
+                for (int i = 0; i < n; i++) {
+                    if (surplus > 0) {
+//                        System.out.println(String.format("[for]%d", surplus));
+                        itemSSize.put(i, itemSSize.get(i) + 1);
+                        surplus--;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            int curNum = 0;
+            for (int i = 0; i < n; i++) {
+                datas.add(data.subList(curNum, curNum + itemSSize.get(i)));
+                curNum += itemSSize.get(i);
+            }
+        }
+
+        return datas;
+    }
 }

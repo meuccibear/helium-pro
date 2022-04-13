@@ -115,9 +115,9 @@ public class HexUtils {
     }
 
     public static void main(String[] args) throws IOException {
-        String hex5 = h3.h3ToParentAddress("8c180cc000001ff", 5);
-        System.out.println(hex5);
-        System.out.println(h3.h3ToCenterChild(hex5,12));
+//        String hex5 = h3.h3ToParentAddress("8c180cc000001ff", 5);
+//        System.out.println(hex5);
+//        System.out.println(h3.h3ToCenterChild(hex5,12));
 
 //        System.out.println(offset("883091364bfffff", "rightLower", 8));
 //
@@ -143,7 +143,12 @@ public class HexUtils {
 //        GeoCoord geoCoord = new GeoCoord(cenGeoCoord.lat + lat, cenGeoCoord.lng + lng);
 //
         //51.568910 -9.170066
-        System.out.println(h3.geoToH3Address(51.568910, -9.170066, 12));
+//        System.out.println(h3.geoToH3Address(51.568910, -9.170066, 12));
+//        39.035612 116.722636
+        for (GeoCoord geoCoord : h3.getH3UnidirectionalEdgeBoundary("88318c4065fffff")) {
+            System.out.println(JSON.toJSONString(h3.geoToH3Address(geoCoord.lat, geoCoord.lng, 8)));
+        }
+//        h3.getH3UnidirectionalEdgeBoundary()
     }
 
 }

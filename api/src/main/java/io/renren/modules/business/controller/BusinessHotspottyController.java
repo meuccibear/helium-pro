@@ -1,6 +1,10 @@
 package io.renren.modules.business.controller;
 
+import com.alibaba.fastjson.TypeReference;
+import io.renren.common.gitUtils.BeanUtils;
+import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.PageRRVO;
+import io.renren.common.gitUtils.vue.domain.OptionBean;
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.R;
 import io.renren.modules.business.entity.BusinessHotspottyEntity;
@@ -10,9 +14,9 @@ import io.renren.modules.sys.controller.AbstractController;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -31,25 +35,27 @@ public class BusinessHotspottyController extends AbstractController {
     /**
      * 列表
      */
-    @RequestMapping("/onlines")
-    public R findOnlines(){
-        return R.ok().put("onlines", businessHotspottyService.findOnlines(getUserId()));
+    @RequestMapping("/list")
+    @RequiresPermissions("business:businesshotspotty:list")
+    public R list(@ModelAttribute HotspottyDTO hotspottyDTO){
+        //如果不是超级管理员，则只查询自己创建的角色列表
+        if(Constant.isNotAdmin(getUserId())){
+            hotspottyDTO.setCreateUserId(getUserId());
+        }
+        PageRRVO pageUtils = businessHotspottyService.getAll(hotspottyDTO);
+        R r = R.ok();
+        r.put("page", pageUtils);
+        r.put("onlines", businessHotspottyService.findOnlines(hotspottyDTO));
+        return r;
     }
 
     /**
      * 列表
      */
-    @RequestMapping("/list")
-    @RequiresPermissions("business:businesshotspotty:list")
-    public R list(@ModelAttribute HotspottyDTO hotspottyDTO){
-        //如果不是超级管理员，则只查询自己创建的角色列表
-        if(getUserId() != Constant.SUPER_ADMIN){
-            hotspottyDTO.setCreateUserId(getUserId());
-        }
-        PageRRVO pageUtils = businessHotspottyService.getAll(hotspottyDTO);
-        return R.ok().put("page", pageUtils);
-    }
-
+//    @RequestMapping("/onlines")
+//    public R findSelect(){
+//        return R.ok().put("onlines", businessHotspottyService.findSelect(getUserId()));
+//    }
 
     /**
      * 信息
@@ -58,7 +64,6 @@ public class BusinessHotspottyController extends AbstractController {
     @RequiresPermissions("business:businesshotspotty:info")
     public R info(@PathVariable("hotspottyId") Long hotspottyId){
 		BusinessHotspottyEntity businessHotspotty = businessHotspottyService.getById(hotspottyId);
-
         return R.ok().put("businessHotspotty", businessHotspotty);
     }
 
@@ -70,7 +75,17 @@ public class BusinessHotspottyController extends AbstractController {
     public R save(@RequestBody BusinessHotspottyEntity businessHotspotty){
         businessHotspotty.setCreateTime(new Date());
         businessHotspotty.setCreateUserId(getUserId());
-		businessHotspottyService.save(businessHotspotty);
+
+        String[] addresss = businessHotspotty.getAddress().trim().split("\n");
+        BusinessHotspottyEntity businessHotspottyDB;
+        for (String address : addresss) {
+            if (ObjectUtils.notIsEmpty(address)) {
+                businessHotspottyDB = BeanUtils.toJavaObject(businessHotspotty, new TypeReference<BusinessHotspottyEntity>(){});
+                businessHotspottyDB.setAddress(address);
+                businessHotspottyDB.setStatus(-1);
+                businessHotspottyService.insertHotspotty(businessHotspottyDB);
+            }
+        }
         return R.ok();
     }
 
@@ -94,6 +109,23 @@ public class BusinessHotspottyController extends AbstractController {
 		businessHotspottyService.removeByIds(Arrays.asList(hotspottyIds));
 
         return R.ok();
+    }
+
+
+    /**
+     * 选择设备
+     */
+    @GetMapping("/select")
+//    @RequiresPermissions("business:businessgroup:select")
+    public R select(){
+        Long userId = null;
+        //如果不是超级管理员，则只查询自己创建的角色列表
+        if(Constant.isNotAdmin(getUserId())){
+            userId= getUserId();
+        }
+        //查询列表数据
+        List<OptionBean> hotsPottyList = businessHotspottyService.findHotspottyIdAndNameAndOwner(userId);
+        return R.ok().put("hotsPottyList", hotsPottyList);
     }
 
 }

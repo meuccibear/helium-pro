@@ -30,12 +30,14 @@ import java.util.List;
 @TableName("sys_user")
 public class SysUserEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * 用户ID
 	 */
 	@TableId
 	private Long userId;
+
+	private String nikeName;
 
 	/**
 	 * 用户名
@@ -57,8 +59,8 @@ public class SysUserEntity implements Serializable {
 	/**
 	 * 邮箱
 	 */
-	@NotBlank(message="邮箱不能为空", groups = {AddGroup.class, UpdateGroup.class})
-	@Email(message="邮箱格式不正确", groups = {AddGroup.class, UpdateGroup.class})
+//	@NotBlank(message="邮箱不能为空", groups = {AddGroup.class, UpdateGroup.class})
+//	@Email(message="邮箱格式不正确", groups = {AddGroup.class, UpdateGroup.class})
 	private String email;
 
 	/**

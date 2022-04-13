@@ -146,10 +146,11 @@ public class CSVUtils {
 //                    rowIndex++;
 //                    continue;
 //                }
-//                System.out.println(record.size());
+                logger.info(record.size());
 //              每行的内容
                 List<String> value = new ArrayList<>(colNum + 1);
                 for (int i = 0; i < record.size(); i++) {
+                    logger.info(record.get(i));
                     value.add(record.get(i));
                 }
                 values.add(value);

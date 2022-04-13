@@ -101,7 +101,9 @@ public class StringUtils<resultMap> {
     public static String outStr(String str, Object... clos) {
         StringBuffer stringBuffer = new StringBuffer();
         for (Object clo : clos) {
-            stringBuffer.append(clo);
+            if(ObjectUtils.notIsEmpty(clo)){
+                stringBuffer.append(clo);
+            }
             stringBuffer.append(str);
         }
         return stringBuffer.toString();
@@ -160,6 +162,17 @@ public class StringUtils<resultMap> {
             }
         }
         return resultMap;
+    }
+
+    /**
+     * 省略中间字符串
+     *
+     * @param str 字符串
+     * @return 省略的字符串
+     * @eg omitMiddle(" 112oAt69WMJnMbipmESZeQ88sZSzRWi8t3AiDecdSuXnzkyBrfoh ") ==》 112oAt...yBrfoh
+     */
+    public static String omitMiddle(int showNum, String str) {
+        return String.format("%s...%s", str.substring(0, showNum), str.substring(str.length() - showNum));
     }
 
 }

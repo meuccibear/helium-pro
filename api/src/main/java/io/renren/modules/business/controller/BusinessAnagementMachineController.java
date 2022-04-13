@@ -34,7 +34,10 @@ public class BusinessAnagementMachineController extends AbstractController {
     @RequiresPermissions("business:businessanagementmachine:list")
     public R list(@RequestParam Map<String, Object> params){
         //只有超级管理员，才能查看所有管理员列表
-        if(getUserId() != Constant.SUPER_ADMIN){
+//        if(getUserId() != Constant.SUPER_ADMIN){
+//            params.put("createUserId", getUserId());
+//        }
+        if(Constant.isNotAdmin(getUserId())){
             params.put("createUserId", getUserId());
         }
 

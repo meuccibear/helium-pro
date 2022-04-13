@@ -1,4 +1,6 @@
 package io.renren.modules.business.dao;
+import io.renren.modules.domain.dto.GroupDTO;
+import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.renren.modules.business.entity.BusinessGroupEntity;
@@ -17,5 +19,11 @@ import java.util.List;
 public interface BusinessGroupDao extends BaseMapper<BusinessGroupEntity> {
 
     List<BusinessGroupEntity> queryNotButtonList();
+
+    List<BusinessGroupEntity> findAllByCreateUserId(@Param("createUserId")Long createUserId);
+
+    List<BusinessGroupEntity> findAllByCreateUserId(GroupDTO groupDTO);
+
+    Integer findAllByCreateUserIdCount(GroupDTO groupDTO);
 
 }

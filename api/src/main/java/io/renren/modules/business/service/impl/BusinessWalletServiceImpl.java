@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.renren.common.gitUtils.PageRRVO;
+import io.renren.common.gitUtils.StringUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
@@ -11,6 +12,7 @@ import io.renren.modules.business.dao.BusinessHotspottyDao;
 import io.renren.modules.business.dao.BusinessWalletDao;
 import io.renren.modules.business.entity.BusinessHotspottyEntity;
 import io.renren.modules.business.entity.BusinessWalletEntity;
+import io.renren.modules.business.entity.WalletEntity;
 import io.renren.modules.business.service.BusinessHotspottyService;
 import io.renren.modules.business.service.BusinessWalletService;
 import io.renren.modules.domain.dto.WalletDTO;
@@ -20,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,15 @@ public class BusinessWalletServiceImpl extends ServiceImpl<BusinessWalletDao, Bu
     BusinessHotspottyService businessHotspottyService;
     @Autowired
     BusinessHotspottyDao businessHotspottyDao;
+
+    @Override
+    public PageRRVO getAll(WalletDTO walletDTO) {
+        List<WalletEntity> wallets = baseMapper.findAll(walletDTO);
+        for (WalletEntity wallet : wallets) {
+            wallet.setOwner(StringUtils.omitMiddle(8, wallet.getOwner()));
+        }
+        return PageRRVO.build(walletDTO, wallets, baseMapper.findAllCount(walletDTO));
+    }
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -112,12 +122,6 @@ public class BusinessWalletServiceImpl extends ServiceImpl<BusinessWalletDao, Bu
             }
         }
     }
-
-    @Override
-    public PageRRVO getAll(WalletDTO walletDTO) {
-        return PageRRVO.build(walletDTO, baseMapper.findAll(walletDTO), baseMapper.findAllCount(walletDTO));
-    }
-
 
 
 

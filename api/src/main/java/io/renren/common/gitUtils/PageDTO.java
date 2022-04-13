@@ -47,7 +47,10 @@ public class PageDTO implements Serializable {
         setUserId(userId);
 
         //系统管理员，拥有最高权限
-        if (userId  == Constant.SUPER_ADMIN) {
+//        if (userId  == Constant.SUPER_ADMIN) {
+//            setType(0);
+//        }
+        if (Constant.isAdmin(userId)) {
             setType(0);
         }
     }

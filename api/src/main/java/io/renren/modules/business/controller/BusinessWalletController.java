@@ -44,7 +44,7 @@ public class BusinessWalletController extends AbstractController {
     @RequiresPermissions("business:businesswallet:list")
     public R list(@ModelAttribute WalletDTO walletDTO) {
         //如果不是超级管理员，则只查询自己创建的角色列表
-        if(getUserId() != Constant.SUPER_ADMIN){
+        if(Constant.isNotAdmin(getUserId())){
             walletDTO.setCreateUserId(getUserId());
         }
         PageRRVO page = businessWalletService.getAll(walletDTO);

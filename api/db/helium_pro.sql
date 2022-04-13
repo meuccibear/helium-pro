@@ -1,5 +1,5 @@
 /*
- Navicat Premium Data Transfer
+ Navicat Premium LeanData Transfer
 
  Source Server         : 183.6.57.245
  Source Server Type    : MySQL
@@ -13,6 +13,14 @@
 
  Date: 10/03/2022 19:28:27
 */
+
+-- TRUNCATE sys_user_role
+-- TRUNCATE sys_user_group
+-- TRUNCATE sys_role_menu
+-- TRUNCATE sys_group_hotspotty
+-- TRUNCATE business_wallet
+-- TRUNCATE business_hotspotty
+-- TRUNCATE business_group
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;

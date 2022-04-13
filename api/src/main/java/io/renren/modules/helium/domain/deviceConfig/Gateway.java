@@ -1,5 +1,6 @@
 package io.renren.modules.helium.domain.deviceConfig;
 
+import com.alibaba.fastjson.JSON;
 import io.renren.common.gitUtils.ExcelUtils;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.StringUtils;
@@ -128,6 +129,11 @@ public class Gateway {
         String ownerName = ownerMap.get(getOwner());
         String script = "./change_position_core.sh %f %f %s %s";
         if (!bug) {
+            StringUtils.writeList("\t", logPath);
+            StringUtils.writeList("\t", script);
+            StringUtils.writeList("\t", JSON.toJSON(getGeoCoord()));
+            StringUtils.writeList("\t", getAddress());
+            StringUtils.writeList("\t",ownerName);
             FileUtils.writeln(logPath + "script.txt", String.format(script, getGeoCoord().getLat(), getGeoCoord().getLng(), getAddress(),
                     ownerName), true, true);
         }

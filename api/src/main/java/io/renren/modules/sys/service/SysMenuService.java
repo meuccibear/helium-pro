@@ -22,6 +22,10 @@ import java.util.List;
  */
 public interface SysMenuService extends IService<SysMenuEntity> {
 
+
+
+	List<SysMenuEntity> queryNotButtonListByTypeId(Long userId);
+
 	/**
 	 * 根据父菜单，查询子菜单
 	 * @param parentId 父菜单ID
@@ -34,12 +38,13 @@ public interface SysMenuService extends IService<SysMenuEntity> {
 	 * @param parentId 父菜单ID
 	 */
 	List<SysMenuEntity> queryListParentId(Long parentId);
-	
+
 	/**
 	 * 获取不包含按钮的菜单列表
 	 */
-	List<SysMenuEntity> queryNotButtonList();
-	
+
+	List<SysMenuEntity> queryNotButtonList(Long userId);
+
 	/**
 	 * 获取用户菜单列表
 	 */

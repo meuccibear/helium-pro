@@ -39,10 +39,13 @@ public class UserEntity implements Serializable {
 	 * 手机号
 	 */
 	private String mobile;
+
+
 	/**
 	 * 密码
 	 */
 	private String password;
+
 	/**
 	 * 创建时间
 	 */

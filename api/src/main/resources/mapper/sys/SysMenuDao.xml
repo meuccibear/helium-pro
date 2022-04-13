@@ -11,4 +11,14 @@
 		select * from sys_menu where type != 2 order by order_num asc
 	</select>
 
+	<select id="queryNotButtonListByTypeId" resultType="io.renren.modules.sys.entity.SysMenuEntity">
+		SELECT
+		sm.*
+		FROM sys_menu sm
+		LEFT JOIN sys_role_menu rm ON rm.menu_id = sm.menu_id
+		LEFT JOIN sys_user_role ur ON ur.role_id = rm.role_id
+		where ur.user_id = #{userId} and sm.type != 2
+		order by sm.order_num asc
+	</select>
+
 </mapper>

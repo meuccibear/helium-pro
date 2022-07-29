@@ -1,11 +1,18 @@
 package io.renren.common.gitUtils.kdl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import io.renren.common.gitUtils.BeanUtils;
+import io.renren.common.gitUtils.JSONUtils;
+import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.StringUtils;
+import io.renren.common.gitUtils.kdl.domian.Result;
 import io.renren.common.gitUtils.kdl.enums.EndPoint;
 import io.renren.common.gitUtils.kdl.enums.OpsOrderLevel;
 import io.renren.common.gitUtils.kdl.exceptions.KdlException;
 import io.renren.common.gitUtils.kdl.exceptions.KdlNameError;
 import io.renren.common.gitUtils.kdl.exceptions.KdlStatusError;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -25,6 +32,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class Client {
     private Auth auth;
 
@@ -56,8 +64,13 @@ public class Client {
         return res[0];
     }
 
+    public void add_ip_whitelist(String ip) throws Exception {
+        List ip_whitelist = get_ip_whitelist();
+        ip_whitelist.add(ip);
+        set_ip_whitelist(ip_whitelist);
+    }
 
-    public String[] get_ip_whitelist() throws Exception {
+    public List get_ip_whitelist() throws Exception {
         return get_ip_whitelist("simple");
     }
 
@@ -68,30 +81,26 @@ public class Client {
      * @return String[] ip白名单数组
      * @throws Exception
      */
-    public String[] get_ip_whitelist(String sign_type) throws Exception {
+    public List get_ip_whitelist(String sign_type) throws Exception {
         String endpoint = EndPoint.GetIpWhitelist.getValue();
         Map<String, Object> kwargs = new HashMap<>();
         kwargs.put("sign_type", sign_type);
         Map<String, Object> params = this._get_params(endpoint, kwargs);
         String[] res = this._get_base_res("GET", endpoint, params);
         if (res[1].equals("json")) {
-            JSONObject data = new JSONObject(res[0]).getJSONObject("result");
-            JSONArray arr = data.getJSONArray("ipwhitelist");
-            String[] ip_whitelist = new String[arr.length()];
-            for (int i = 0; i < arr.length(); i++) {
-                ip_whitelist[i] = arr.getString(i);
-            }
-            return ip_whitelist;
+            JSONObject data = new JSONObject(res[0]).getJSONObject("data");
+            com.alibaba.fastjson.JSONArray ipwhitelist = (com.alibaba.fastjson.JSONArray) JSONUtils.jsGetData(BeanUtils.toJSONObject(res[0]), "data.ipwhitelist");
+            return ObjectUtils.isEmpty(ipwhitelist) ? new ArrayList() : BeanUtils.toJavaObject(ipwhitelist, new TypeReference<List<String>>(){{}});
         }
-        return new String[]{};
+        return new ArrayList();
     }
 
     public void set_ip_whitelist(String iplist) throws Exception {
         set_ip_whitelist(iplist, "simple");
     }
 
-    public void set_ip_whitelist(String[] iplist) throws Exception {
-        if (iplist.length == 0) {
+    public void set_ip_whitelist(List<String> iplist) throws Exception {
+        if (iplist.size() == 0) {
             set_ip_whitelist("", "simple");
             return;
         }
@@ -135,7 +144,6 @@ public class Client {
     }
 
 
-
     public String[] get_dps(int num, String format) throws Exception {
 
         Map<String, Object> kwargs = new HashMap<>();
@@ -143,7 +151,7 @@ public class Client {
             kwargs.put("format", format);
         }
 
-        return get_dps(num,kwargs);
+        return get_dps(num, kwargs);
     }
 
     /**
@@ -154,6 +162,15 @@ public class Client {
      * @return String[] proxy数组
      * @throws Exception
      */
+    public String get_dp() throws Exception {
+        String[] dps = get_dps(1, new HashMap<>());
+        if (ObjectUtils.notIsEmpty(dps)) {
+            return dps[0];
+        }
+        log.error("【获取快代理IP失败】再次获取！");
+        return get_dp();
+    }
+
     public String[] get_dps(int num, Map<String, Object> kwargs) throws Exception {
         if (num > 0) {
             kwargs.put("num", num);
@@ -167,8 +184,9 @@ public class Client {
         return null;
     }
 
-    public Map<String, Boolean> check_dps_valid(String proxy) throws Exception {
-        return check_dps_valid(proxy, "simple");
+    public Boolean check_dps_valid(String proxy) throws Exception {
+        Map<String, Boolean> hmacsha1 = check_dps_valid(proxy, "hmacsha1");
+        return hmacsha1.get(proxy);
     }
 
     public Map<String, Boolean> check_dps_valid(String[] proxy) throws Exception {
@@ -257,14 +275,12 @@ public class Client {
         kwargs.put("sign_type", sign_type);
         Map<String, Object> params = this._get_params(endpoint, kwargs);
         String[] res = this._get_base_res("GET", endpoint, params);
+        log.info(JSON.toJSONString(res));
         if (res[1].equals("json")) {
-            JSONObject data = new JSONObject(res[0]).getJSONObject("result");
-            Set<String> keys = data.keySet();
-            Map<String, Boolean> valids = new HashMap<>();
-            for (String key : keys) {
-                valids.put(key, data.getBoolean(key));
-            }
-            return valids;
+            Result result = BeanUtils.toJavaObject(res[0], new TypeReference<Result>() {{
+            }});
+            return BeanUtils.toJavaObject(result.getData(), new TypeReference<Map<String, Boolean>>() {{
+            }});
         }
         return new HashMap<>();
     }

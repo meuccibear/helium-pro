@@ -42,6 +42,7 @@
         dataForm: {
           id: 0,
           roleName: '',
+          openRole: 0,
           remark: ''
         },
         dataRule: {
@@ -76,6 +77,7 @@
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.dataForm.roleName = data.role.roleName
+                this.dataForm.openRole = data.role.openRole
                 this.dataForm.remark = data.role.remark
                 var idx = data.role.menuIdList.indexOf(this.tempKey)
                 if (idx !== -1) {
@@ -97,6 +99,7 @@
               data: this.$http.adornData({
                 'roleId': this.dataForm.id || undefined,
                 'roleName': this.dataForm.roleName,
+                'openRole': this.dataForm.openRole,
                 'remark': this.dataForm.remark,
                 'menuIdList': [].concat(this.$refs.menuListTree.getCheckedKeys(), [this.tempKey], this.$refs.menuListTree.getHalfCheckedKeys())
               })

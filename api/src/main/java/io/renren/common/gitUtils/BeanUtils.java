@@ -1,10 +1,9 @@
 package io.renren.common.gitUtils;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,12 +51,41 @@ public class BeanUtils {
         if (values != null) {
             for (Object o : values) {
                 if (null != o) {
-                    jsonObject.putAll(toJSON(o));
+                    jsonObject.putAll(toJSONObject(o));
                 }
             }
         }
         String jsonStr = jsonObject.toJSONString();
         return JSONObject.parseObject(jsonStr, clazz);
+    }
+
+
+    public static <T> T mergeObjects(TypeReference<T> type, Object... values) {
+        if (null == type) {
+            return null;
+        }
+        JSONObject jsonObject = new JSONObject();
+        if (values != null) {
+            for (Object o : values) {
+                if (null != o) {
+                    jsonObject.putAll(toJSONObject(o));
+                }
+            }
+        }
+        String jsonStr = jsonObject.toJSONString();
+        return toJavaObject(jsonStr, type);
+    }
+
+    public static <T> T mergeToModel(TypeReference<T> type, String parameter, Object data) {
+        if (null == parameter) {
+            return toJavaObject("{}", type);
+        }
+        JSONObject parameterJson = BeanUtils.toJSONObject(parameter);
+        JSONObject dataJson = BeanUtils.toJSONObject(data);
+        for (String s : parameterJson.keySet()) {
+            parameterJson.put(s, dataJson.get(s));
+        }
+        return toJavaObject(parameterJson, type);
     }
 
     /**
@@ -87,7 +115,7 @@ public class BeanUtils {
     /**
      * Object 转 任意实体类 或者 Map
      * eg:
-     * LeanData result = BeanUtils.toJavaObject(xprinterResult.getResult(), new TypeReference<LeanData>() {});
+     * LeanData result = BeanUtils.toJavaObject(xprinterResult.getResultV(), new TypeReference<LeanData>() {});
      *
      * @param obj  实体类
      * @param type 类型
@@ -108,8 +136,23 @@ public class BeanUtils {
         return JSONObject.parseObject(text, type);
     }
 
+    public static Object toJSON(Object data) {
+        String json;
+        if (data instanceof String) {
+            json = (String) data;
+        } else {
+            json = JSONObject.toJSONString(data);
+        }
 
-    public static JSONObject toJSON(Object data) {
+        try {
+            return JSONObject.parseObject(json);
+        } catch (JSONException e){
+            System.out.println(e.toString());
+        }
+        return JSONArray.parseArray(json);
+    }
+
+    public static JSONObject toJSONObject(Object data) {
         String json;
         if (data instanceof String) {
             json = (String) data;
@@ -120,6 +163,16 @@ public class BeanUtils {
         return JSONObject.parseObject(json);
     }
 
+    public static JSONArray toJSONArray(Object data) {
+        String json;
+        if (data instanceof String) {
+            json = (String) data;
+        } else {
+            json = JSONObject.toJSONString(data);
+        }
+
+        return JSONArray.parseArray(json);
+    }
 
     public static Object getData(JSONObject jsonObject, String str) {
         String[] colNames = str.split("\\.");
@@ -127,9 +180,9 @@ public class BeanUtils {
         JSONObject resultData = null;
         for (int i = 0; i < colNames.length; i++) {
             if (i + 1 == colNames.length) {
-                if(ObjectUtils.notIsEmpty(resultData)){
+                if (ObjectUtils.notIsEmpty(resultData)) {
                     return resultData.get(colNames[i]);
-                }else{
+                } else {
                     return jsonObject.get(colNames[i]);
                 }
             } else {
@@ -145,9 +198,9 @@ public class BeanUtils {
         JSONObject resultData = null;
         for (int i = 0; i < colNames.length; i++) {
             if (i + 1 == colNames.length) {
-                if(ObjectUtils.notIsEmpty(resultData)){
+                if (ObjectUtils.notIsEmpty(resultData)) {
                     return resultData.getInteger(colNames[i]);
-                }else{
+                } else {
                     return jsonObject.getInteger(colNames[i]);
                 }
             } else {
@@ -156,15 +209,16 @@ public class BeanUtils {
         }
         return 0;
     }
+
     public static Double getDouble(JSONObject jsonObject, String str) {
         String[] colNames = str.split("\\.");
 
         JSONObject resultData = null;
         for (int i = 0; i < colNames.length; i++) {
             if (i + 1 == colNames.length) {
-                if(ObjectUtils.notIsEmpty(resultData)){
+                if (ObjectUtils.notIsEmpty(resultData)) {
                     return resultData.getDouble(colNames[i]);
-                }else{
+                } else {
                     return jsonObject.getDouble(colNames[i]);
                 }
             } else {

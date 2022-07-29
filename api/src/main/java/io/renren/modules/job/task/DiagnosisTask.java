@@ -8,6 +8,7 @@
 
 package io.renren.modules.job.task;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.ObjectUtils;
@@ -16,6 +17,7 @@ import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtilsx;
 import io.renren.modules.business.entity.BusinessLog;
 import io.renren.modules.business.service.BusinessLogService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,24 +33,28 @@ import java.util.List;
  * @author Mark sunlightcs@gmail.com
  */
 @Component("DiagnosisTask")
+@Slf4j
 public class DiagnosisTask implements ITask {
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     BusinessLogService businessLogService;
 
     @Override
     public void run(String params) {
-        logger.debug("DiagnosisTask定时任务正在执行，参数为：{}", params);
+        log.debug("DiagnosisTask定时任务正在执行，参数为：{}", params);
 
         try {
             HttpResultData httpResultData = HttpUtilsx.get(params);
             List<BusinessLog> businessLogs = BeanUtils.toJavaObject(httpResultData.getResult(), new TypeReference<List<BusinessLog>>(){{}});
             for (BusinessLog businessLog : businessLogs) {
-                if(ObjectUtils.notIsEmpty(businessLog.getDisk())){
-                    businessLog.setDisk(Double.valueOf((String) businessLog.getDisk()));
+                try{
+                    if(ObjectUtils.notIsEmpty(businessLog.getDisk())){
+                        businessLog.setDisk(Double.valueOf((String) businessLog.getDisk()));
+                    }
+                    businessLogService.insertSelective(businessLog);
+                }catch (Exception e){
+                    log.debug("DiagnosisTask{}{}", JSON.toJSONString(businessLog), e.toString());
                 }
-                businessLogService.insertSelective(businessLog);
             }
         } catch (MsgException e) {
             e.printStackTrace();

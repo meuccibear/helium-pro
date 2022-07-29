@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.renren.modules.sys.dao.GlobalDeviceMapper">
+  <resultMap id="BaseResultMap" type="io.renren.modules.sys.entity.GlobalDevice">
+    <!--@mbg.generated-->
+    <!--@Table global_device-->
+    <id column="address" jdbcType="VARCHAR" property="address" />
+    <result column="hex5" jdbcType="VARCHAR" property="hex5" />
+    <result column="lng" jdbcType="DOUBLE" property="lng" />
+    <result column="lat" jdbcType="DOUBLE" property="lat" />
+    <result column="timestamp_added" jdbcType="TIMESTAMP" property="timestampAdded" />
+    <result column="timestamp" jdbcType="TIMESTAMP" property="timestamp" />
+    <result column="online" jdbcType="VARCHAR" property="online" />
+    <result column="listen_addrs" jdbcType="VARCHAR" property="listenAddrs" />
+    <result column="height" jdbcType="BIGINT" property="height" />
+    <result column="reward_scale" jdbcType="DOUBLE" property="rewardScale" />
+    <result column="payer" jdbcType="VARCHAR" property="payer" />
+    <result column="owner" jdbcType="VARCHAR" property="owner" />
+    <result column="nonce" jdbcType="INTEGER" property="nonce" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="mode" jdbcType="VARCHAR" property="mode" />
+    <result column="location_hex" jdbcType="VARCHAR" property="locationHex" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="last_poc_challenge" jdbcType="BIGINT" property="lastPocChallenge" />
+    <result column="last_change_block" jdbcType="BIGINT" property="lastChangeBlock" />
+    <result column="short_street" jdbcType="VARCHAR" property="shortStreet" />
+    <result column="short_state" jdbcType="VARCHAR" property="shortState" />
+    <result column="short_country" jdbcType="VARCHAR" property="shortCountry" />
+    <result column="short_city" jdbcType="VARCHAR" property="shortCity" />
+    <result column="long_street" jdbcType="VARCHAR" property="longStreet" />
+    <result column="long_state" jdbcType="VARCHAR" property="longState" />
+    <result column="long_country" jdbcType="VARCHAR" property="longCountry" />
+    <result column="long_city" jdbcType="VARCHAR" property="longCity" />
+    <result column="city_id" jdbcType="VARCHAR" property="cityId" />
+    <result column="gain" jdbcType="INTEGER" property="gain" />
+    <result column="elevation" jdbcType="INTEGER" property="elevation" />
+    <result column="block_added" jdbcType="BIGINT" property="blockAdded" />
+    <result column="block" jdbcType="BIGINT" property="block" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="cursor" jdbcType="VARCHAR" property="cursor" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    address, hex5, lng, lat, timestamp_added, `timestamp`, `online`, listen_addrs, height,
+    reward_scale, payer, `owner`, nonce, `name`, `mode`, location_hex, `location`, last_poc_challenge,
+    last_change_block, short_street, short_state, short_country, short_city, long_street,
+    long_state, long_country, long_city, city_id, gain, elevation, block_added, block,
+    create_time, update_time, `cursor`
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from global_device
+    where address = #{address,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--@mbg.generated-->
+    delete from global_device
+    where address = #{address,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="io.renren.modules.sys.entity.GlobalDevice">
+    <!--@mbg.generated-->
+    insert into global_device (address, hex5, lng,
+      lat, timestamp_added, `timestamp`,
+      `online`, listen_addrs, height,
+      reward_scale, payer, `owner`,
+      nonce, `name`, `mode`,
+      location_hex, `location`, last_poc_challenge,
+      last_change_block, short_street, short_state,
+      short_country, short_city, long_street,
+      long_state, long_country, long_city,
+      city_id, gain, elevation,
+      block_added, block, create_time,
+      update_time, `cursor`)
+    values (#{address,jdbcType=VARCHAR}, #{hex5,jdbcType=VARCHAR}, #{lng,jdbcType=DOUBLE},
+      #{lat,jdbcType=DOUBLE}, #{timestampAdded,jdbcType=TIMESTAMP}, #{timestamp,jdbcType=TIMESTAMP},
+      #{online,jdbcType=VARCHAR}, #{listenAddrs,jdbcType=VARCHAR}, #{height,jdbcType=BIGINT},
+      #{rewardScale,jdbcType=DOUBLE}, #{payer,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR},
+      #{nonce,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{mode,jdbcType=VARCHAR},
+      #{locationHex,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, #{lastPocChallenge,jdbcType=BIGINT},
+      #{lastChangeBlock,jdbcType=BIGINT}, #{shortStreet,jdbcType=VARCHAR}, #{shortState,jdbcType=VARCHAR},
+      #{shortCountry,jdbcType=VARCHAR}, #{shortCity,jdbcType=VARCHAR}, #{longStreet,jdbcType=VARCHAR},
+      #{longState,jdbcType=VARCHAR}, #{longCountry,jdbcType=VARCHAR}, #{longCity,jdbcType=VARCHAR},
+      #{cityId,jdbcType=VARCHAR}, #{gain,jdbcType=INTEGER}, #{elevation,jdbcType=INTEGER},
+      #{blockAdded,jdbcType=BIGINT}, #{block,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP}, #{cursor,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="io.renren.modules.sys.entity.GlobalDevice">
+    <!--@mbg.generated-->
+    insert into global_device
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="address != null">
+        address,
+      </if>
+      <if test="hex5 != null">
+        hex5,
+      </if>
+      <if test="lng != null">
+        lng,
+      </if>
+      <if test="lat != null">
+        lat,
+      </if>
+      <if test="timestampAdded != null">
+        timestamp_added,
+      </if>
+      <if test="timestamp != null">
+        `timestamp`,
+      </if>
+      <if test="online != null">
+        `online`,
+      </if>
+      <if test="listenAddrs != null">
+        listen_addrs,
+      </if>
+      <if test="height != null">
+        height,
+      </if>
+      <if test="rewardScale != null">
+        reward_scale,
+      </if>
+      <if test="payer != null">
+        payer,
+      </if>
+      <if test="owner != null">
+        `owner`,
+      </if>
+      <if test="nonce != null">
+        nonce,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="mode != null">
+        `mode`,
+      </if>
+      <if test="locationHex != null">
+        location_hex,
+      </if>
+      <if test="location != null">
+        `location`,
+      </if>
+      <if test="lastPocChallenge != null">
+        last_poc_challenge,
+      </if>
+      <if test="lastChangeBlock != null">
+        last_change_block,
+      </if>
+      <if test="shortStreet != null">
+        short_street,
+      </if>
+      <if test="shortState != null">
+        short_state,
+      </if>
+      <if test="shortCountry != null">
+        short_country,
+      </if>
+      <if test="shortCity != null">
+        short_city,
+      </if>
+      <if test="longStreet != null">
+        long_street,
+      </if>
+      <if test="longState != null">
+        long_state,
+      </if>
+      <if test="longCountry != null">
+        long_country,
+      </if>
+      <if test="longCity != null">
+        long_city,
+      </if>
+      <if test="cityId != null">
+        city_id,
+      </if>
+      <if test="gain != null">
+        gain,
+      </if>
+      <if test="elevation != null">
+        elevation,
+      </if>
+      <if test="blockAdded != null">
+        block_added,
+      </if>
+      <if test="block != null">
+        block,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="cursor != null">
+        `cursor`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="hex5 != null">
+        #{hex5,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null">
+        #{lng,jdbcType=DOUBLE},
+      </if>
+      <if test="lat != null">
+        #{lat,jdbcType=DOUBLE},
+      </if>
+      <if test="timestampAdded != null">
+        #{timestampAdded,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timestamp != null">
+        #{timestamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="online != null">
+        #{online,jdbcType=VARCHAR},
+      </if>
+      <if test="listenAddrs != null">
+        #{listenAddrs,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null">
+        #{height,jdbcType=BIGINT},
+      </if>
+      <if test="rewardScale != null">
+        #{rewardScale,jdbcType=DOUBLE},
+      </if>
+      <if test="payer != null">
+        #{payer,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null">
+        #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="nonce != null">
+        #{nonce,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mode != null">
+        #{mode,jdbcType=VARCHAR},
+      </if>
+      <if test="locationHex != null">
+        #{locationHex,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="lastPocChallenge != null">
+        #{lastPocChallenge,jdbcType=BIGINT},
+      </if>
+      <if test="lastChangeBlock != null">
+        #{lastChangeBlock,jdbcType=BIGINT},
+      </if>
+      <if test="shortStreet != null">
+        #{shortStreet,jdbcType=VARCHAR},
+      </if>
+      <if test="shortState != null">
+        #{shortState,jdbcType=VARCHAR},
+      </if>
+      <if test="shortCountry != null">
+        #{shortCountry,jdbcType=VARCHAR},
+      </if>
+      <if test="shortCity != null">
+        #{shortCity,jdbcType=VARCHAR},
+      </if>
+      <if test="longStreet != null">
+        #{longStreet,jdbcType=VARCHAR},
+      </if>
+      <if test="longState != null">
+        #{longState,jdbcType=VARCHAR},
+      </if>
+      <if test="longCountry != null">
+        #{longCountry,jdbcType=VARCHAR},
+      </if>
+      <if test="longCity != null">
+        #{longCity,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null">
+        #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="gain != null">
+        #{gain,jdbcType=INTEGER},
+      </if>
+      <if test="elevation != null">
+        #{elevation,jdbcType=INTEGER},
+      </if>
+      <if test="blockAdded != null">
+        #{blockAdded,jdbcType=BIGINT},
+      </if>
+      <if test="block != null">
+        #{block,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cursor != null">
+        #{cursor,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.sys.entity.GlobalDevice">
+    <!--@mbg.generated-->
+    update global_device
+    <set>
+      <if test="hex5 != null">
+        hex5 = #{hex5,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null">
+        lng = #{lng,jdbcType=DOUBLE},
+      </if>
+      <if test="lat != null">
+        lat = #{lat,jdbcType=DOUBLE},
+      </if>
+      <if test="timestampAdded != null">
+        timestamp_added = #{timestampAdded,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timestamp != null">
+        `timestamp` = #{timestamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="online != null">
+        `online` = #{online,jdbcType=VARCHAR},
+      </if>
+      <if test="listenAddrs != null">
+        listen_addrs = #{listenAddrs,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null">
+        height = #{height,jdbcType=BIGINT},
+      </if>
+      <if test="rewardScale != null">
+        reward_scale = #{rewardScale,jdbcType=DOUBLE},
+      </if>
+      <if test="payer != null">
+        payer = #{payer,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null">
+        `owner` = #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="nonce != null">
+        nonce = #{nonce,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mode != null">
+        `mode` = #{mode,jdbcType=VARCHAR},
+      </if>
+      <if test="locationHex != null">
+        location_hex = #{locationHex,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        `location` = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="lastPocChallenge != null">
+        last_poc_challenge = #{lastPocChallenge,jdbcType=BIGINT},
+      </if>
+      <if test="lastChangeBlock != null">
+        last_change_block = #{lastChangeBlock,jdbcType=BIGINT},
+      </if>
+      <if test="shortStreet != null">
+        short_street = #{shortStreet,jdbcType=VARCHAR},
+      </if>
+      <if test="shortState != null">
+        short_state = #{shortState,jdbcType=VARCHAR},
+      </if>
+      <if test="shortCountry != null">
+        short_country = #{shortCountry,jdbcType=VARCHAR},
+      </if>
+      <if test="shortCity != null">
+        short_city = #{shortCity,jdbcType=VARCHAR},
+      </if>
+      <if test="longStreet != null">
+        long_street = #{longStreet,jdbcType=VARCHAR},
+      </if>
+      <if test="longState != null">
+        long_state = #{longState,jdbcType=VARCHAR},
+      </if>
+      <if test="longCountry != null">
+        long_country = #{longCountry,jdbcType=VARCHAR},
+      </if>
+      <if test="longCity != null">
+        long_city = #{longCity,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null">
+        city_id = #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="gain != null">
+        gain = #{gain,jdbcType=INTEGER},
+      </if>
+      <if test="elevation != null">
+        elevation = #{elevation,jdbcType=INTEGER},
+      </if>
+      <if test="blockAdded != null">
+        block_added = #{blockAdded,jdbcType=BIGINT},
+      </if>
+      <if test="block != null">
+        block = #{block,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cursor != null">
+        `cursor` = #{cursor,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where address = #{address,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.renren.modules.sys.entity.GlobalDevice">
+    <!--@mbg.generated-->
+    update global_device
+    set hex5 = #{hex5,jdbcType=VARCHAR},
+      lng = #{lng,jdbcType=DOUBLE},
+      lat = #{lat,jdbcType=DOUBLE},
+      timestamp_added = #{timestampAdded,jdbcType=TIMESTAMP},
+      `timestamp` = #{timestamp,jdbcType=TIMESTAMP},
+      `online` = #{online,jdbcType=VARCHAR},
+      listen_addrs = #{listenAddrs,jdbcType=VARCHAR},
+      height = #{height,jdbcType=BIGINT},
+      reward_scale = #{rewardScale,jdbcType=DOUBLE},
+      payer = #{payer,jdbcType=VARCHAR},
+      `owner` = #{owner,jdbcType=VARCHAR},
+      nonce = #{nonce,jdbcType=INTEGER},
+      `name` = #{name,jdbcType=VARCHAR},
+      `mode` = #{mode,jdbcType=VARCHAR},
+      location_hex = #{locationHex,jdbcType=VARCHAR},
+      `location` = #{location,jdbcType=VARCHAR},
+      last_poc_challenge = #{lastPocChallenge,jdbcType=BIGINT},
+      last_change_block = #{lastChangeBlock,jdbcType=BIGINT},
+      short_street = #{shortStreet,jdbcType=VARCHAR},
+      short_state = #{shortState,jdbcType=VARCHAR},
+      short_country = #{shortCountry,jdbcType=VARCHAR},
+      short_city = #{shortCity,jdbcType=VARCHAR},
+      long_street = #{longStreet,jdbcType=VARCHAR},
+      long_state = #{longState,jdbcType=VARCHAR},
+      long_country = #{longCountry,jdbcType=VARCHAR},
+      long_city = #{longCity,jdbcType=VARCHAR},
+      city_id = #{cityId,jdbcType=VARCHAR},
+      gain = #{gain,jdbcType=INTEGER},
+      elevation = #{elevation,jdbcType=INTEGER},
+      block_added = #{blockAdded,jdbcType=BIGINT},
+      block = #{block,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      `cursor` = #{cursor,jdbcType=VARCHAR}
+    where address = #{address,jdbcType=VARCHAR}
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2022-04-27-->
+  <select id="selectHex5ByLongCountry" resultType="java.lang.String">
+    select hex5
+    from global_device
+    <where>
+<!--      <if test="longCountry != null">-->
+<!--        long_country=#{longCountry,jdbcType=VARCHAR}-->
+<!--      </if>-->
+<!--      <if test="shortCountry != null">-->
+<!--        short_country=#{shortCountry,jdbcType=VARCHAR}-->
+<!--      </if>-->
+      <if test="longCountry != null">
+        short_country=#{longCountry,jdbcType=VARCHAR}
+      </if>
+    </where>
+    GROUP BY hex5
+  </select>
+
+<!--auto generated by MybatisCodeHelper on 2022-04-27-->
+  <select id="findAllByHex5" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from global_device
+    where hex5=#{hex5,jdbcType=VARCHAR}
+  </select>
+</mapper>

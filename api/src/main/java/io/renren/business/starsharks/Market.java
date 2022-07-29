@@ -29,18 +29,13 @@ public class Market {
     public static void main(String[] args) {
         StarsharksResult starsharksResult = new Market().starsharks(1, 100);
 
-        System.out.println(BeanUtils.toJSON(starsharksResult));
+        System.out.println(BeanUtils.toJSONObject(starsharksResult));
     }
 
     public StarsharksResult starsharks(int page, int page_size) {
         JSONObject result = new Market().sharks(page, page_size);
-        JSONObject data = null;
-        try {
-            data = (JSONObject) JSONUtils.getJSONObject(result, "data");
-        } catch (MsgException e) {
-            e.printStackTrace();
-        }
-        JSONArray sharks = JSONUtils.getJSONArray(data, "sharks");
+        JSONObject data = (JSONObject) JSONUtils.jsGetData(result, "data");
+        JSONArray sharks = (JSONArray) JSONUtils.jsGetData(data, "sharks");
 
         JSONObject jsonObject;
 

@@ -1,6 +1,5 @@
 package io.renren.common.gitUtils.http;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.ObjectUtils;
@@ -40,7 +39,7 @@ public class FileUtils {
     }
 
     public static JSONObject readJSONO(String filePath) throws MsgException {
-        return BeanUtils.toJSON(readLine(filePath));
+        return BeanUtils.toJSONObject(readLine(filePath));
     }
 
     public static String readLine(String filePath) throws MsgException {

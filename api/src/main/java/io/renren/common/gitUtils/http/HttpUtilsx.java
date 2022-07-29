@@ -7,6 +7,8 @@ import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.kdl.AuthFactory;
 import io.renren.common.gitUtils.kdl.Client;
+import io.renren.common.gitUtils.network.IPUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -38,22 +40,21 @@ import java.util.*;
 
 /**
  * 网络工具类
+ *         <dependency>
+ *             <groupId>org.apache.httpcomponents</groupId>
+ *             <artifactId>httpcore</artifactId>
+ *             <version>4.4.10</version>
+ *         </dependency>
+ *
+ *         <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+ *         <dependency>
+ *             <groupId>org.apache.httpcomponents</groupId>
+ *             <artifactId>httpclient</artifactId>
+ *             <version>4.5.6</version>
+ *         </dependency>
  */
+@Slf4j
 public class HttpUtilsx {
-
-//        <dependency>
-//            <groupId>org.apache.httpcomponents</groupId>
-//            <artifactId>httpcore</artifactId>
-//            <version>4.4.10</version>
-//        </dependency>
-//
-//        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
-//        <dependency>
-//            <groupId>org.apache.httpcomponents</groupId>
-//            <artifactId>httpclient</artifactId>
-//            <version>4.5.6</version>
-//        </dependency>
-
 
     //1.get （url） File
     //2.get （url） 网页
@@ -68,11 +69,12 @@ public class HttpUtilsx {
 
 
     // 代理 所需要的参数
-    public static String hostname = "127.0.0.1";
-    public static int port = 8866;
+    //    public static String hostname = "127.0.0.1";
+    //    public static int port = 8866;
+
+    public static String proxyAddr = "127.0.0.1:8866";
     public static boolean isProxy = false;
     public static String scheme = "http";
-
 
     // HttpClient 三种 Http Basic 验证方式 0、标准模式 1、抢先模式 2、原生 Http Basic 模式
     public static Integer authenticationType = 0;
@@ -80,6 +82,41 @@ public class HttpUtilsx {
     // 原生 Http Basic 模式 所需参数
     public static String userName = null, userPassword = "";
 
+    public static boolean useKDL() {
+        return useKDL(3);
+    }
+
+    public static String filePath = "./data/proxyAddr";
+
+    /**
+     * @throws
+     * @title 使用快代理
+     * @description
+     * @author Mr.Lv lvzhuozhuang@foxmail.com
+     * @updateTime 2022/4/14 11:48
+     * @return
+     */
+    public static boolean useKDL(int num) {
+        try {
+            String proxyAddrConfig = FileUtils.readLine(filePath);
+            if (ObjectUtils.notIsEmpty(proxyAddrConfig) && AuthFactory.build().check_dps_valid(proxyAddrConfig)) {
+                setProxyAddr(proxyAddrConfig);
+                return true;
+            } else {
+                num--;
+                if (num == 0) {
+                    throw new MsgException("尝试三次均不成功呢！");
+                }
+                String dp = AuthFactory.build().get_dp();
+                FileUtils.write(filePath, dp, true, false);
+                return useKDL(num);
+            }
+
+        } catch (Exception e) {
+            log.error("使用快代理异常！", e);
+        }
+        return false;
+    }
 
     /**
      * 设置 代理地址
@@ -87,16 +124,21 @@ public class HttpUtilsx {
      * @param ip
      */
     public static void setProxyAddr(String ip) {
-        if (ObjectUtils.notIsEmpty(ip) && ip.contains(":")) {
-            String[] datas = ip.split(":");
-            hostname = datas[0];
-            port = Integer.parseInt(datas[1]);
-            LOGGER.info("代理以设置为: " + String.format("%s:%s", hostname, port));
-            isProxy = true;
-        } else {
-            isProxy = false;
-        }
+//        try {
+        proxyAddr = ip;
+//            Object[] objects = IPUtils.formatIP(ip);
+//            hostname = (String) objects[0];
+//            port = (int) objects[1];
+        isProxy = true;
+//            LOGGER.info("代理以设置为: " + String.formatKV("%s:%s", hostname, port));
+        LOGGER.info("代理以设置为: " + proxyAddr);
+        return;
+//        } catch (MsgException e) {
+//            log.error("设置代理失败！", e);
+//            isProxy = false;
+//        }
     }
+
 
     /**
      * 设置 Http Basic 用户验证
@@ -123,7 +165,7 @@ public class HttpUtilsx {
      */
     public static HttpResultData get(String url, Map<String, String> parameter, Map<String, String> headers) throws MsgException {
 
-//        System.out.println(String.format("%s\n============================>", url));
+//        System.out.println(String.formatKV("%s\n============================>", url));
 
         //创建URIBuilder
         URIBuilder uriBuilder = null;
@@ -151,7 +193,10 @@ public class HttpUtilsx {
 
         //代理
         if (isProxy) {
-            httpGet.setConfig(RequestConfig.custom().setProxy(HttpHostFactory.build(hostname, port, scheme)).build());
+
+
+//            httpGet.setConfig(RequestConfig.custom().setProxy(HttpHostFactory.builds(hostname, port, scheme)).builds());
+            httpGet.setConfig(RequestConfig.custom().setProxy(HttpHostFactory.builds(proxyAddr, scheme)).build());
         }
 
         HttpResultData httpResultData = send(httpGet, headers);
@@ -254,7 +299,8 @@ public class HttpUtilsx {
             throw new MsgException("链接文件不存在~");
         } catch (UnknownHostException e) {
             if (isProxy) {
-                throw new MsgException(String.format("代理：%s:%d 不能访问~", hostname, port));
+//                throw new MsgException(String.formatKV("代理：%s:%d 不能访问~", hostname, port));
+                throw new MsgException(String.format("代理：%s:%d 不能访问~", proxyAddr));
             } else {
                 throw new MsgException("链接不能访问~");
             }
@@ -430,7 +476,7 @@ public class HttpUtilsx {
             throw new MsgException("loginInfo 接口网络问题~");
         }
 
-//        System.out.println(String.format("链接:%s \n结果: %s", request.getURI(), JSONObject.toJSONString(httpResultData)));
+//        System.out.println(String.formatKV("链接:%s \n结果: %s", request.getURI(), JSONObject.toJSONString(httpResultData)));
 
         return httpResultData;
     }
@@ -498,7 +544,17 @@ public class HttpUtilsx {
     }
 
     private static void setPostProxy(RequestConfig.Builder requestConfigBuilder) {
-        LOGGER.debug(String.format("%s:%s", hostname, port));
+//        LOGGER.debug(String.formatKV("%s:%s", hostname, port));
+        LOGGER.debug(String.format("%s:%s", proxyAddr));
+//        HttpHost proxy = new HttpHost(hostname, port, "http"); //添加代理，IP为本地IP 8888就是fillder的端口
+        Object[] objects = new Object[0];
+        try {
+            objects = IPUtils.formatIP(proxyAddr);
+        } catch (MsgException e) {
+            e.printStackTrace();
+        }
+        String hostname = (String) objects[0];
+        Integer port = (Integer) objects[1];
         HttpHost proxy = new HttpHost(hostname, port, "http"); //添加代理，IP为本地IP 8888就是fillder的端口
         requestConfigBuilder.setProxy(proxy);
     }

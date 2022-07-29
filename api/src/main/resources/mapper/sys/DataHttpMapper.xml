@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.renren.modules.sys.dao.DataHttpMapper">
+  <resultMap id="BaseResultMap" type="io.renren.modules.sys.entity.DataHttp">
+    <!--@mbg.generated-->
+    <!--@Table data_http-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="entityParameter" jdbcType="LONGVARCHAR" property="entityparameter" />
+    <result column="headers" jdbcType="LONGVARCHAR" property="headers" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="respone" jdbcType="LONGVARCHAR" property="respone" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, `method`, url, entityParameter, headers, `status`, respone, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from data_http
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <!--@mbg.generated-->
+    delete from data_http
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="io.renren.modules.sys.entity.DataHttp" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into data_http (`method`, url, entityParameter,
+      headers, `status`, respone,
+      create_time)
+    values (#{method,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{entityparameter,jdbcType=LONGVARCHAR},
+      #{headers,jdbcType=LONGVARCHAR}, #{status,jdbcType=INTEGER}, #{respone,jdbcType=LONGVARCHAR},
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="io.renren.modules.sys.entity.DataHttp" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into data_http
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="method != null">
+        `method`,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="entityparameter != null">
+        entityParameter,
+      </if>
+      <if test="headers != null">
+        headers,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="respone != null">
+        respone,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="method != null">
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="entityparameter != null">
+        #{entityparameter,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="headers != null">
+        #{headers,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="respone != null">
+        #{respone,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.sys.entity.DataHttp">
+    <!--@mbg.generated-->
+    update data_http
+    <set>
+      <if test="method != null">
+        `method` = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="entityparameter != null">
+        entityParameter = #{entityparameter,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="headers != null">
+        headers = #{headers,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="respone != null">
+        respone = #{respone,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.renren.modules.sys.entity.DataHttp">
+    <!--@mbg.generated-->
+    update data_http
+    set `method` = #{method,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      entityParameter = #{entityparameter,jdbcType=LONGVARCHAR},
+      headers = #{headers,jdbcType=LONGVARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      respone = #{respone,jdbcType=LONGVARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2022-04-17-->
+  <select id="findAllByAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from data_http
+    <where>
+      <if test="id != null">
+        and id=#{id,jdbcType=INTEGER}
+      </if>
+      <if test="url != null">
+        and url=#{url,jdbcType=VARCHAR}
+      </if>
+      <if test="respone != null">
+        and respone=#{respone,jdbcType=LONGVARCHAR}
+      </if>
+      <if test="status != null">
+        and `status`=#{status,jdbcType=INTEGER}
+      </if>
+      <if test="method != null">
+        and `method`=#{method,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null">
+        and create_time=#{createTime,jdbcType=TIMESTAMP}
+      </if>
+      and create_time >= ( NOW( ) - INTERVAL 24 HOUR )
+    </where>
+    ORDER BY create_time desc
+    limit 1
+  </select>
+
+  <select id="truncate">
+    TRUNCATE table schedule_job_log;
+    DELETE from business_log where create_time &lt;= DATE_SUB(now(), INTERVAL 3 DAY)
+    DELETE from data_http where create_time &lt;= DATE_SUB(now(), INTERVAL 2 DAY)
+  </select>
+</mapper>

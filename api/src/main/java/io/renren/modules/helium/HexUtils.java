@@ -8,6 +8,7 @@ import io.renren.business.domin.device.CompletedRewardsBean;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.ExcelUtils;
 import io.renren.common.gitUtils.exception.MsgException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import java.util.Map;
  * @create: 2022-02-23 18:31
  * @Version 1.0
  **/
+@Slf4j
 public class HexUtils {
     public static H3Core h3;
     public static Map<String, GeoCoord> hex8Offset = new HashMap<>();
@@ -60,6 +62,7 @@ public class HexUtils {
     public HexUtils(String path) {
         importHexsFile(path);
     }
+
 
     public CompletedRewardsBean getHex(String hex) {
         return hexMap.get(hex);
@@ -114,6 +117,17 @@ public class HexUtils {
         return h3.geoToH3Address(geoCoord.lat, geoCoord.lng, res);
     }
 
+    public static List<String> getNearbyHex(String hex, Integer res) {
+//        int res = h3.h3GetResolution(address);
+//        if(res < 0 || res > 8){
+//            throw new IllegalArgumentException(String.format("resolution %d is out of range (must be 0 < res < 8)", res));
+//        }
+//        log.info(null == res ? hex : h3.h3ToParentAddress(hex, res));
+        List<String> strings = h3.kRing(null == res ? hex : h3.h3ToParentAddress(hex, res), 1);
+        return strings;
+    }
+
+
     public static void main(String[] args) throws IOException {
 //        String hex5 = h3.h3ToParentAddress("8c180cc000001ff", 5);
 //        System.out.println(hex5);
@@ -125,8 +139,8 @@ public class HexUtils {
 //        {"lat":-0.002408089057290397,"lng":-6.898403577189072E-4}
 //        System.out.println(JSON.toJSONString(getDistanceGeoCoord( "8c180cd8c9fffff","8c180cd8c8e35ff")));
 //        System.out.println(JSON.toJSONString(h3.h3ToGeo("88309c4b5dfffff")));
-//        System.out.println(JSON.toJSONString(h3.geoToH3Address(31.78586221, 119.6810115, 12)));
-//        System.out.println(JSON.toJSONString(h3.h3ToGeo("8c309c4b5c001ff")));
+//        System.out.println(JSON.toJSONString(h3.geoToH3Address(30.6735023718096, 117.48017871304, 8)));
+//        System.out.println(JSON.toJSONString(h3.h3ToGeo("88318b72b5fffff")));
 
 //        H3Core h3 = H3Core.newInstance();
 //
@@ -145,10 +159,47 @@ public class HexUtils {
         //51.568910 -9.170066
 //        System.out.println(h3.geoToH3Address(51.568910, -9.170066, 12));
 //        39.035612 116.722636
-        for (GeoCoord geoCoord : h3.getH3UnidirectionalEdgeBoundary("88318c4065fffff")) {
-            System.out.println(JSON.toJSONString(h3.geoToH3Address(geoCoord.lat, geoCoord.lng, 8)));
-        }
+//        for (GeoCoord geoCoord : h3.getH3UnidirectionalEdgeBoundary("85408a13fffffff")) {
+//            System.out.println(JSON.toJSONString(h3.geoToH3Address(geoCoord.lat, geoCoord.lng, 8)));
+//        }
 //        h3.getH3UnidirectionalEdgeBoundary()
+
+
+        //周围的方块 顺序是从9点钟方向逆时针转
+//        List<String> strings = h3.kRing("88309bb897fffff", 1);
+//        System.out.println(JSON.toJSONString(strings));
+//
+//        for (String string : strings) {
+//            GeoCoord geoCoord = h3.h3ToGeo(string);
+//            System.out.println(geoCoord.lat + "\t" + geoCoord.lng+ "\t" +string);
+//        }
+//        //[["kRing中心"],[""...]]
+//        List<List<String>> lists = h3.kRings("881e21b115fffff", 1);
+//        System.out.println(JSON.toJSONString(lists));
+//
+//        System.out.println(h3.h3GetResolution("881e21b115fffff"));
+
+        String aa ="8840b24505fffff\n" +
+                "8840b24517fffff\n" +
+                "8840b24503fffff\n" +
+                "8840b24e65fffff\n" +
+                "8840b24e05fffff\n" +
+                "8840b24e41fffff\n" +
+                "8840b24aabfffff\n" +
+                "8840b24abdfffff\n" +
+                "8840b24aebfffff\n" +
+                "8840b241c3fffff\n" +
+                "8840b241abfffff\n" +
+                "8840b241e1fffff\n" +
+                "8840b2408dfffff\n" +
+                "8840b240c3fffff\n" +
+                "8840b240adfffff\n" +
+                "8840b211bdfffff\n";
+
+        for (String s : aa.split("\n")) {
+            System.out.println(h3.h3ToParentAddress(s, 6));
+        }
+
     }
 
 }

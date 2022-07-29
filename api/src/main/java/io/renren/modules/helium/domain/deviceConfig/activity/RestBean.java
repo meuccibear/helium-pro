@@ -4,6 +4,7 @@
 package io.renren.modules.helium.domain.deviceConfig.activity;
 
 import com.alibaba.fastjson.JSON;
+import io.renren.modules.helium.domain.Device;
 import io.renren.modules.helium.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class RestBean {
 
-    private List<Role> data;
+    private List<Device> data;
 
     private String cursor;
 

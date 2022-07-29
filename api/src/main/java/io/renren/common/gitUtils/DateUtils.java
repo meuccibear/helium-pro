@@ -183,7 +183,7 @@ public class DateUtils {
 //        df.setTimeZone(TimeZone.getTimeZone(ID));
 //        localDateTime.atOffset(ZoneOffset.UTC);
         return localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
-//        return df.format(date);
+//        return df.formatKV(date);
     }
 
     /**
@@ -208,7 +208,7 @@ public class DateUtils {
      * @param now 开始时间
      * @return 提示消息
      */
-    public static String calculationTimeConsuming(String msg, LocalDateTime now) {
+    public static String calculationTimeConsuming( LocalDateTime now) {
         if (null != now) {
             LocalDateTime end = LocalDateTime.now();
             Duration duration = Duration.between(now, end);
@@ -217,7 +217,7 @@ public class DateUtils {
             long minutes = duration.toMinutes();//相差的分钟数
             long millis = duration.toMillis();//相差毫秒数
             long nanos = duration.toNanos();//相差的纳秒数
-            return msg + "耗时【 " + days + "天：" + hours + " 小时：" + minutes + " 分钟：" + millis + " 毫秒：" + nanos + " 纳秒】";
+            return "耗时【 " + days + "天：" + hours + " 小时：" + minutes + " 分钟：" + millis + " 毫秒：" + nanos + " 纳秒】";
         }
         return "";
     }
@@ -274,7 +274,7 @@ public class DateUtils {
 //        Timestamp t = new Timestamp(date.getTime());
 //        t.setNanos(123121);
 //        NumberFormat nf = new DecimalFormat("000000");
-//        System.out.println(df.format(t.getTime()) + nf.format(t.getNanos()));
+//        System.out.println(df.formatKV(t.getTime()) + nf.formatKV(t.getNanos()));
 
         return utcToLocal(date);
     }
@@ -303,4 +303,68 @@ public class DateUtils {
         return locatlDate;
     }
 
+    /**
+     * @title 获取毫秒
+     * @description
+     * @author Mr.Lv lvzhuozhuang@foxmail.com
+     * @updateTime 2022/7/28 17:26
+     * @throws
+     */
+    public static Long localDateTimeToTimestamp(LocalDateTime localDateTime) {
+        try {
+            ZoneId zoneId = ZoneId.systemDefault();
+            Instant instant = localDateTime.atZone(zoneId).toInstant();
+            return instant.toEpochMilli();//毫秒时间戳
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
+
+
+
+//LocalDateTime localDateTime = LocalDateTime.now();
+//        //时间运算，相加相减
+//        System.out.println(localDateTime.plusYears(2)); //加2年
+//        System.out.println(localDateTime.plusDays(2)); //加两天
+//        System.out.println(localDateTime.minusYears(2)); //减两年
+//        System.out.println(localDateTime.minusDays(2)); //减两天
+//        System.out.println(localDateTime.toString());    // 转字符串 结果：2021-11-24T15:36:12.914
+//        System.out.println(localDateTime.toLocalDate()); //获取日期(LocalDate) 结果：2021-11-24
+//        System.out.println(localDateTime.toLocalTime()); //获取时间(LocalTime) 结果：15:36:12.914
+//        System.out.println(localDateTime.getDayOfMonth()); //获取当前时间月份的第几天 结果：24
+//        System.out.println(localDateTime.getDayOfWeek());  //获取当前周的第几天       结果：WEDNESDAY
+//        System.out.println(localDateTime.getDayOfYear());  //获取当前时间在该年属于第几天 结果：328
+//        System.out.println(localDateTime.getMonthValue()); // 获取当前时间的月份(阿拉伯文) 结果：11
+//        System.out.println(localDateTime.getMonth());      // 获取当前时间的月份(英文) 结果：11
+//        System.out.println(localDateTime.getHour());       // 获取当前时间的小时数 结果：15
+//        System.out.println(localDateTime.getMinute());     // 获取当前时间的分钟数 结果：36
+//        //格式化输出
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY/MM/dd HH:mm:ss");
+//        System.out.println(localDateTime.format(formatter)); // 结果：2021/11/24 15:36:12
+//        //构造时间
+//        LocalDateTime startTime = LocalDateTime.of(2021, 1, 1, 20, 31, 20);
+//        LocalDateTime endTime = LocalDateTime.of(2021, 1, 3, 20, 31, 20);
+//        //比较时间
+//        System.out.println(localDateTime.isAfter(startTime)); // 结果：true
+//        System.out.println(localDateTime.isBefore(endTime));  // 结果：false
+//        //获取毫秒数(使用Instant)
+//        System.out.println(localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()); // 结果：1637739570129
+//        //获取秒数(使用Instant)
+//        System.out.println(localDateTime.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond()); // 结果：1637739570
+//        // 获取当前时间的0点~23点
+//        LocalDateTime beginDay = localDateTime.withHour(0).withMinute(0).withSecond(0).withNano(0);
+//        LocalDateTime endDay = localDateTime.withHour(23).withMinute(59).withSecond(59);
+//        // 获取本月的第一天的0点0分0秒和最后一天的23点59分59秒
+//        LocalDateTime beginMonth = localDateTime.with(TemporalAdjusters.firstDayOfMonth()).withHour(0).withMinute(0).withSecond(0);
+//        LocalDateTime endMonth = localDateTime.with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59);
+//        // LocalDateTime转Date
+//        Date date = Date.from(localDateTime.toInstant(ZoneOffset.of("+8")));
+//        // Date转LocalDateTime
+//        date.toInstant().atOffset(ZoneOffset.of("+8")).toLocalDateTime();
+//        // LocalDateTime获取秒数
+//        Long second = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
+//        // LocalDateTime获取毫秒数
+//        Long milliSecond = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();

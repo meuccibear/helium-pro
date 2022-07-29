@@ -8,24 +8,15 @@
 
 package io.renren.modules.job.task;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.StringUtils;
-import io.renren.common.utils.SpringContextUtils;
 import io.renren.modules.business.service.BusinessDeviceService;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 测试定时任务(演示Demo，可删除)
@@ -41,28 +32,20 @@ public class MultithreadingDeviceTask implements ITask {
     @Autowired
     private BusinessDeviceService businessDeviceService;
 
+//    @Autowired
+//    private HeliumHttpUtils heliumHttpUtils;
+
     @SneakyThrows
     @Override
     public void run(String params) {
-        logger.debug("MultithreadingDeviceTask定时任务正在执行，参数为：{}", params);
+        logger.info("MultithreadingDeviceTask定时任务正在执行，参数为：{}", params);
 
         List<List<String>> lists = ObjectUtils.averageAssign(businessDeviceService.findAll(), ObjectUtils.toInt(params, 5));
         for (int i = 0; i < lists.size(); i++) {
-            StringUtils.writeList("-", lists.get(i).hashCode());
-//            try {
-//                Object target = SpringContextUtils.getBean("DeviceTask");
-//                Method method = target.getClass().getDeclaredMethod("run", String.class);
-//                method.invoke(target, JSON.toJSONString(lists.get(i)));
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            } catch (InvocationTargetException e) {
-//                e.printStackTrace();
-//            } catch (NoSuchMethodException e) {
-//                e.printStackTrace();
-//            }
-            businessDeviceService.updateData(lists.get(i));
+            businessDeviceService.updateData(lists, i);
         }
+//        StringUtils.writeList("-", lists.get(0).hashCode());
+//        businessDeviceService.updateData(lists.get(0));
     }
-
 
 }

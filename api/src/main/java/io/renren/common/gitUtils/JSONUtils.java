@@ -1,11 +1,14 @@
 package io.renren.common.gitUtils;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.google.gson.JsonObject;
 import io.renren.common.gitUtils.exception.MsgException;
+import io.renren.common.gitUtils.http.FileUtils;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +17,7 @@ import java.util.Map;
  * @Author Mr.Lv
  * @Date 2020/8/31 11:10
  */
+@Slf4j
 public class JSONUtils {
 
     public static Object toJson(String json) {
@@ -40,43 +44,97 @@ public class JSONUtils {
      * @param str
      * @return
      */
-    public static JSONArray getJSONArray(JSONObject jsonObject, String str) {
+//    public static JSONArray jsGetData(JSONObject jsonObject, String str) {
+//        String[] colNames = str.split("\\.");
+//        JSONObject resultData = null;
+//        for (int i = 0; i < colNames.length; i++) {
+//            if (i + 1 == colNames.length) {
+//                if (ObjectUtils.notIsEmpty(resultData)) {
+//                    return resultData.getJSONArray(colNames[i]);
+//                } else {
+//                    return jsonObject.getJSONArray(colNames[i]);
+//                }
+//            } else {
+//                resultData = jsonObject.getJSONObject(colNames[i]);
+//            }
+//        }
+//        return new JSONArray();
+//    }
+
+    /**
+     * 数组方式获取参数
+     * @param data
+     * @param keys
+     * @return
+     */
+//    public static Object jsGetData(Object data, String... keys) {
+//        return jsGetData(BeanUtils.toJSONObject(data), keys);
+//    }
+//
+//    /**
+//     * 数组方式获取参数
+//     * @param jsonObject
+//     * @param keys
+//     * @return
+//     */
+//    public static Object jsGetData(JSONObject jsonObject, String... keys) {
+//        if (null != keys) {
+//            String key = "";
+//            for (int i = 0; i < keys.length; i++) {
+//                key = keys[i];
+//                if (i < keys.length) {
+//                    return jsonObject.get(key);
+//                } else {
+//                    jsonObject = jsonObject.getJSONObject(key);
+//                }
+//            }
+//        }
+//        return jsonObject;
+//    }
+
+
+    /**
+     * js方式获取参数
+     *
+     * @param jsonObject
+     * @param str
+     * @return
+     * @throws MsgException
+     */
+    public static Object jsGetData(Object jsonObject, String str) {
+        if (!(jsonObject instanceof Map) && ObjectUtils.notIsEmpty(jsonObject)) {
+            jsonObject = BeanUtils.toJSONObject(jsonObject);
+        }
+
         String[] colNames = str.split("\\.");
-        JSONObject resultData = null;
+        Object resultData = jsonObject;
+        Integer num = 0;
+        JSONArray jsonArray;
         for (int i = 0; i < colNames.length; i++) {
-            if (i + 1 == colNames.length) {
-                if (ObjectUtils.notIsEmpty(resultData)) {
-                    return resultData.getJSONArray(colNames[i]);
+            if (ObjectUtils.valueVerification("isInteger", colNames[i])) {
+                jsonArray = (JSONArray) resultData;
+                try {
+                    num = ObjectUtils.toInt(colNames[i]);
+                } catch (MsgException e) {
+                    num = 0;
+                    log.warn("toInt()错误！！！");
+                }
+                if (null != jsonArray && num < jsonArray.size()) {
+                    resultData = jsonArray.get(num);
                 } else {
-                    return jsonObject.getJSONArray(colNames[i]);
+                    return null;
                 }
             } else {
-                resultData = jsonObject.getJSONObject(colNames[i]);
+                resultData = get((JSONObject) resultData, colNames[i]);
             }
         }
-        return new JSONArray();
-    }
-
-    public static Object getObjectBycol(Object data, String... keys) {
-        return getObjectBycol(BeanUtils.toJSON(data), keys);
-    }
-
-    public static Object getObjectBycol(JSONObject jsonObject, String... keys) {
-        if (null != keys) {
-            String key = "";
-            for (int i = 0; i < keys.length; i++) {
-                key = keys[i];
-                if (i < keys.length) {
-                    return jsonObject.get(key);
-                } else {
-                    jsonObject = jsonObject.getJSONObject(key);
-                }
-            }
-        }
-        return jsonObject;
+        return resultData;
     }
 
     public static Object get(JSONObject jsonObject, String key) {
+        if (ObjectUtils.isEmpty(jsonObject)) {
+            return null;
+        }
         Object value = jsonObject.get(key);
         if (value instanceof JSONObject) {
             return (JSONObject) value;
@@ -90,37 +148,36 @@ public class JSONUtils {
         return value;
     }
 
-
-    public static void getStructure(JSONObject jsonObject, EntityStructure entityStructure) {
-//        for (int i = 0; i < jsonObject.size(); i++) {
-//            jsonObject.get
-//        }
-    }
-
-    public static Object getJSONObject(JSONObject jsonObject, String str) throws MsgException {
-        String[] colNames = str.split("\\.");
-        Object resultData = jsonObject;
-        Integer num = 0;
-        JSONArray jsonArray;
-        for (int i = 0; i < colNames.length; i++) {
-            if (ObjectUtils.valueVerification("isInteger", colNames[i])) {
-                jsonArray = (JSONArray) resultData;
-                num = ObjectUtils.toInt(colNames[i]);
-                if (null != jsonArray && num < jsonArray.size()) {
-                    resultData = jsonArray.get(num);
-                } else {
-                    return null;
-                }
-            } else {
-                resultData = get((JSONObject) resultData, colNames[i]);
+    public static void toCsv(String filePath, Object... datas) throws MsgException {
+        if (datas.length > 0) {
+            List<String> keys = toCsvTitle(filePath, datas[0]);
+            for (Object data : datas) {
+                toCsv(filePath, data, keys);
             }
         }
-        return resultData;
     }
 
+    public static List<String> toCsvTitle(String filePath, Object data) throws MsgException {
+        JSONObject jsonObject = BeanUtils.toJSONObject(data);
+        List<String> keys = BeanUtils.toJavaObject(jsonObject.keySet().toArray(), new TypeReference<List<String>>() {{
+        }});
+        FileUtils.writeln(filePath + ".csv", StringUtils.outStr(",", keys.toArray()), true, false);
+        return keys;
+    }
 
-    public static void main(String[] args) {
+    public static void toCsv(String filePath, Object data, List<String> keys) throws MsgException {
+        List<Object> values = new ArrayList<>();
+        JSONObject jsonObject = BeanUtils.toJSONObject(data);
+        for (String key : keys) {
+            values.add(jsonObject.get(key));
+        }
+
+        FileUtils.writeln(filePath + ".csv", StringUtils.outStr(",", values.toArray()), true, true);
+
+    }
+
+    public static void main(String[] args) throws MsgException {
         String json = "{\"end_epoch\":1287370,\"start_epoch\":1287340,\"time\":1648533868,\"type\":\"rewards_v2\",\"rewards\":[{\"amount\":337194,\"type\":\"poc_challengers\",\"gateway\":\"112NiSFKmeSoWwoxu7PQQkXwYJQZVqbQkBshMuBbekfWagp4rgGh\",\"account\":\"1353qQSW2iacyi5yULP3nqGSsZdRoi82Po8ioJer2RAGnM3ufRp\"}],\"hash\":\"2ghJ843e17xfuURveN96RvTytMFUUAxOdsKihkym04U\",\"height\":1287371}";
-        System.out.println(getObjectBycol(JSON.parseObject(json), ""));
+        toCsv("./asd", BeanUtils.toJSONObject(json));
     }
 }

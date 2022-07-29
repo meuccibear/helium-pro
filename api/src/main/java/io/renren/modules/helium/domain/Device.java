@@ -6,6 +6,8 @@ import io.renren.common.gitUtils.DateUtils;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.StringUtils;
 import io.renren.modules.business.entity.BusinessDeviceEntity;
+import io.renren.modules.helium.HexUtils;
+import io.renren.modules.sys.entity.GlobalDevice;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -70,7 +72,7 @@ public class Device extends BasicBean {
     @Override
     public String toString() {
 
-        JSONObject jsonObject = BeanUtils.toJSON(this);
+        JSONObject jsonObject = BeanUtils.toJSONObject(this);
         List<String> WLV = new ArrayList<>();
         String[] clos = "index,blacklistedBatch,mac,privateIp,publicIp,network,name,total,lng,lat,nonce,owner,address,location_hex".split(",");
         for (String clo : clos) {
@@ -100,21 +102,41 @@ public class Device extends BasicBean {
 //                JSON.toJSONString(getStatus().getListen_addrs()));
     }
 
-    public BusinessDeviceEntity toDBDeviceEntity() {
-        BusinessDeviceEntity businessDeviceEntity = new BusinessDeviceEntity();
-//        businessDeviceEntity.setAddress(getAddress());
-        businessDeviceEntity.setName(getName().replaceAll("-", " "));
-        businessDeviceEntity.setOnline(getStatus().getOnline());
-        businessDeviceEntity.setCountry(getGeocode().getLong_country());
-
-        businessDeviceEntity.setCity(StringUtils.outStr(" ", getGeocode().getLong_city(), getGeocode().getLong_state()));
-        businessDeviceEntity.setStreet(getGeocode().getLong_street());
-        businessDeviceEntity.setHex(getLocation_hex());
-        businessDeviceEntity.setTotal24h(getTotal());
-        businessDeviceEntity.setOwner(getOwner());
-        businessDeviceEntity.setUpdateTime(new Date());
-        businessDeviceEntity.setDepllist(getDepllist());
-        businessDeviceEntity.setScale(getReward_scale());
-        return businessDeviceEntity;
+    public GlobalDevice toGlobalDevice(String cursor) {
+        getTimestamp();
+        getStatus().getTimestamp();
+        getStatus().getIp();
+        GlobalDevice globalDevice = BeanUtils.mergeObjects(GlobalDevice.class, this, getGeocode(), getStatus());
+        if (ObjectUtils.notIsEmpty(getLocation())) {
+            globalDevice.setHex5(HexUtils.h3.h3ToParentAddress(getLocation(), 5));
+        }
+        globalDevice.setCursor(cursor);
+        return globalDevice;
     }
+
+
+    public String toGlobalDeviceSql(String cursor) {
+//         insert into global_device (address, hex5, lng, lat, timestamp_added, `timestamp`, `online`, listen_addrs, height, reward_scale, payer, `owner`, nonce, `name`, `mode`,
+//         location_hex, `location`, last_poc_challenge, last_change_block, short_street, short_state, short_country, short_city, long_street, long_state, long_country,
+//         long_city, city_id, gain, elevation, block_added, block, create_time, update_time, `cursor`)
+
+        String sql = "insert into global_device (address, hex5, lng, lat, timestamp_added, `timestamp`, `online`, listen_addrs, height, reward_scale, payer, `owner`, nonce, `name`, `mode`, location_hex, `location`, last_poc_challenge, last_change_block, short_street, short_state, short_country, short_city, long_street, long_state, long_country, long_city, city_id, gain, elevation, block_added, block, create_time, update_time, `cursor`)\n" +
+                " VALUES ('%s', '%s', %f, %f, %s, %s, '%s', '%s', %d, %f, '%s', '%s', %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', null, '%s');";
+        String sf = "'%s'";
+
+        return String.format(sql, getAddress(), ObjectUtils.notIsEmpty(getLocation()) ? HexUtils.h3.h3ToParentAddress(getLocation(), 5) : "null", getLng(), getLat(), ObjectUtils.notIsEmpty(getTimestamp()) ? String.format(sf, DateUtils.asStr(getTimestamp())) : null,
+                ObjectUtils.notIsEmpty(getStatus().getTimestamp()) ? String.format(sf, DateUtils.asStr(getStatus().getTimestamp())) : null, getStatus().getOnline(), getStatus().getIp(), getStatus().getHeight(), getReward_scale(), getPayer(),
+                getOwner(), getNonce(), getName(), getMode(), getLocation_hex(), getLocation(), getLast_poc_challenge(), getLast_change_block(), ObjectUtils.notIsEmpty(getGeocode().getShort_street()) ? getGeocode().getShort_street().replaceAll("'", "") : null,
+                getGeocode().getShort_state(), getGeocode().getShort_country(), getGeocode().getShort_city(), ObjectUtils.notIsEmpty(getGeocode().getLong_street()) ? getGeocode().getLong_street().replaceAll("'", "") : null, getGeocode().getLong_state(), getGeocode().getLong_country(),
+                getGeocode().getLong_city(), getGeocode().getCity_id(), getGain(), getElevation(), getBlock_added(), getBlock(), DateUtils.asStr(LocalDateTime.now()), cursor);
+    }
+
+
+    public LocalDateTime getTimestamp() {
+        if (timestamp_added instanceof String) {
+            setTimestamp_added(DateUtils.asLocalDateTime(DateUtils.toDate((String) timestamp_added)));
+        }
+        return (LocalDateTime) timestamp_added;
+    }
+
 }

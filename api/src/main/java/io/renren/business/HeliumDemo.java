@@ -1,7 +1,10 @@
 package io.renren.business;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import io.renren.business.domin.device.CompletedRewardsBean;
 import io.renren.business.domin.deviceConfig.Gateway;
+import io.renren.common.gitUtils.JSONUtils;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.StringUtils;
 import io.renren.common.gitUtils.exception.MsgException;
@@ -12,6 +15,8 @@ import io.renren.modules.helium.HeliumUtils;
 import io.renren.modules.helium.HexUtils;
 import io.renren.modules.helium.NumUtils;
 import io.renren.modules.helium.domain.Device;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +36,12 @@ public class HeliumDemo {
 
     /**
      * 导出 设备配置文件
-     * @param index         设备开始编号
-     * @param port          端口 eg: 山猫：1680 黑豹: 1681
-     * @param groupIndex    分组开始编号
-     * @param groupName     分组名称
-     * @param arr           IP 数据
+     *
+     * @param index      设备开始编号
+     * @param port       端口 eg: 山猫：1680 黑豹: 1681
+     * @param groupIndex 分组开始编号
+     * @param groupName  分组名称
+     * @param arr        IP 数据
      */
     public void exportGateway(int index, int port, int groupIndex, String groupName, String[] arr) {
 
@@ -52,6 +58,7 @@ public class HeliumDemo {
 
     /**
      * 获取多个随机位置
+     *
      * @throws MsgException
      */
     public static void getRandomLocations(String hexPath, String... groupS) throws MsgException {
@@ -94,8 +101,10 @@ public class HeliumDemo {
     }
 
     static HexUtils hexUtils;
+
     /**
      * 随机多个设备
+     *
      * @param hex 区域碎片代码
      * @param num 随机数量
      * @return
@@ -103,7 +112,7 @@ public class HeliumDemo {
      */
     public static List<Device> getRandomDevices(String hex, int num) throws MsgException {
 //        System.out.println(path);
-//        String jsonStr = FileUtils.readLine(String.format(initRandomDevicePath, path));
+//        String jsonStr = FileUtils.readLine(String.formatKV(initRandomDevicePath, path));
 //        System.out.println(jsonStr);
 //        CompletedRewardsBean completedRewardsBean = BeanUtils.mergeObjects(CompletedRewardsBean.class, jsonStr);
 //        hexUtils = new HexUtils(path);
@@ -114,12 +123,11 @@ public class HeliumDemo {
             device = getRandomDevice(completedRewardsBean);
             device.setHex(hex);
             devices.add(device);
-//            System.out.println(String.format("hex\treward_scale: %s address: %s", device.getReward_scale(), device.getAddress()));
-//            System.out.println(String.format("%s\t%s address: %s", hex, device.getReward_scale(), device.getAddress()));
+//            System.out.println(String.formatKV("hex\treward_scale: %s address: %s", device.getReward_scale(), device.getAddress()));
+//            System.out.println(String.formatKV("%s\t%s address: %s", hex, device.getReward_scale(), device.getAddress()));
         }
         return devices;
     }
-
 
     /**
      * 随机设备【递归|单用】
@@ -157,5 +165,6 @@ public class HeliumDemo {
         HttpResultData httpResultData = HttpUtilsx.get(url);
         return httpResultData.getResult();
     }
+
 
 }

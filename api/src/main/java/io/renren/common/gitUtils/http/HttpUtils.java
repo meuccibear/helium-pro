@@ -4,17 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import io.renren.common.gitUtils.BeanUtils;
+import io.renren.common.gitUtils.DateUtils;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.exception.MsgException;
-import io.renren.modules.sys.entity.Http;
-import io.renren.modules.sys.service.HttpService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
@@ -31,17 +29,15 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /*
@@ -63,16 +59,8 @@ import java.util.*;
 
  */
 @Slf4j
-//@Component
 public class HttpUtils {
     private final Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
-
-    //打开
-//    @Autowired
-//    HttpService httpService;
-
-    HttpSetting setting = new HttpSetting() {{
-    }};
 
     /**
      * @author Mr.Lv lvzhuozhuang@foxmail.com
@@ -90,62 +78,36 @@ public class HttpUtils {
      * @author Mr.Lv lvzhuozhuang@foxmail.com
      * @updateTime 2022/4/12 3:37
      */
-    public HttpResultData send(Method method, String url) throws MsgException, URISyntaxException {
+    public HttpResultData send(Method method, String url) throws MsgException {
         return send(method, url, null);
     }
 
-    public HttpResultData send(Method method, String url, Map<String, String> parameter) throws MsgException, URISyntaxException {
-        return send(method, url, parameter, null);
+    public HttpResultData send(Method method, String url, Object entityParameter) throws MsgException {
+        return send(method, url, entityParameter, null);
     }
 
-    public HttpResultData send(Method method, String url, Map<String, String> parameter, Map<String, String> headers) throws MsgException, URISyntaxException {
-        log.info("\n{}\n============================>\n{}\n{}", url, JSON.toJSON(headers), JSON.toJSON(parameter));
-        HttpResultData httpResultData = null;
-        sendBefore(method, url, parameter, headers, httpResultData);
-        if (ObjectUtils.isEmpty(httpResultData)) {
-            HttpUriRequest request = setting.initHttp(method, url, parameter);
-            if (ObjectUtils.isEmpty(headers)) {
-                headers = new HashMap<>();
-            }
-            headers.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36");
+    public void sendBefore(Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
+    }
 
-            httpResultData = setting.send(request, headers);
-            sendAfter(method, url, parameter, headers, httpResultData);
+    public HttpResultData send(Method method, String url, Object entityParameter, Map<String, String> headers) throws MsgException {
+        LocalDateTime now = LocalDateTime.now();
+
+        Long time = DateUtils.localDateTimeToTimestamp(now);
+
+        log.info("\n{}\n============================>\ntime:{}\nheaders:{}\nparameter:{}\nentityParameter:{}", url, DateUtils.asDate(now).getTime(), JSON.toJSON(headers), JSON.toJSON(entityParameter));
+        HttpResultData httpResultData = null;
+        sendBefore(method, url, entityParameter, headers, httpResultData, time);
+        if (ObjectUtils.isEmpty(httpResultData)) {
+            httpResultData = getSetting().initHttp(method, url, entityParameter, headers, getSetting().numberOfRetries);
+            sendAfter(method, url, entityParameter, headers, httpResultData, time);
         }
-        log.info("\n<============================\n{}", JSON.toJSON(httpResultData));
+        log.info("\n<============================\ntime:{}\n所消耗的时间{}\n{}", DateUtils.asDate(now).getTime(), DateUtils.calculationTimeConsuming(now), JSON.toJSON(httpResultData));
 
         return httpResultData;
     }
 
-    /**
-     * @throws
-     * @title send前
-     * @description
-     * @author Mr.Lv lvzhuozhuang@foxmail.com
-     * @updateTime 2022/4/12 4:15
-     */
-    public void sendBefore(Method method, String url, Map<String, String> parameter, Map<String, String> headers, HttpResultData httpResultData) {
-//        if (ObjectUtils.isEmpty(httpService)) {
-//            return;
-//        }
-//        Http byAll = httpService.findByAll(new Http(null, url, JSON.toJSONString(parameter), null, null, method.name()));
-//        if (ObjectUtils.notIsEmpty(byAll)) {
-//            httpResultData = BeanUtils.toJavaObject(byAll.getRespone(), new TypeReference<HttpResultData>() {{
-//            }});
-//        }
+    public void sendAfter(Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
     }
-
-    /**
-     * @throws
-     * @title send后
-     * @description
-     * @author Mr.Lv lvzhuozhuang@foxmail.com
-     * @updateTime 2022/4/12 4:19
-     */
-    public void sendAfter(Method method, String url, Map<String, String> parameter, Map<String, String> headers, HttpResultData httpResultData) {
-//        httpService.insert(new Http(null, url, JSON.toJSONString(parameter), JSON.toJSONString(httpResultData), 1, method.name()));
-    }
-
 
     /**
      * 获取文件
@@ -189,8 +151,8 @@ public class HttpUtils {
         } catch (FileNotFoundException e) {
             throw new MsgException("链接文件不存在~");
         } catch (UnknownHostException e) {
-            if (setting.isProxy()) {
-                throw new MsgException(String.format("代理：%s:%d 不能访问~", setting.getHostname(), setting.getPort()));
+            if (getSetting().isProxy()) {
+                throw new MsgException(String.format("代理：%s 不能访问~", getSetting().generateProxyAddr()));
             } else {
                 throw new MsgException("链接不能访问~");
             }
@@ -208,7 +170,7 @@ public class HttpUtils {
      * @param url 链接
      * @return 返回的字符串
      */
-    public String getInputStream(String url) throws MsgException {
+    public String getStr(String url) throws MsgException {
 
         InputStream inStream = url(url);
 
@@ -243,24 +205,77 @@ public class HttpUtils {
         return result.toString();
     }
 
+
+    public HttpSetting getSetting() {
+        return new HttpSetting() {{
+        }};
+    }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
     public class HttpSetting {
         private final Logger LOGGER = LoggerFactory.getLogger(HttpSetting.class);
 
-        // 代理 所需要的参数
-        public String hostname = "127.0.0.1";
-        public int port = 8866;
-        public boolean isProxy = false;
-        public String scheme = "http";
+        Integer numberOfRetries = 3;
 
-        // HttpClient 三种 Http Basic 验证方式 0、标准模式 1、抢先模式 2、原生 Http Basic 模式
-        public Integer authenticationType = 0;
+        //唯一值
+        public String proxyID;
+
+        //代理厂商
+        public Integer proxyType = -1;
+
+        public boolean isProxy = false;
 
         // 原生 Http Basic 模式 所需参数
-        public String userName = null, userPassword = "";
+        public String accountInfo;
 
+        private boolean checkStatusCode = false;
+
+        /**
+         * 设置 Http Basic 用户验证
+         *
+         * @param userName
+         * @param userPassword
+         */
+        public void setAccount(String userName, String userPassword) {
+            accountInfo = String.format("%s:%s", userName, userPassword);
+        }
+
+        String getFilePath() {
+            return ObjectUtils.notIsEmpty(proxyID) ? "./proxyAddr_" + proxyID : "";
+        }
+
+        public String getProxyAddr() throws MsgException {
+            String filePath = getFilePath();
+            if (ObjectUtils.isEmpty(filePath)) {
+                return generateProxyAddr();
+            }
+            return FileUtils.readLine(filePath);
+        }
+
+        public String generateProxyAddr() throws MsgException {
+            return "127.0.0.1:8866";
+        }
+
+        public String refresh() throws MsgException {
+            String proxyAddrConfig = generateProxyAddr();
+            log.info("代理地址{}", proxyAddrConfig);
+            if (ObjectUtils.notIsEmpty(getFilePath())) {
+                log.info("文件地址{}", getFilePath());
+                FileUtils.write(getFilePath(), proxyAddrConfig, true, false);
+            }
+            return proxyAddrConfig;
+        }
+
+        RequestConfig setingRequestConfig() throws MsgException {
+            String proxyAddrConfig = getProxyAddr();
+            log.info("【proxyAddrConfig】{}", proxyAddrConfig);
+            if (ObjectUtils.isEmpty(proxyAddrConfig)) {
+                proxyAddrConfig = refresh();
+            }
+            return HttpHostFactory.build(proxyAddrConfig);
+        }
 
         List<String> headerKeys = new ArrayList<String>() {
             {
@@ -272,135 +287,107 @@ public class HttpUtils {
             }
         };
 
-        /**
-         * 设置 代理地址
-         *
-         * @param ip
-         */
-        public void setProxyAddr(String ip) {
-            if (ObjectUtils.notIsEmpty(ip) && ip.contains(":")) {
-                String[] datas = ip.split(":");
-                hostname = datas[0];
-                port = Integer.parseInt(datas[1]);
-                LOGGER.info("代理以设置为: " + String.format("%s:%s", hostname, port));
-                isProxy = true;
-            } else {
-                isProxy = false;
+
+        @SneakyThrows
+        URI generateURIBuilder(String url, Object parameter) {
+            //创建URIBuilder
+            URIBuilder uriBuilder = new URIBuilder(url);
+            //设置参数
+//            uriBuilder.addParameters(ObjectUtils.isEmpty(parameter) ? new ArrayList<>() : Option.buildHttpPost(parameter));
+            if (null == parameter) {
+                return uriBuilder.build();
             }
-        }
 
-
-        /**
-         * 设置 Http Basic 用户验证
-         *
-         * @param userName
-         * @param userPassword
-         */
-        public void setUser(String userName, String userPassword) {
-            authenticationType = 2;
-            setUserName(userName);
-            setUserPassword(userPassword);
+            JSONObject parameterJson = BeanUtils.toJSONObject(parameter);
+            for (String s : parameterJson.keySet()) {
+                uriBuilder.addParameter(s, String.valueOf(parameterJson.get(s)));
+            }
+            return uriBuilder.build();
         }
 
         /**
+         * @return
          * @throws
          * @title 初始化请求
          * @description
          * @author Mr.Lv lvzhuozhuang@foxmail.com
          * @updateTime 2022/4/12 3:35
          */
-        public HttpUriRequest initHttp(Method method, String url, Object parameter) throws MsgException, URISyntaxException {
+        public HttpResultData initHttp(Method method, String url, Object entityParameter, Map<String, String> headers, Integer errFrequency) throws MsgException {
             HttpUriRequest request;
             switch (method) {
                 case GET:
-                    //创建URIBuilder
-                    URIBuilder uriBuilder = null;
-                    try {
-                        uriBuilder = new URIBuilder(url);
-                    } catch (URISyntaxException e) {
-                        throw new MsgException("URI语法异常");
-                    }
+                    HttpGet httpGet = new HttpGet(generateURIBuilder(url, entityParameter));
 
-                    //设置参数
-                    uriBuilder.addParameters(ObjectUtils.isEmpty(parameter) ? new ArrayList<>() : Option.buildHttpPost(parameter));
-
-                    HttpGet httpGet = new HttpGet(uriBuilder.build());
                     //代理
                     if (isProxy) {
-                        httpGet.setConfig(RequestConfig.custom().setProxy(HttpHostFactory.build(hostname, port, scheme)).build());
+                        httpGet.setConfig(setingRequestConfig());
                     }
                     request = httpGet;
                     break;
                 case POST:
+//                    HttpPost httpPost = new HttpPost(generateURIBuilder(url, urlParameter));
                     HttpPost httpPost = new HttpPost(url);
+
                     //代理
                     if (isProxy) {
-                        RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
-                        LOGGER.debug(String.format("%s:%s", hostname, port));
-                        HttpHost proxy = new HttpHost(hostname, port, "http"); //添加代理，IP为本地IP 8888就是fillder的端口
-                        requestConfigBuilder.setProxy(proxy);
-                        httpPost.setConfig(requestConfigBuilder.build());
+                        httpPost.setConfig(setingRequestConfig());
                     }
 
                     //包装成一个Entity对象
                     StringEntity stringEntity = null;
 
                     //body请求
-                    if (parameter instanceof String) {
-                        stringEntity = new StringEntity((String) parameter, "UTF-8");
+                    if (entityParameter instanceof String) {
+                        stringEntity = new StringEntity((String) entityParameter, "UTF-8");
                     }
 
                     //url请求
-                    if (parameter instanceof Map) {
+                    if (entityParameter instanceof Map && ObjectUtils.notIsEmpty(entityParameter)) {
                         try {
-                            stringEntity = new UrlEncodedFormEntity(Option.buildHttpPost(parameter), "UTF-8");
+                            JSONObject parameterJson = BeanUtils.toJSONObject(entityParameter);
+                            List<NameValuePair> ps = new ArrayList<>();
+                            for (Object key : parameterJson.keySet().toArray()) {
+                                ps.add(new BasicNameValuePair((String) key, parameterJson.getString((String) key)));
+                            }
+
+                            UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(ps, "UTF-8");
+                            stringEntity = urlEncodedFormEntity;
                         } catch (UnsupportedEncodingException e) {
                             throw new MsgException("不支持的编码异常");
                         }
                     }
 
-                    if (null == stringEntity) {
-                        throw new MsgException("为空！");
+                    if (ObjectUtils.notIsEmpty(stringEntity)) {
+                        httpPost.setEntity(stringEntity);
                     }
 
-                    //设置请求的内容
-                    httpPost.setEntity(stringEntity);
+
                     request = httpPost;
+
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + method);
             }
 
-            return request;
-        }
-
-        /**
-         * 发送请求
-         *
-         * @param request 请求
-         * @return 返回 HttpResultData 对象
-         * @throws IOException 异常信息
-         */
-        HttpResultData send(HttpUriRequest request, Map<String, String> headers) throws MsgException {
-            /*
-             * ps：
-             * Content-Type 请求头部编码
-             * Accept 返回编码
-             */
             //设置请求头信息
-            if (null != headers) {
-                for (String key : headers.keySet()) {
-                    if (!headerKeys.contains(key)) {
-                        request.setHeader(new BasicHeader(key, headers.get(key)));
-                    }
+            if (null == headers) {
+                headers = new HashMap<>();
+            }
+            headers.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36");
+
+            for (String key : headers.keySet()) {
+                if (!headerKeys.contains(key)) {
+                    request.setHeader(new BasicHeader(key, headers.get(key)));
                 }
             }
 
+            // HttpClient 三种 Http Basic 验证方式 0、标准模式 1、抢先模式 2、原生 Http Basic 模式
             //请求用户登录
-            if (authenticationType == 2) {
+            if (ObjectUtils.notIsEmpty(getAccountInfo())) {
                 //String a = Base64.getUrlEncoder().encodeToString((username + ":" + password).getBytes());
                 //添加http头信息
-                request.addHeader("Authorization", "Basic " + Base64.getUrlEncoder().encodeToString((userName + ":" + userPassword).getBytes()));
+                request.addHeader("Authorization", "Basic " + Base64.getUrlEncoder().encodeToString(getAccountInfo().getBytes()));
                 request.addHeader("Content-Type", "application/json");
                 //httpPost.addHeader("Authorization","Basic "+a);
             }
@@ -413,13 +400,18 @@ public class HttpUtils {
             HttpResponse response = null;
             try {
                 response = client.execute(request);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new MsgException("IO异常");
+            } catch (Exception e) {
+                if (getSetting().isProxy) {
+                    if (--errFrequency >= 0) {
+                        log.info("\nExecute问题!{}\n{}\n<><><><><><><><>\n正在重试【{}】", e.getMessage(), url, (getSetting().numberOfRetries - errFrequency));
+                        refresh();
+                        return initHttp(method, url, entityParameter, headers, errFrequency);
+                    }
+                    throw new MsgException("连接失败！", e);
+                } else {
+                    throw new MsgException("Execute异常！", e);
+                }
             }
-
-            //获取响应码
-            int statusCode = response.getStatusLine().getStatusCode();
 
             //获取返回对象
             HttpEntity entity = response.getEntity();
@@ -432,18 +424,251 @@ public class HttpUtils {
                 throw new MsgException("IO异常");
             }
 
-            HttpResultData httpResultData = new HttpResultData(statusCode, result, Option.getCookie(store));
-            if (ObjectUtils.isEmpty(httpResultData)) {
-                throw new MsgException("loginInfo 接口网络问题~");
+            //获取响应码
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (getSetting().checkStatusCode && statusCode != 200) {
+                if (--errFrequency > 0) {
+                    if (getSetting().isProxy) {
+                        log.info("状态码问题!");
+                        log.info("\n{}\n<><><><><><><><>\n正在重试{}", url, (getSetting().numberOfRetries - errFrequency));
+                        // 刷新代理
+                        refresh();
+                    }
+                    return initHttp(method, url, entityParameter, headers, errFrequency);
+                }
+                throw new MsgException(String.format("\n【请求出错】\n状态码：%d\nresult:%s", statusCode, result));
             }
 
-//        System.out.println(String.format("链接:%s \n结果: %s", request.getURI(), JSONObject.toJSONString(httpResultData)));
-
-            return httpResultData;
+            return new HttpResultData(statusCode, result, Option.getCookie(store));
         }
+
+        /**
+         * @return
+         * @throws
+         * @title 初始化请求
+         * @description
+         * @author Mr.Lv lvzhuozhuang@foxmail.com
+         * @updateTime 2022/4/12 3:35
+         */
+//        public HttpResultData initHttp(Method method, String url, Object parameter, Map<String, String> headers, Integer errFrequency) throws MsgException {
+//            HttpUriRequest request;
+//            switch (method) {
+//                case GET:
+//                    HttpGet httpGet = new HttpGet(generateURIBuilder(url, parameter));
+//
+//                    //代理
+//                    if (isProxy) {
+//                        httpGet.setConfig(setingRequestConfig());
+//                    }
+//                    request = httpGet;
+//                    break;
+//                case POST:
+//                    HttpPost httpPost = new HttpPost(generateURIBuilder(url, parameter));
+//
+//                    //代理
+//                    if (isProxy) {
+//                        httpPost.setConfig(setingRequestConfig());
+//                    }
+//
+//                    //body请求
+//                    if (parameter instanceof String) {
+//                        //包装成一个Entity对象
+//                        httpPost.setEntity(new StringEntity((String) parameter, "UTF-8"));
+//                    }
+//
+//                    request = httpPost;
+//
+//                    break;
+//                default:
+//                    throw new IllegalStateException("Unexpected value: " + method);
+//            }
+//
+//            if (ObjectUtils.isEmpty(headers)) {
+//                headers = new HashMap<>();
+//            }
+//            headers.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36");
+//
+////            return request;
+//
+//
+//            /*
+//             * ps：
+//             * Content-Type 请求头部编码
+//             * Accept 返回编码
+//             */
+//            //设置请求头信息
+//            if (null != headers) {
+//                for (String key : headers.keySet()) {
+//                    if (!headerKeys.contains(key)) {
+//                        request.setHeader(new BasicHeader(key, headers.get(key)));
+//                    }
+//                }
+//            }
+//
+//            // HttpClient 三种 Http Basic 验证方式 0、标准模式 1、抢先模式 2、原生 Http Basic 模式
+//            //请求用户登录
+//            if (ObjectUtils.notIsEmpty(getAccountInfo())) {
+//                //String a = Base64.getUrlEncoder().encodeToString((username + ":" + password).getBytes());
+//                //添加http头信息
+//                request.addHeader("Authorization", "Basic " + Base64.getUrlEncoder().encodeToString(getAccountInfo().getBytes()));
+//                request.addHeader("Content-Type", "application/json");
+//                //httpPost.addHeader("Authorization","Basic "+a);
+//            }
+//
+//            //创建一个httpclient对象
+//            CookieStore store = new BasicCookieStore();
+//            HttpClient client = SSLClient.sslClient(store);
+//
+//            //执行请求
+//            HttpResponse response = null;
+//            try {
+//                response = client.execute(request);
+//            } catch (Exception e) {
+////                e.printStackTrace();
+//                if (getSetting().isProxy) {
+////                    if (getSetting().automaticExceptionHandling) {
+//                    if (--errFrequency >= 0) {
+//                        log.info("\nExecute问题!{}\n{}\n<><><><><><><><>\n正在重试【{}】", e.getMessage(), url, (getSetting().numberOfRetries - errFrequency));
+//                        refresh();
+//                        return initHttp(method, url, parameter, headers, errFrequency);
+//                    }
+//                    throw new MsgException("连接失败！", e);
+////                    } else {
+////                        throw new MsgException("IO异常！", MsgException.ErrEnum.IOException, e);
+////                    }
+//                } else {
+//                    throw new MsgException("Execute异常！", e);
+//                }
+//            }
+//
+//
+//            //获取返回对象
+//            HttpEntity entity = response.getEntity();
+//
+//            //通过EntityUitls获取返回内容
+//            String result = null;
+//            try {
+//                result = EntityUtils.toString(entity, "UTF-8");
+//            } catch (IOException e) {
+//                throw new MsgException("IO异常");
+//            }
+//
+//            //获取响应码
+//            int statusCode = response.getStatusLine().getStatusCode();
+//
+//            if (statusCode != 200) {
+//                if (--errFrequency > 0) {
+//                    if (getSetting().isProxy) {
+//                        log.info("状态码问题!");
+//                        log.info("\n{}\n<><><><><><><><>\n正在重试{}", url, (getSetting().numberOfRetries - errFrequency));
+//                        refresh();
+//                    }
+//                    return initHttp(method, url, parameter, headers, errFrequency);
+//                }
+//                throw new MsgException(String.format("\n【请求出错】\n状态码：%d\nresult:%s", statusCode, result));
+//            }
+//
+//            HttpResultData httpResultData = new HttpResultData(statusCode, result, Option.getCookie(store));
+//            if (ObjectUtils.isEmpty(httpResultData)) {
+//                throw new MsgException("loginInfo 接口网络问题~");
+//            }
+//
+//            return httpResultData;
+//        }
+
+        /**
+         * 发送请求
+         *
+         * @param request 请求
+         * @return 返回 HttpResultData 对象
+         * @throws IOException 异常信息
+         */
+//        HttpResultData send(HttpUriRequest request, Map<String, String> headers, Integer errFrequency) throws MsgException {
+//            /*
+//             * ps：
+//             * Content-Type 请求头部编码
+//             * Accept 返回编码
+//             */
+//            //设置请求头信息
+//            if (null != headers) {
+//                for (String key : headers.keySet()) {
+//                    if (!headerKeys.contains(key)) {
+//                        request.setHeader(new BasicHeader(key, headers.get(key)));
+//                    }
+//                }
+//            }
+//
+//            // HttpClient 三种 Http Basic 验证方式 0、标准模式 1、抢先模式 2、原生 Http Basic 模式
+//            //请求用户登录
+//            if (ObjectUtils.notIsEmpty(getAccountInfo())) {
+//                //String a = Base64.getUrlEncoder().encodeToString((username + ":" + password).getBytes());
+//                //添加http头信息
+//                request.addHeader("Authorization", "Basic " + Base64.getUrlEncoder().encodeToString(getAccountInfo().getBytes()));
+//                request.addHeader("Content-Type", "application/json");
+//                //httpPost.addHeader("Authorization","Basic "+a);
+//            }
+//
+//            //创建一个httpclient对象
+//            CookieStore store = new BasicCookieStore();
+//            HttpClient client = SSLClient.sslClient(store);
+//
+//            //执行请求
+//            HttpResponse response = null;
+//            try {
+//                response = client.execute(request);
+//            } catch (IOException e) {
+////                e.printStackTrace();
+//                if (getSetting().isProxy) {
+//                    if (getSetting().automaticExceptionHandling) {
+//                        if (--errFrequency > 0) {
+//                            log.info("正在重试{}", errFrequency);
+//                            refresh();
+//                            return send(request, headers, errFrequency);
+//                        }
+//                        throw new MsgException("连接失败！", e);
+//                    } else {
+//                        throw new MsgException("IO异常！", MsgException.ErrEnum.IOException, e);
+//                    }
+//                } else {
+//                    throw new MsgException("IO异常！", e);
+//                }
+//            }
+//
+//            //获取响应码
+//            int statusCode = response.getStatusLine().getStatusCode();
+//
+//            if (statusCode == 400) {
+//                if (--errFrequency > 0) {
+//                    if (getSetting().isProxy) {
+//                        refresh();
+//                    }
+//                    return send(request, headers, errFrequency);
+//                }
+//                throw new MsgException("400 Bad Request!");
+//            }
+//
+//            //获取返回对象
+//            HttpEntity entity = response.getEntity();
+//
+//            //通过EntityUitls获取返回内容
+//            String result = null;
+//            try {
+//                result = EntityUtils.toString(entity, "UTF-8");
+//            } catch (IOException e) {
+//                throw new MsgException("IO异常");
+//            }
+//
+//            HttpResultData httpResultData = new HttpResultData(statusCode, result, Option.getCookie(store));
+//            if (ObjectUtils.isEmpty(httpResultData)) {
+//                throw new MsgException("loginInfo 接口网络问题~");
+//            }
+//
+//            return httpResultData;
+//        }
     }
 
     public static class Option {
+
         public Map<String, String> toMap(String json) {
 
             if (json == null) {
@@ -486,7 +711,7 @@ public class HttpUtils {
          * @author Mr.Lv lvzhuozhuang@foxmail.com
          * @updateTime 2022/4/12 3:41
          */
-        static byte[] readInputStream(InputStream inStream) {
+        public static byte[] readInputStream(InputStream inStream) {
             ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 
             if (ObjectUtils.notIsEmpty(inStream)) {
@@ -553,7 +778,6 @@ public class HttpUtils {
          * @return List<NameValuePair>
          */
         static List<NameValuePair> buildHttpPost(Object parameter) {
-
             Map<String, String> params = BeanUtils.toJavaObject(parameter, new TypeReference<Map<String, String>>() {
             });
             List<NameValuePair> ps = new ArrayList<>();
@@ -576,13 +800,4 @@ public class HttpUtils {
     }
 
 
-    @SneakyThrows
-    @Test
-    public void test() {
-        // 普通 Get 请求
-        send(Method.GET, "https://explorer-api.helium.com/api/makers");
-
-        // 普通 Get 请求
-        send(Method.GET, "https://explorer-api.helium.com/api/makers");
-    }
 }

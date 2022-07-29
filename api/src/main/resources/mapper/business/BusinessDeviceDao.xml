@@ -194,8 +194,12 @@
             <if test="online != null">
                 online,
             </if>
+            <if test="country != null">
                 country,
+            </if>
+            <if test="city != null">
                 city,
+            </if>
             <if test="street != null">
                 street,
             </if>
@@ -322,8 +326,12 @@
             <if test="online != null">
                 #{online},
             </if>
+            <if test="country != null">
                 #{country},
+            </if>
+            <if test="city != null">
                 #{city},
+            </if>
             <if test="street != null">
                 #{street},
             </if>
@@ -461,8 +469,12 @@
             <if test="updated.online != null">
                 online = #{updated.online},
             </if>
+            <if test="updated.country != null">
                 country = #{updated.country},
+            </if>
+            <if test="updated.city != null">
                 city = #{updated.city},
+            </if>
             <if test="updated.street != null">
                 street = #{updated.street},
             </if>

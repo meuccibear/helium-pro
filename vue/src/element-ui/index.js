@@ -65,10 +65,12 @@ import {
   Collapse,
   CollapseItem,
   Cascader,
+  CascaderPanel,
   ColorPicker,
   Transfer,
   Container,
   Header,
+  Link,
   Aside,
   Main,
   Footer,
@@ -134,10 +136,12 @@ Vue.use(CarouselItem)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(Cascader)
+Vue.use(CascaderPanel)
 Vue.use(ColorPicker)
 Vue.use(Transfer)
 Vue.use(Container)
 Vue.use(Header)
+Vue.use(Link)
 Vue.use(Aside)
 Vue.use(Main)
 Vue.use(Footer)

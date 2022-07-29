@@ -16,8 +16,8 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('business:businesshotspotty:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('business:businesshotspotty:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+<!--        <el-button v-if="isAuth('business:businesshotspotty:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>-->
+<!--        <el-button v-if="isAuth('business:businesshotspotty:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>-->
       </el-form-item>
     </el-form>
 <!--    sortable-->
@@ -33,12 +33,12 @@
         align="center"
         width="50">
       </el-table-column>
-      <el-table-column
+<!--      <el-table-column
         prop="hotspottyId"
         header-align="center"
         align="center"
         label="编号">
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column
         header-align="center"
         align="center"
@@ -185,7 +185,7 @@
           <el-tag v-else size="small">正常</el-tag>
         </template>
       </el-table-column>
-      <el-table-column
+<!--      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
@@ -195,7 +195,7 @@
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.hotspottyId)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.hotspottyId)">删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column>-->
     </el-table>
     <el-pagination
       @size-change="sizeChangeHandle"
@@ -243,32 +243,34 @@
       // 获取数据列表
       getDataList () {
         this.dataListLoading = true
+        // this.$http({
+        //   url: this.$http.adornUrl('/business/businesshotspotty/onlines'),
+        //   method: 'get',
+        //   params: this.$http.adornParams()
+        // }).then(({data}) => {
+        //   this.onlines = data.onlines
+        // }).then(() => {
+        //
+        // })
         this.$http({
-          url: this.$http.adornUrl('/business/businesshotspotty/onlines'),
+          url: this.$http.adornUrl('/business/businesshotspotty/list'),
           method: 'get',
-          params: this.$http.adornParams()
-        }).then(({data}) => {
-          this.onlines = data.onlines
-        }).then(() => {
-          this.$http({
-            url: this.$http.adornUrl('/business/businesshotspotty/list'),
-            method: 'get',
-            params: this.$http.adornParams({
-              'page': this.pageIndex,
-              'limit': this.pageSize,
-              'key': this.dataForm.key,
-              'online': this.dataForm.online
-            })
-          }).then(({data}) => {
-            if (data && data.code === 0) {
-              this.dataList = data.page.list
-              this.totalPage = data.page.totalCount
-            } else {
-              this.dataList = []
-              this.totalPage = 0
-            }
-            this.dataListLoading = false
+          params: this.$http.adornParams({
+            'page': this.pageIndex,
+            'limit': this.pageSize,
+            'key': this.dataForm.key,
+            'online': this.dataForm.online
           })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.onlines = data.onlines
+            this.dataList = data.page.list
+            this.totalPage = data.page.totalCount
+          } else {
+            this.dataList = []
+            this.totalPage = 0
+          }
+          this.dataListLoading = false
         })
       },
       // 每页数

@@ -2,6 +2,7 @@ package io.renren.common.gitUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -13,7 +14,7 @@ import java.util.regex.Pattern;
  * @author: Zhuozhuang.Lv
  * @create: 2020-01-06 16:20
  */
-
+@Slf4j
 public class StringUtils<resultMap> {
 
     public static Boolean isEmpty(Object value) {
@@ -43,10 +44,11 @@ public class StringUtils<resultMap> {
     public static String substring(String str, String beginStr, String endStr) {
         int beginIndex = str.indexOf(beginStr);
         if (beginIndex > -1) {
-            String lastStr = str.substring(beginIndex + beginStr.length(), str.length());
+            String lastStr = str.substring(beginIndex + beginStr.length() - beginStr.length(), str.length());
+//            System.out.println(lastStr);
             int lastIndex = lastStr.indexOf(endStr);
             if (StringUtils.notIsEmpty(lastIndex) && lastIndex > -1) {
-                return lastStr.substring(0, lastIndex).toString().replaceAll(" ", "");
+                return lastStr.substring(0, lastIndex + endStr.length()).toString().replaceAll(" ", "");
             } else {
                 return "";
             }
@@ -54,9 +56,6 @@ public class StringUtils<resultMap> {
         return "";
     }
 
-    public static void main(String[] args) {
-        System.out.println(substring("ap:12)", "ap:", ")"));
-    }
 
     public static String getString(String res, String regex) {
         regex = StringUtils.clearSpace(regex);
@@ -101,11 +100,12 @@ public class StringUtils<resultMap> {
     public static String outStr(String str, Object... clos) {
         StringBuffer stringBuffer = new StringBuffer();
         for (Object clo : clos) {
-            if(ObjectUtils.notIsEmpty(clo)){
+//            if (ObjectUtils.notIsEmpty(clo)) {
                 stringBuffer.append(clo);
-            }
+//            }
             stringBuffer.append(str);
         }
+        stringBuffer.deleteCharAt(stringBuffer.length() - 1);
         return stringBuffer.toString();
     }
 
@@ -173,6 +173,36 @@ public class StringUtils<resultMap> {
      */
     public static String omitMiddle(int showNum, String str) {
         return String.format("%s...%s", str.substring(0, showNum), str.substring(str.length() - showNum));
+    }
+
+
+    public static String formatKV(String str, Object data) {
+        if (ObjectUtils.isEmpty(str) || ObjectUtils.isEmpty(data)) {
+            return null;
+        }
+        JSONObject jsonObject = BeanUtils.toJSONObject(data);
+        for (Object o : jsonObject.keySet().toArray()) {
+            str = str.replaceAll(String.format("\\$\\{%s}", String.valueOf(o)), String.valueOf(jsonObject.get(o)));
+        }
+        return str;
+    }
+
+    public static String formatV(String str, Object... datas) {
+        if (ObjectUtils.isEmpty(str) || ObjectUtils.isEmpty(datas)) {
+            return str;
+        }
+        for (Object data : datas) {
+            str = str.replace(substring(str, "$", "}"), String.valueOf(data));
+        }
+        return str;
+    }
+
+
+    public static void main(String[] args) {
+//        System.out.println(substring("ap:12)", "ap:", ")"));
+//        System.out.println(formatV("我是${name}", "asd"));
+//        System.out.println(substring("我是${name}", "$", "}"));
+
     }
 
 }

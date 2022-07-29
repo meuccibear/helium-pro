@@ -1,11 +1,14 @@
 package io.renren.modules.business.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.modules.business.entity.BusinessDeviceEntity;
 import io.renren.modules.domain.dto.DeviceDTO;
+import lombok.SneakyThrows;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -32,11 +35,21 @@ public interface BusinessDeviceService extends IService<BusinessDeviceEntity> {
 
     R getAll(DeviceDTO deviceDTO);
 
-    void deviceDataRefresh(Integer startIndex, Integer endIndex);
-
-    void updateData(List<String> addresss);
-
     void importData(MultipartFile file);
+
+    void updateData(List<List<String>> lists, int index);
+
+//    void updateData1(List<List<String>> lists, int index, String filePath);
+
+    void getDevice(Map<String, String> ownerNo, List<List<String>> lists, int index, String filePath) throws MsgException;
+
+    void addHeliumGlobalDevice(List<List<String>> lists, int index, String filePath) throws MsgException;
+
+    void addHeliumGlobalDevicev2(List<List<String>> lists, int index, String filePath) throws MsgException;
+
+    void dashboard(List<List<String>> lists, int i, String filePath);
+
+//    void addHotspottyGlobalDevice(List<List<String>> lists, int index, String filePath) throws MsgException;
 
 }
 

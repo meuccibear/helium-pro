@@ -1,9 +1,9 @@
 <template>
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
-      <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
-      </el-form-item>
+<!--      <el-form-item>-->
+<!--        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>-->
+<!--      </el-form-item>-->
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('business:businesswallet:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
@@ -38,7 +38,7 @@
         prop="owner"
         header-align="center"
         align="center"
-        :show-overflow-tooltip="true"
+        width="200"
         label="钱包地址">
       </el-table-column>
       <el-table-column

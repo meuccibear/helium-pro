@@ -17,11 +17,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GeoCoord {
+    public String group;
+    public String souHex;
     public String cHex;
     public double lat;
     public double lng;
 
     public static GeoCoord build(String resultHex, com.uber.h3core.util.GeoCoord h3ToGeo) {
-        return new GeoCoord(resultHex, h3ToGeo.lat, h3ToGeo.lng);
+        return new GeoCoord(null,null, resultHex, h3ToGeo.lat, h3ToGeo.lng);
     }
 }

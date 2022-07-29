@@ -18,14 +18,6 @@ import java.util.Date;
 //@Ignore
 @Slf4j
 public class Demo {
-    public static void main(String[] args) {
-        String groupStr =
-                "";
-
-
-        System.out.println(groupStr);
-    }
-
 
     @Test
     public void readExcel(){

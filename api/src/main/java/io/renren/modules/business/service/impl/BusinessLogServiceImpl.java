@@ -23,7 +23,6 @@ public class BusinessLogServiceImpl implements BusinessLogService {
     public int insertSelective(BusinessLog record) {
         record.setHearttm(new Date());
         BusinessDeviceEntity businessDeviceEntity = record.toDBDeviceEntity();
-
         int i = businessLogMapper.insertSelective(record);
         businessDeviceService.updateByAddress(businessDeviceEntity);
         return i;

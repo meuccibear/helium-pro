@@ -11,7 +11,7 @@
       <!--      <el-input v-model="dataForm.groupId" placeholder="分组"></el-input>-->
       <el-select v-model="dataForm.groupId" placeholder="请选择" :value="dataForm.groupId">
         <el-option
-          v-for="item in groupList"
+          v-for="item in groupSelect"
           :key="item.groupId"
           :label="item.groupName"
           :value="item.groupId">
@@ -58,7 +58,14 @@
       <el-input v-model="dataForm.owner" placeholder="钱包地址"></el-input>
     </el-form-item>-->
     <el-form-item label="设备地址" prop="address">
-      <el-input v-model="dataForm.address" placeholder="设备地址"></el-input>
+      <el-tooltip placement="top">
+        <div slot="content">使用换行隔开 实现批量导入~</div>
+        <el-input
+          type="textarea"
+          :rows="2"
+          v-model="dataForm.address" placeholder="设备地址"></el-input>
+      </el-tooltip>
+<!--      <el-input v-model="dataForm.address" placeholder="设备地址"></el-input>-->
     </el-form-item>
     <el-form-item label="备注" prop="remarks">
       <el-input v-model="dataForm.remarks" placeholder="备注"></el-input>
@@ -177,7 +184,7 @@
             { required: true, message: '状态  0：禁用   1：正常不能为空', trigger: 'blur' }
           ]
         },
-        groupList: []
+        groupSelect: []
       }
     },
     methods: {
@@ -189,7 +196,7 @@
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
-          this.groupList = data.groupList
+          this.groupSelect = data.groupSelect
         }).then(() => {
           this.visible = true
           this.$nextTick(() => {

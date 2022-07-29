@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-
 import java.util.*;
 
 /**
@@ -28,9 +27,9 @@ import java.util.*;
 //@Ignore
 @Slf4j
 public class Hotspotty {
-    @SneakyThrows
+    /*@SneakyThrows
     public static void main(String[] args) {
-        List<JSONObject> jsonObjects = ExcelUtils.readFile("./hotspotty.txt");
+        List<JSONObject> jsonObjects = ExcelUtils.readFile("./data/hotspotty.txt");
         JSONObject jsonObject;
         boolean de;
         String filePath = String.format("%s\\%d.txt", "./", System.currentTimeMillis());
@@ -47,8 +46,16 @@ public class Hotspotty {
             FileUtils.writeln(filePath, StringUtils.outStr("\t", address, de, hotspotsByAddress.getName(), hotspotsByAddress.getStatus().getOnline(), hotspotsByAddress.getStatus().getIp(), hotspotsByAddress.getGeocode().getLong_country(), hotspotsByAddress.getGeocode().getLong_city(), hotspotsTotal), true, true);
 //            FileUtils.writeln(filePath, StringUtils.outStr("\t",  address,  hotspotsByAddress.getGeocode().getLong_street(), hotspotsByAddress.getGeocode().getLong_city()), true, true);
         }
-    }
+    }*/
 
+    @Test
+    public void getHotspotsTotal (){
+        try {
+            System.out.println(HeliumUtils.getHotspotsTotal(2, "112CPndQ3JPQf6o8qG9pLf1zWeAYkebK6AGe8UFd74Z2JUEXVm6p"));
+        } catch (MsgException e) {
+            e.printStackTrace();
+        }
+    }
 
     @SneakyThrows
     @Test
@@ -160,10 +167,6 @@ public class Hotspotty {
             System.out.println();
         }
     }
-
-
-
-
 
     public Map<String, String> toTableMap(String groupStr) {
         String[] vals;

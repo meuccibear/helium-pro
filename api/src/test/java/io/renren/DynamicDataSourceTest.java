@@ -8,25 +8,12 @@
 
 package io.renren;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import io.renren.common.gitUtils.ExcelUtils;
-import io.renren.common.gitUtils.StringUtils;
-import io.renren.common.gitUtils.exception.MsgException;
-import io.renren.common.gitUtils.http.FileUtils;
-import io.renren.common.gitUtils.http.HeliumHttpUtils;
-import io.renren.common.gitUtils.http.HttpUtils;
-import io.renren.modules.helium.HeliumUtils;
-import io.renren.modules.helium.domain.Device;
 import io.renren.service.DynamicDataSourceTestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.net.URISyntaxException;
-import java.util.List;
 
 /**
  * 多数据源测试

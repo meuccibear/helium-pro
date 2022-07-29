@@ -55,7 +55,7 @@ public class Data {
         }
 //        result.append("\n\n\n\t\t\t" + JSONObject.toJSONString(this) + "\n\n\n\n");
 
-//        String.format("%s --> %s\n", DateUtils.asStr(getTime()), JSON.toJSONString(this))
+//        String.formatKV("%s --> %s\n", DateUtils.asStr(getTime()), JSON.toJSONString(this))
         return result.toString();
     }
 

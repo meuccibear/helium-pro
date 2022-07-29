@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.renren.modules.sys.dao.WebsiteApiMapper">
+  <resultMap id="BaseResultMap" type="io.renren.modules.sys.entity.WebsiteApi">
+    <!--@mbg.generated-->
+    <!--@Table website_api-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="key" jdbcType="VARCHAR" property="key" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="method" jdbcType="INTEGER" property="method" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="full_link" jdbcType="VARCHAR" property="fullLink" />
+    <result column="parameter" jdbcType="VARCHAR" property="parameter" />
+    <result column="headers" jdbcType="VARCHAR" property="headers" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, `key`, `name`, `type`, `method`, url, parent_id, full_link, `parameter`, headers
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from website_api
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <!--@mbg.generated-->
+    delete from website_api
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="io.renren.modules.sys.entity.WebsiteApi" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into website_api (`key`, `name`, `type`,
+      `method`, url, parent_id,
+      full_link, `parameter`, headers
+      )
+    values (#{key,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+      #{method,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER},
+      #{fullLink,jdbcType=VARCHAR}, #{parameter,jdbcType=VARCHAR}, #{headers,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="io.renren.modules.sys.entity.WebsiteApi" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into website_api
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="key != null">
+        `key`,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="method != null">
+        `method`,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="fullLink != null">
+        full_link,
+      </if>
+      <if test="parameter != null">
+        `parameter`,
+      </if>
+      <if test="headers != null">
+        headers,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="key != null">
+        #{key,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="method != null">
+        #{method,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="fullLink != null">
+        #{fullLink,jdbcType=VARCHAR},
+      </if>
+      <if test="parameter != null">
+        #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="headers != null">
+        #{headers,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.sys.entity.WebsiteApi">
+    <!--@mbg.generated-->
+    update website_api
+    <set>
+      <if test="key != null">
+        `key` = #{key,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        `type` = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="method != null">
+        `method` = #{method,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="fullLink != null">
+        full_link = #{fullLink,jdbcType=VARCHAR},
+      </if>
+      <if test="parameter != null">
+        `parameter` = #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="headers != null">
+        headers = #{headers,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.renren.modules.sys.entity.WebsiteApi">
+    <!--@mbg.generated-->
+    update website_api
+    set `key` = #{key,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      `method` = #{method,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=INTEGER},
+      full_link = #{fullLink,jdbcType=VARCHAR},
+      `parameter` = #{parameter,jdbcType=VARCHAR},
+      headers = #{headers,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2022-04-17-->
+  <select id="findAllByType" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from website_api
+        where `type`=#{type,jdbcType=INTEGER}
+    </select>
+</mapper>

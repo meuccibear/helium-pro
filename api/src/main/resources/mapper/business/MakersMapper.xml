@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.renren.modules.business.dao.MakersMapper">
+  <resultMap id="BaseResultMap" type="io.renren.modules.business.entity.Makers">
+    <!--@mbg.generated-->
+    <!--@Table getResultVToJSONArray-->
+    <id column="makers_id" jdbcType="BIGINT" property="makersId" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    makers_id, address, `name`
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from makers
+    where makers_id = #{makersId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from makers
+    where makers_id = #{makersId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" parameterType="io.renren.modules.business.entity.Makers">
+    <!--@mbg.generated-->
+    insert into makers
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="makersId != null">
+        makers_id,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="makersId != null">
+        #{makersId,jdbcType=BIGINT},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.business.entity.Makers">
+    <!--@mbg.generated-->
+    update makers
+    <set>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where makers_id = #{makersId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.renren.modules.business.entity.Makers">
+    <!--@mbg.generated-->
+    update makers
+    set address = #{address,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR}
+    where makers_id = #{makersId,jdbcType=BIGINT}
+  </update>
+  <update id="updateBatch" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    update makers
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="address = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when makers_id = #{item.makersId,jdbcType=BIGINT} then #{item.address,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="`name` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when makers_id = #{item.makersId,jdbcType=BIGINT} then #{item.name,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+    </trim>
+    where makers_id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.makersId,jdbcType=BIGINT}
+    </foreach>
+  </update>
+  <insert id="batchInsert" parameterType="map">
+    <!--@mbg.generated-->
+    insert into makers
+    (makers_id, address, `name`)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.makersId,jdbcType=BIGINT}, #{item.address,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertOrUpdate" parameterType="io.renren.modules.business.entity.Makers">
+    <!--@mbg.generated-->
+    insert into makers
+    (makers_id, address, `name`)
+    values
+    (#{makersId,jdbcType=BIGINT}, #{address,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}
+      )
+    on duplicate key update
+    makers_id = #{makersId,jdbcType=BIGINT},
+    address = #{address,jdbcType=VARCHAR},
+    `name` = #{name,jdbcType=VARCHAR}
+  </insert>
+  <insert id="insertOrUpdateSelective" parameterType="io.renren.modules.business.entity.Makers">
+    <!--@mbg.generated-->
+    insert into makers
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="makersId != null">
+        makers_id,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="makersId != null">
+        #{makersId,jdbcType=BIGINT},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    on duplicate key update
+    <trim suffixOverrides=",">
+      <if test="makersId != null">
+        makers_id = #{makersId,jdbcType=BIGINT},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+<!--auto generated by MybatisCodeHelper on 2022-07-29-->
+  <select id="selectNameByAddress" resultType="java.lang.String">
+    select `name`
+    from makers
+    where address=#{address,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

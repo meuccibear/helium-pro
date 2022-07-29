@@ -11,16 +11,20 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.ssl.SSLContextBuilder;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.security.KeyManagementException;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,7 +58,19 @@ public class SSLClient {
                  public void checkServerTrusted(X509Certificate[] xcs, String str) {
                  }
              };
-             SSLContext ctx = SSLContext.getInstance(SSLConnectionSocketFactory.TLS);
+//             SSLContext ctx = SSLContext.getInstance(SSLConnectionSocketFactory.TLS);
+             SSLContext ctx = null;
+             try {
+                 ctx = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+                     // 信任所有
+                     public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                         return true;
+                     }
+                 }).build();
+             } catch (KeyStoreException e) {
+                 e.printStackTrace();
+             }
+
              ctx.init(null, new TrustManager[]{trustManager}, null);
              SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(ctx, NoopHostnameVerifier.INSTANCE);
              // 创建Registry

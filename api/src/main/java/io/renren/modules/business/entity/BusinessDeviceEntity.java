@@ -170,7 +170,7 @@ public class BusinessDeviceEntity implements Serializable {
 	/**
 	 * 是否进入黑名单 0.正常 1.黑鸡
 	 */
-	private int depllist;
+	private Integer depllist;
 	/**
 	 * 状态 0.正常 1.同步中 2.掉线
 	 */

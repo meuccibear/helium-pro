@@ -4,9 +4,16 @@ spring:
         druid:
             driver-class-name: com.mysql.cj.jdbc.Driver
 #            url: jdbc:mysql://localhost:3306/depl?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-            url: jdbc:mysql://localhost:3306/helium_pro?serverTimezone=Asia/Shanghai&useSSL=false&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+#            url: jdbc:mysql://192.168.0.27:3306/helium_pro?serverTimezone=Asia/Shanghai&useSSL=false&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+            url: jdbc:mysql://localhost:33061/helium_pro?serverTimezone=Asia/Shanghai&useSSL=false&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
             username: root
-            password: 123456
+            password: 123321
+#            url: jdbc:mysql://183.6.57.245:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
+#            username: worker
+#            password: worker
+#            url: jdbc:mysql://103.149.26.144:3356/helium_pro_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
+#            username: root
+#            password: Zp1949@@
             initial-size: 10
             max-active: 100
             min-idle: 10
@@ -25,6 +32,7 @@ spring:
                 url-pattern: /druid/*
                 #login-username: admin
                 #login-password: admin
+                allow: 127.0.0.1,192.168.0.41
             filter:
                 stat:
                     log-slow-sql: true

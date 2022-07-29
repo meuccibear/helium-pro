@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.renren.modules.sys.dao.LocationsMapper">
+  <resultMap id="BaseResultMap" type="io.renren.modules.sys.entity.Locations">
+    <!--@mbg.generated-->
+    <!--@Table locations-->
+    <id column="Location" jdbcType="VARCHAR" property="location" />
+    <result column="LongStreet" jdbcType="VARCHAR" property="longstreet" />
+    <result column="ShortStreet" jdbcType="VARCHAR" property="shortstreet" />
+    <result column="LongCity" jdbcType="VARCHAR" property="longcity" />
+    <result column="ShortCity" jdbcType="VARCHAR" property="shortcity" />
+    <result column="LongState" jdbcType="VARCHAR" property="longstate" />
+    <result column="ShortState" jdbcType="VARCHAR" property="shortstate" />
+    <result column="LongCountry" jdbcType="VARCHAR" property="longcountry" />
+    <result column="ShortCountry" jdbcType="VARCHAR" property="shortcountry" />
+    <result column="SearchCity" jdbcType="VARCHAR" property="searchcity" />
+    <result column="CityID" jdbcType="VARCHAR" property="cityid" />
+    <result column="Geometry" jdbcType="VARCHAR" property="geometry" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    `Location`, LongStreet, ShortStreet, LongCity, ShortCity, LongState, ShortState,
+    LongCountry, ShortCountry, SearchCity, CityID, Geometry
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from locations
+    where `Location` = #{location,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--@mbg.generated-->
+    delete from locations
+    where `Location` = #{location,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="io.renren.modules.sys.entity.Locations">
+    <!--@mbg.generated-->
+    insert into locations (`Location`, LongStreet, ShortStreet,
+      LongCity, ShortCity, LongState,
+      ShortState, LongCountry, ShortCountry,
+      SearchCity, CityID, Geometry
+      )
+    values (#{location,jdbcType=VARCHAR}, #{longstreet,jdbcType=VARCHAR}, #{shortstreet,jdbcType=VARCHAR},
+      #{longcity,jdbcType=VARCHAR}, #{shortcity,jdbcType=VARCHAR}, #{longstate,jdbcType=VARCHAR},
+      #{shortstate,jdbcType=VARCHAR}, #{longcountry,jdbcType=VARCHAR}, #{shortcountry,jdbcType=VARCHAR},
+      #{searchcity,jdbcType=VARCHAR}, #{cityid,jdbcType=VARCHAR}, #{geometry,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="io.renren.modules.sys.entity.Locations">
+    <!--@mbg.generated-->
+    insert into locations
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="location != null">
+        `Location`,
+      </if>
+      <if test="longstreet != null">
+        LongStreet,
+      </if>
+      <if test="shortstreet != null">
+        ShortStreet,
+      </if>
+      <if test="longcity != null">
+        LongCity,
+      </if>
+      <if test="shortcity != null">
+        ShortCity,
+      </if>
+      <if test="longstate != null">
+        LongState,
+      </if>
+      <if test="shortstate != null">
+        ShortState,
+      </if>
+      <if test="longcountry != null">
+        LongCountry,
+      </if>
+      <if test="shortcountry != null">
+        ShortCountry,
+      </if>
+      <if test="searchcity != null">
+        SearchCity,
+      </if>
+      <if test="cityid != null">
+        CityID,
+      </if>
+      <if test="geometry != null">
+        Geometry,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="location != null">
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="longstreet != null">
+        #{longstreet,jdbcType=VARCHAR},
+      </if>
+      <if test="shortstreet != null">
+        #{shortstreet,jdbcType=VARCHAR},
+      </if>
+      <if test="longcity != null">
+        #{longcity,jdbcType=VARCHAR},
+      </if>
+      <if test="shortcity != null">
+        #{shortcity,jdbcType=VARCHAR},
+      </if>
+      <if test="longstate != null">
+        #{longstate,jdbcType=VARCHAR},
+      </if>
+      <if test="shortstate != null">
+        #{shortstate,jdbcType=VARCHAR},
+      </if>
+      <if test="longcountry != null">
+        #{longcountry,jdbcType=VARCHAR},
+      </if>
+      <if test="shortcountry != null">
+        #{shortcountry,jdbcType=VARCHAR},
+      </if>
+      <if test="searchcity != null">
+        #{searchcity,jdbcType=VARCHAR},
+      </if>
+      <if test="cityid != null">
+        #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="geometry != null">
+        #{geometry,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.sys.entity.Locations">
+    <!--@mbg.generated-->
+    update locations
+    <set>
+      <if test="longstreet != null">
+        LongStreet = #{longstreet,jdbcType=VARCHAR},
+      </if>
+      <if test="shortstreet != null">
+        ShortStreet = #{shortstreet,jdbcType=VARCHAR},
+      </if>
+      <if test="longcity != null">
+        LongCity = #{longcity,jdbcType=VARCHAR},
+      </if>
+      <if test="shortcity != null">
+        ShortCity = #{shortcity,jdbcType=VARCHAR},
+      </if>
+      <if test="longstate != null">
+        LongState = #{longstate,jdbcType=VARCHAR},
+      </if>
+      <if test="shortstate != null">
+        ShortState = #{shortstate,jdbcType=VARCHAR},
+      </if>
+      <if test="longcountry != null">
+        LongCountry = #{longcountry,jdbcType=VARCHAR},
+      </if>
+      <if test="shortcountry != null">
+        ShortCountry = #{shortcountry,jdbcType=VARCHAR},
+      </if>
+      <if test="searchcity != null">
+        SearchCity = #{searchcity,jdbcType=VARCHAR},
+      </if>
+      <if test="cityid != null">
+        CityID = #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="geometry != null">
+        Geometry = #{geometry,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where `Location` = #{location,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.renren.modules.sys.entity.Locations">
+    <!--@mbg.generated-->
+    update locations
+    set LongStreet = #{longstreet,jdbcType=VARCHAR},
+      ShortStreet = #{shortstreet,jdbcType=VARCHAR},
+      LongCity = #{longcity,jdbcType=VARCHAR},
+      ShortCity = #{shortcity,jdbcType=VARCHAR},
+      LongState = #{longstate,jdbcType=VARCHAR},
+      ShortState = #{shortstate,jdbcType=VARCHAR},
+      LongCountry = #{longcountry,jdbcType=VARCHAR},
+      ShortCountry = #{shortcountry,jdbcType=VARCHAR},
+      SearchCity = #{searchcity,jdbcType=VARCHAR},
+      CityID = #{cityid,jdbcType=VARCHAR},
+      Geometry = #{geometry,jdbcType=VARCHAR}
+    where `Location` = #{location,jdbcType=VARCHAR}
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2022-04-17-->
+  <select id="findLocationByCityid" resultType="java.lang.String">
+    select `Location`
+    from locations
+    where CityID like concat('%', #{cityid}, '%')
+  </select>
+
+<!--auto generated by MybatisCodeHelper on 2022-04-26-->
+  <select id="findCityidByLongcountry" resultType="java.lang.String">
+    select CityID
+    from locations
+    where LongCountry in (
+    <foreach collection="countrys" item="item" separator=",">
+      #{item,jdbcType=VARCHAR}
+    </foreach>
+    )
+  </select>
+</mapper>

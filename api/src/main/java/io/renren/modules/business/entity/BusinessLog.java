@@ -11,6 +11,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BusinessLog {
+
+    //    {
+    //    "hid": "1125o7FRU7QpamH6VQn9bDsj2oXb4aMn6q1xUPT9KE1B3ad8QpxL",
+    //    "devtype": "eda",
+    //    "ip": "192.168.1.135",
+    //    "disk": "5.11",
+    //    "loratm": 1658981699.5076168,
+    //    "witnesstm": 0,
+    //    "beacontm": 1658920477.7158105,
+    //    "muxtm": 0,
+    //    "minerver": "unkown",
+    //    "minerstat": "unkown",
+    //    "ver": "1.7",
+    //    "hearttm": 1658981718.9539683,
+    //    "remark": ""
+    //  }
     /**
      * 分组名称
      */

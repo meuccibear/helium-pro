@@ -28,10 +28,10 @@ public class ObjectUtils {
             return ((String) value).length() > 0;
         } else if (value instanceof String[]) {
             return ((String[]) value).length > 0;
-        } else if (value instanceof Long) {
-            return (Long) value > 0;
-        } else if (value instanceof Integer) {
-            return (Integer) value > 0;
+//        } else if (value instanceof Long) {
+//            return (Long) value > 0;
+//        } else if (value instanceof Integer) {
+//            return (Integer) value > 0;
         } else if (value instanceof List) {
             List list = (List) value;
             return list.size() > 0;
@@ -44,7 +44,7 @@ public class ObjectUtils {
 
 
     public static void main(String[] args) {
-        notIsEmpty(new String[]{});
+        System.out.println(valueVerification("isJSONArray", "[]"));
     }
 
     /**
@@ -206,6 +206,7 @@ public class ObjectUtils {
 
     static Map<String,String> map = new HashMap<String,String>(){{
         put("isInteger", "^-?\\d+$");
+        put("isJSONArray", "^\\[((\\d,)*\\d)*\\]$\\[((\\d,)*\\d)*\\]");//^\[(\{[^\:]*\:[^\,]*\})*\]
     }};
 
     /**
@@ -224,6 +225,9 @@ public class ObjectUtils {
         }
         return defaultValue;
     }
+
+
+
     public static Integer toInt(String value) throws MsgException {
         if (valueVerification("isInteger", value)) {
             return Integer.parseInt(value);
@@ -269,10 +273,10 @@ public class ObjectUtils {
                 itemSSize.put(i, average);
             }
             while (surplus > 0) {
-//                System.out.println(String.format("[while]%d", surplus));
+//                System.out.println(String.formatKV("[while]%d", surplus));
                 for (int i = 0; i < n; i++) {
                     if (surplus > 0) {
-//                        System.out.println(String.format("[for]%d", surplus));
+//                        System.out.println(String.formatKV("[for]%d", surplus));
                         itemSSize.put(i, itemSSize.get(i) + 1);
                         surplus--;
                     } else {
@@ -289,4 +293,7 @@ public class ObjectUtils {
 
         return datas;
     }
+
+
+
 }

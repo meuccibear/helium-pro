@@ -1,5 +1,7 @@
 package io.renren.common.gitUtils.exception;
 
+import org.apache.http.conn.HttpHostConnectException;
+
 /**
  * @description: 消息自定义异常
  * @author:
@@ -7,12 +9,42 @@ package io.renren.common.gitUtils.exception;
  */
 public class MsgException extends Exception {
 
+    public static enum ErrEnum {
+        SSLException,
+        IOException,
+        HttpHostConnectException,
+
+        //Helium
+        NotFound;
+
+    }
+
 
     public MsgException() {
     }
 
+    ErrEnum errEnum;
+
+    public ErrEnum getErrEnum() {
+        return errEnum;
+    }
+
+    public void setErrEnum(ErrEnum errEnum) {
+        this.errEnum = errEnum;
+    }
+
     public MsgException(String message) {
         super(message);
+    }
+
+    public MsgException(String message, ErrEnum errEnum) {
+        super(message);
+        this.errEnum = errEnum;
+    }
+
+    public MsgException(String message, ErrEnum errEnum, Throwable cause) {
+        super(message, cause);
+        this.errEnum = errEnum;
     }
 
     public MsgException(String message, Throwable cause) {

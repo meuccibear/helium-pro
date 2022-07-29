@@ -68,9 +68,10 @@
         fixed="right"
         header-align="center"
         align="center"
-        width="150"
+        width="220"
         label="操作">
         <template slot-scope="scope">
+          <el-button v-if="isAuth('sys:user:authorizedGroupUser')" type="text" size="small" @click="authorizedGroupUserHandle(scope.row.userId)">授权分组</el-button>
           <el-button v-if="isAuth('sys:user:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.userId)">修改</el-button>
           <el-button v-if="isAuth('sys:user:delete')" type="text" size="small" @click="deleteHandle(scope.row.userId)">删除</el-button>
         </template>
@@ -85,6 +86,7 @@
       :total="totalPage"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
+    <authorized-group-user v-if="authorizedGroupUserVisible" ref="authorizedGroupUser" @refreshDataList="getDataList"></authorized-group-user>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
   </div>
@@ -92,6 +94,7 @@
 
 <script>
   import AddOrUpdate from './user-add-or-update'
+  import AuthorizedGroupUser from './authorized-group-user'
   export default {
     data () {
       return {
@@ -104,11 +107,13 @@
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
-        addOrUpdateVisible: false
+        addOrUpdateVisible: false,
+        authorizedGroupUserVisible: false
       }
     },
     components: {
-      AddOrUpdate
+      AddOrUpdate,
+      AuthorizedGroupUser
     },
     activated () {
       this.getDataList()
@@ -156,6 +161,13 @@
         this.addOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs.addOrUpdate.init(id)
+        })
+      },
+      // 授权分组
+      authorizedGroupUserHandle (id) {
+        this.authorizedGroupUserVisible = true
+        this.$nextTick(() => {
+          this.$refs.authorizedGroupUser.init(id)
         })
       },
       // 删除

@@ -18,4 +18,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Result {
     private Object data;
+    private Object cursor;
+    private String error;
 }

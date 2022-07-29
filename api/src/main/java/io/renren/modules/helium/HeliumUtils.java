@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.uber.h3core.H3Core;
-//import com.uber.h3core.util.GeoCoord;
 import io.renren.business.domin.device.CompletedRewardsBean;
 import io.renren.common.gitUtils.*;
 import io.renren.common.gitUtils.exception.MsgException;
@@ -14,11 +13,12 @@ import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtilsx;
 import io.renren.modules.helium.domain.*;
 import lombok.SneakyThrows;
-import org.junit.Test;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,10 +33,12 @@ import java.util.Map;
  * @create: 2022-03-08 14:27
  * @Version 1.0
  **/
+@Slf4j
 public class HeliumUtils {
 
     //    static String WWW = "https://helium-api.stakejoy.com/";
     static String WWW = "https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/";
+    private static String proIP;
 
     /**
      * @param typeId   天
@@ -50,6 +52,12 @@ public class HeliumUtils {
 //        System.out.println(url);
 
         Map<String, String> parameter = new HashMap<>();
+
+        LocalDateTime maxTime = LocalDateTime.now(ZoneOffset.UTC);
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+        String localDateTime = df.format(maxTime);
+        maxTime = LocalDateTime.parse(localDateTime, df);
+
         switch (typeId) {
             case 1:
                 parameter.put("min_time", "-30 day");
@@ -58,14 +66,13 @@ public class HeliumUtils {
                 break;
             case 2:
                 parameter.put("min_time", "-48 hour");
-                parameter.put("max_time", DateUtils.asStr(LocalDateTime.now(ZoneOffset.UTC), "UTC"));
+                parameter.put("max_time", DateUtils.asStr(maxTime, "UTC"));
                 parameter.put("bucket", "hour");
                 break;
         }
 
-//        System.out.println(JSON.toJSONString(parameter));
         JSONObject jsonObject = getJSONObject(url, parameter);
-        JSONArray jsonArray = (JSONArray) JSONUtils.getObjectBycol(jsonObject, "data");
+        JSONArray jsonArray = (JSONArray) JSONUtils.jsGetData(jsonObject, "data");
 
         List<HotspotsProfit> hotspotsProfits = BeanUtils.toJavaObject(jsonArray, new TypeReference<List<HotspotsProfit>>() {
         });
@@ -97,30 +104,10 @@ public class HeliumUtils {
     public static Device getHotspotsByAddress(String address) throws MsgException {
         Result result = BeanUtils.toJavaObject(get(String.format("v1/hotspots/%s", address)), new TypeReference<Result>() {
         });
-        System.out.println(JSON.toJSONString(result));
         Device device = BeanUtils.toJavaObject(result.getData(), new TypeReference<Device>() {
         });
         return device;
     }
-
-    /**
-     * @throws
-     * @title 根据钱包地址获取钱包设备
-     * @description
-     * @author Mr.Lv lvzhuozhuang@foxmail.com
-     * @updateTime 2022/3/15 7:21
-     */
-    public static List<Device> getWalletByAddress(String address) throws MsgException {
-
-        get(String.format("v1/accounts/%s/hotspots", address));
-
-        Result result = BeanUtils.toJavaObject(null, new TypeReference<Result>() {
-        });
-        List<Device> devices = BeanUtils.toJavaObject(result.getData(), new TypeReference<List<Device>>() {
-        });
-        return devices;
-    }
-
 
     /**
      * 查看该区域是否有设备
@@ -175,7 +162,6 @@ public class HeliumUtils {
     public static String get(String qUrl, String url) throws MsgException {
         String headersStr = "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36";
         HttpResultData httpResultData = HttpUtilsx.get(qUrl + url, HttpUtilsx.getHeadres(headersStr));
-        System.out.println(httpResultData.getResult());
         return httpResultData.getResult();
     }
 
@@ -194,6 +180,14 @@ public class HeliumUtils {
     }
 
     public static JSONObject getJSONObject(String url, Map<String, String> parameter) throws MsgException {
+//        try {
+//            if(ObjectUtils.isEmpty(proIP)){
+//                proIP = AuthFactory.builds().get_dp();
+//                HttpUtilsx.setProxyAddr(proIP);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         HttpResultData httpResultData = HttpUtilsx.get(WWW + url, parameter, new HashMap<>());
         return JSON.parseObject(httpResultData.getResult());
     }
@@ -246,7 +240,7 @@ public class HeliumUtils {
                 return getRandomDevice(cHexs);
             }
             HEXS.put(cHex, cHex);
-            System.out.println("[geoCoord.hex] "+JSON.toJSONString(geoCoord));
+            System.out.println("[geoCoord.hex] " + JSON.toJSONString(geoCoord));
             return geoCoord;
         }
 
@@ -292,14 +286,14 @@ public class HeliumUtils {
 //        String hex3 = HexUtils.h3.h3ToParentAddress(cHexs.get(0), 5);
 //        if (ObjectUtils.notIsEmpty(cHexs)) {
 ////            if (num < cHexs.size()) {
-////                throw new MsgException(String.format("该地区不够%d个位置~", num));
+////                throw new MsgException(String.formatKV("该地区不够%d个位置~", num));
 ////            }
 //            System.out.println(cHexs.size());
 //            List<GeoCoord> geoCoords = new ArrayList<>();
 //            for (int i = 0; i < num; i++) {
 //                geoCoords.add(getRandomDevice(cHexs));
-////            System.out.println(String.format("hex\treward_scale: %s address: %s", device.getReward_scale(), device.getAddress()));
-////            System.out.println(String.format("%s\t%s address: %s", hex, device.getReward_scale(), device.getAddress()));
+////            System.out.println(String.formatKV("hex\treward_scale: %s address: %s", device.getReward_scale(), device.getAddress()));
+////            System.out.println(String.formatKV("%s\t%s address: %s", hex, device.getReward_scale(), device.getAddress()));
 //            }
 //            location = new Location(hex3, address, geoCoords);
 //        }
@@ -327,7 +321,7 @@ public class HeliumUtils {
 
         if (ObjectUtils.notIsEmpty(cHexs)) {
 //            if (num < cHexs.size()) {
-//                throw new MsgException(String.format("该地区不够%d个位置~", num));
+//                throw new MsgException(String.formatKV("该地区不够%d个位置~", num));
 //            }
             List<GeoCoord> geoCoords = new ArrayList<>();
             GeoCoord randomDevice;
@@ -338,8 +332,8 @@ public class HeliumUtils {
 //                    continue;
 //                }
                 geoCoords.add(randomDevice);
-//            System.out.println(String.format("hex\treward_scale: %s address: %s", device.getReward_scale(), device.getAddress()));
-//            System.out.println(String.format("%s\t%s address: %s", hex, device.getReward_scale(), device.getAddress()));
+//            System.out.println(String.formatKV("hex\treward_scale: %s address: %s", device.getReward_scale(), device.getAddress()));
+//            System.out.println(String.formatKV("%s\t%s address: %s", hex, device.getReward_scale(), device.getAddress()));
             }
             StringUtils.writeList("\t", "【getLocations】 ", JSON.toJSONString(geoCoords));
 
@@ -421,7 +415,7 @@ public class HeliumUtils {
         List<Role> roleL = new ArrayList<>();
         for (int i = 0; i < index; i++) {
             rolesJ = roles(hotspotsId, null, cursorNo);
-            Object data = JSONUtils.getObjectBycol(rolesJ, "data");
+            Object data = JSONUtils.jsGetData(rolesJ, "data");
             if (ObjectUtils.notIsEmpty(data)) {
                 for (Role role : BeanUtils.toJavaObject(data, new TypeReference<List<Role>>() {
                 })) {
@@ -429,7 +423,7 @@ public class HeliumUtils {
                     roleL.add(role);
                 }
             }
-            cursorNo = (String) JSONUtils.getObjectBycol(rolesJ, "cursor");
+            cursorNo = (String) JSONUtils.jsGetData(rolesJ, "cursors");
         }
         return roleL;
     }
@@ -440,8 +434,8 @@ public class HeliumUtils {
             cursorNo = cursor.get(hotspotsId);
         } else {
             JSONObject json = roles(hotspotsId, "", null);
-            if (json.containsKey("cursor")) {
-                cursor.put(hotspotsId, (String) json.get("cursor"));
+            if (json.containsKey("cursors")) {
+                cursor.put(hotspotsId, (String) json.get("cursors"));
                 cursorNo = cursor.get(hotspotsId);
             }
         }
@@ -483,7 +477,7 @@ public class HeliumUtils {
 //            case "challenger":
 //                break;
             case "reward_gateway":
-                return String.format("Total:%s", JSONUtils.getObjectBycol(json, "data", "rewards"));
+                return String.format("Total:%s", JSONUtils.jsGetData(json, "data.rewards"));
 //                break;
 //            case "challengee":
 //                break;
@@ -513,11 +507,11 @@ public class HeliumUtils {
         HttpResultData httpResultData = HttpUtilsx.get(url, parameter, headStr);
 
         System.out.println(String.format("<<=============\n %s", JSON.toJSONString(httpResultData.getResult())));
-        System.out.println(String.format("<<=============\n %s", JSON.toJSONString(JSONUtils.getObjectBycol(httpResultData.getResult(), "data"))));
+        System.out.println(String.format("<<=============\n %s", JSON.toJSONString(JSONUtils.jsGetData(httpResultData.getResult(), "data"))));
         return httpResultData;
     }
 
-    static String cursorFilePath = "cursor.txt";
+    static String cursorFilePath = "cursors.txt";
 
     static Map<String, String> cursor = new HashMap<>();
 
@@ -536,7 +530,7 @@ public class HeliumUtils {
 //
 //
 //        JSONObject json = roles(hotspotsId);
-//        String result = (String) json.get("cursor");
+//        String result = (String) json.get("cursors");
 ////        info(result);
 //
 ////        String result = HttpUtils.getInputStream(WWW + "v1/hotspots/" + hotspotsId + "/activity");
@@ -565,14 +559,21 @@ public class HeliumUtils {
         }
     }
 
-    public String dashboard(String hex) throws MsgException {
+    /**
+     * @title 查看Hotspotty网站Hex情况
+     * @description
+     * @author Mr.Lv lvzhuozhuang@foxmail.com
+     * @updateTime 2022/4/13 13:51
+     * @throws
+     */
+    public static String dashboard(String hex) throws MsgException {
         List<LeanData> leanDataL = getCHexsByHex(hex, 5);
-        System.out.println("开始");
         int onlineNum = 0;
         Double scF = null;
         Double scL = null;
         for (LeanData leanData : leanDataL) {
-            System.out.println(leanData.getN().replaceAll("-", " ") + "\tonline:" + leanData.getOnline());
+//            log.info("【leanData.JSON】{}", JSON.toJSONString(leanData));
+//            log.info(StringUtils.outStr("\t", leanData.getN().replaceAll("-", " "), leanData.getD(), leanData.getOnline()));
             if (leanData.getOnline()) {
                 onlineNum++;
             }
@@ -589,6 +590,7 @@ public class HeliumUtils {
             }
         }
 
+        //坐标地址  总数  离线数量    在线数量    尸体百分比 最低scanl  最高scanl
         return StringUtils.outStr("\t", hex, leanDataL.size(), leanDataL.size() - onlineNum, onlineNum, (((leanDataL.size() - onlineNum) * 100) / leanDataL.size()) + "%", scF, scL);
     }
 

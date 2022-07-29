@@ -39,7 +39,7 @@
 //            //包下的类，才生成接口文档
 //            //.apis(RequestHandlerSelectors.basePackage("io.renren.controller"))
 //            .paths(PathSelectors.any())
-//            .build()
+//            .builds()
 //            .securitySchemes(security());
 //    }
 //
@@ -49,7 +49,7 @@
 //            .description("fast-api文档")
 //            .termsOfServiceUrl("https://www.renren.io")
 //            .version("3.0.0")
-//            .build();
+//            .builds();
 //    }
 //
 //    private List<ApiKey> security() {

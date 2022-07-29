@@ -303,7 +303,7 @@ public class BusinessDeviceServiceImpl extends ServiceImpl<BusinessDeviceDao, Bu
                     }
                 } catch (Exception e) {
                     log.error("【setDepllist失败~】" + address, e);
-//                    deviceEntity.setErrStatus(3);
+                    deviceEntity.setErrStatus(3);
                 }
 
                 log.info("【updateByAddress】{}", JSON.toJSONString(deviceEntity));

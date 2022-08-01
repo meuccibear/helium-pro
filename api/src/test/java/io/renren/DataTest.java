@@ -12,9 +12,8 @@ import com.alibaba.fastjson.JSON;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.modules.business.dao.BusinessDeviceDao;
-import io.renren.modules.business.entity.BusinessDeviceEntity;
+import io.renren.modules.business.entity.BusinessDevice;
 import io.renren.modules.helium.HeliumHttpUtils;
-import io.renren.modules.helium.domain.Device;
 import io.renren.modules.sys.api.HeliumApi;
 import io.renren.modules.sys.service.GlobalDeviceService;
 import lombok.SneakyThrows;
@@ -59,7 +58,7 @@ public class DataTest {
 
 
 //        Device hotspotsByAddress = heliumApi.getHotspotsByAddress("112BQSyDQSdmj6pHzXdsrbEjE2kyMT6NN5i7kYxoMfAVRKAqavgc");
-//        BusinessDeviceEntity businessDeviceEntity = hotspotsByAddress.toDBDeviceEntity();
+//        BusinessDevice businessDeviceEntity = hotspotsByAddress.toDBDeviceEntity();
 //        log.info(JSON.toJSONString(businessDeviceEntity));
 //        businessDeviceDao.updateByAddress(businessDeviceEntity);
     }

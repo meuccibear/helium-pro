@@ -1,12 +1,12 @@
-package io.renren.ssh;
+package io.renren.run.ssh;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.Session;
 import io.renren.common.gitUtils.exception.MsgException;
-import io.renren.ssh.entity.AnsiblePack;
-import io.renren.ssh.entity.ServerInformation;
+import io.renren.run.ssh.entity.AnsiblePack;
+import io.renren.run.ssh.entity.ServerInformation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -56,8 +56,8 @@ public class SSHUtils {
             // X Forwarding
             // channel.setXForwarding(true);
 
-            //channel.setInputStream(System.in);
-            channel.setInputStream(null);
+            channel.setInputStream(System.in);
+//            channel.setInputStream(null);
 
             //channel.setOutputStream(System.out);
 
@@ -87,6 +87,8 @@ public class SSHUtils {
                 } catch (Exception ee) {
                 }
             }
+
+
             channel.disconnect();
             session.disconnect();
         } catch (Exception e) {

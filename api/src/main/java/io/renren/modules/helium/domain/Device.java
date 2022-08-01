@@ -5,7 +5,7 @@ import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.DateUtils;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.StringUtils;
-import io.renren.modules.business.entity.BusinessDeviceEntity;
+import io.renren.modules.business.entity.BusinessDevice;
 import io.renren.modules.helium.HexUtils;
 import io.renren.modules.sys.entity.GlobalDevice;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**

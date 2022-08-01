@@ -41,4 +41,13 @@ public class DeviceDTO extends PageRRDTO {
 
     String city;
 
+    /**
+     * @title
+     * @description 1.日报
+     * @author Mr.Lv lvzhuozhuang@foxmail.com
+     * @updateTime 2022/8/1 17:21
+     * @throws
+     */
+    Integer modeType;
+
 }

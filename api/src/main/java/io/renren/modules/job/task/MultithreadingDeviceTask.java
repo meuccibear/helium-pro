@@ -12,6 +12,7 @@ import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.StringUtils;
 import io.renren.modules.business.service.BusinessDeviceService;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,8 @@ import java.util.List;
  * @author Mark sunlightcs@gmail.com
  */
 @Component("MultithreadingDeviceTask")
+@Slf4j
 public class MultithreadingDeviceTask implements ITask {
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private BusinessDeviceService businessDeviceService;
@@ -38,7 +39,7 @@ public class MultithreadingDeviceTask implements ITask {
     @SneakyThrows
     @Override
     public void run(String params) {
-        logger.info("MultithreadingDeviceTask定时任务正在执行，参数为：{}", params);
+        log.info("MultithreadingDeviceTask定时任务正在执行，参数为：{}", params);
 
         List<List<String>> lists = ObjectUtils.averageAssign(businessDeviceService.findAll(), ObjectUtils.toInt(params, 5));
         for (int i = 0; i < lists.size(); i++) {

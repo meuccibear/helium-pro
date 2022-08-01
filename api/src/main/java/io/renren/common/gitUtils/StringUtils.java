@@ -101,7 +101,7 @@ public class StringUtils<resultMap> {
         StringBuffer stringBuffer = new StringBuffer();
         for (Object clo : clos) {
 //            if (ObjectUtils.notIsEmpty(clo)) {
-                stringBuffer.append(clo);
+            stringBuffer.append(clo);
 //            }
             stringBuffer.append(str);
         }
@@ -182,7 +182,7 @@ public class StringUtils<resultMap> {
         }
         JSONObject jsonObject = BeanUtils.toJSONObject(data);
         for (Object o : jsonObject.keySet().toArray()) {
-            str = str.replaceAll(String.format("\\$\\{%s}", String.valueOf(o)), String.valueOf(jsonObject.get(o)));
+            str = str.replaceAll(String.format("\\$\\{%s}", o), String.valueOf(jsonObject.get(o)));
         }
         return str;
     }
@@ -201,6 +201,9 @@ public class StringUtils<resultMap> {
     public static void main(String[] args) {
 //        System.out.println(substring("ap:12)", "ap:", ")"));
 //        System.out.println(formatV("我是${name}", "asd"));
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("cursor", "cursora");
+        System.out.println(formatKV("{ \"cursor\": \"${cursor}\" }", jsonObject.toJSONString()));
 //        System.out.println(substring("我是${name}", "$", "}"));
 
     }

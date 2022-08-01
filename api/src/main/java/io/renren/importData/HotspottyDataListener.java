@@ -5,19 +5,12 @@ import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.excel.util.ListUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.renren.common.gitUtils.BeanUtils;
-import io.renren.common.utils.PageUtils;
-import io.renren.modules.business.entity.BusinessDeviceEntity;
+import io.renren.modules.business.entity.BusinessDevice;
 import io.renren.modules.business.service.BusinessDeviceService;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 /**
  * 模板的读取类
@@ -92,7 +85,7 @@ public class HotspottyDataListener implements ReadListener<HotspottyData> {
      */
     private void saveData() {
         log.info("{}条数据，开始存储数据库！", cachedDataList.size());
-        List<BusinessDeviceEntity> businessDeviceEntities = BeanUtils.toJavaObject(cachedDataList, new TypeReference<List<BusinessDeviceEntity>>() {});
+        List<BusinessDevice> businessDeviceEntities = BeanUtils.toJavaObject(cachedDataList, new TypeReference<List<BusinessDevice>>() {});
         businessDeviceService.insertOrUpdate(businessDeviceEntities);
         log.info("存储数据库成功！");
     }

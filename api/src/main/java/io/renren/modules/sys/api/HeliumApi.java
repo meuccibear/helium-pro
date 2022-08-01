@@ -63,7 +63,6 @@ public class HeliumApi {
         return getResultVS("miner", ip);
     }
 
-
     public RestBean getAllDevice(String address) throws MsgException {
         JSONObject result = (JSONObject) getResultV("getAllDevice", address);
         return BeanUtils.toJavaObject(result, new TypeReference<RestBean>() {

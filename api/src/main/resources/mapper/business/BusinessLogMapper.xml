@@ -4,33 +4,33 @@
   <resultMap id="BaseResultMap" type="io.renren.modules.business.entity.BusinessLog">
     <!--@mbg.generated-->
     <!--@Table business_log-->
-    <result column="cname" jdbcType="VARCHAR" property="cname" />
+    <result column="hid" jdbcType="CHAR" property="hid" />
     <result column="ip" jdbcType="VARCHAR" property="ip" />
     <result column="devtype" jdbcType="VARCHAR" property="devtype" />
     <result column="gip" jdbcType="VARCHAR" property="gip" />
-    <result column="height" jdbcType="VARCHAR" property="height" />
-    <result column="gap" jdbcType="VARCHAR" property="gap" />
     <result column="loratm" jdbcType="TIMESTAMP" property="loratm" />
-    <result column="witnesstm" jdbcType="VARCHAR" property="witnesstm" />
+    <result column="witnesstm" jdbcType="TIMESTAMP" property="witnesstm" />
+    <result column="disk" jdbcType="DOUBLE" property="disk" />
+    <result column="muxtm" jdbcType="TIMESTAMP" property="muxtm" />
+    <result column="minerver" jdbcType="VARCHAR" property="minerver" />
+    <result column="minerstat" jdbcType="VARCHAR" property="minerstat" />
+    <result column="ver" jdbcType="VARCHAR" property="ver" />
     <result column="beacontm" jdbcType="TIMESTAMP" property="beacontm" />
-    <result column="lastwitness" jdbcType="VARCHAR" property="lastwitness" />
     <result column="hearttm" jdbcType="TIMESTAMP" property="hearttm" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
-    <result column="token" jdbcType="VARCHAR" property="token" />
-    <result column="address" jdbcType="VARCHAR" property="address" />
-    <result column="disk" jdbcType="DOUBLE" property="disk" />
+    <result column="grpcfaild" jdbcType="INTEGER" property="grpcfaild" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    cname, ip, devtype, gip, height, gap, loratm, witnesstm, beacontm, lastwitness, hearttm,
-    remark, token, address, disk
+    hid, ip, devtype, gip, loratm, witnesstm, `disk`, muxtm, minerver, minerstat, ver, 
+    beacontm, hearttm, remark, grpcfaild
   </sql>
   <insert id="insertSelective" parameterType="io.renren.modules.business.entity.BusinessLog">
     <!--@mbg.generated-->
     insert into business_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="cname != null">
-        cname,
+      <if test="hid != null">
+        hid,
       </if>
       <if test="ip != null">
         ip,
@@ -41,23 +41,29 @@
       <if test="gip != null">
         gip,
       </if>
-      <if test="height != null">
-        height,
-      </if>
-      <if test="gap != null">
-        gap,
-      </if>
       <if test="loratm != null">
         loratm,
       </if>
       <if test="witnesstm != null">
         witnesstm,
       </if>
+      <if test="disk != null">
+        `disk`,
+      </if>
+      <if test="muxtm != null">
+        muxtm,
+      </if>
+      <if test="minerver != null">
+        minerver,
+      </if>
+      <if test="minerstat != null">
+        minerstat,
+      </if>
+      <if test="ver != null">
+        ver,
+      </if>
       <if test="beacontm != null">
         beacontm,
-      </if>
-      <if test="lastwitness != null">
-        lastwitness,
       </if>
       <if test="hearttm != null">
         hearttm,
@@ -65,19 +71,13 @@
       <if test="remark != null">
         remark,
       </if>
-      <if test="token != null">
-        token,
-      </if>
-      <if test="address != null">
-        address,
-      </if>
-      <if test="disk != null">
-        disk,
+      <if test="grpcfaild != null">
+        grpcfaild,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="cname != null">
-        #{cname,jdbcType=VARCHAR},
+      <if test="hid != null">
+        #{hid,jdbcType=CHAR},
       </if>
       <if test="ip != null">
         #{ip,jdbcType=VARCHAR},
@@ -88,23 +88,29 @@
       <if test="gip != null">
         #{gip,jdbcType=VARCHAR},
       </if>
-      <if test="height != null">
-        #{height,jdbcType=VARCHAR},
-      </if>
-      <if test="gap != null">
-        #{gap,jdbcType=VARCHAR},
-      </if>
       <if test="loratm != null">
         #{loratm,jdbcType=TIMESTAMP},
       </if>
       <if test="witnesstm != null">
-        #{witnesstm,jdbcType=VARCHAR},
+        #{witnesstm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="disk != null">
+        #{disk,jdbcType=DOUBLE},
+      </if>
+      <if test="muxtm != null">
+        #{muxtm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="minerver != null">
+        #{minerver,jdbcType=VARCHAR},
+      </if>
+      <if test="minerstat != null">
+        #{minerstat,jdbcType=VARCHAR},
+      </if>
+      <if test="ver != null">
+        #{ver,jdbcType=VARCHAR},
       </if>
       <if test="beacontm != null">
         #{beacontm,jdbcType=TIMESTAMP},
-      </if>
-      <if test="lastwitness != null">
-        #{lastwitness,jdbcType=VARCHAR},
       </if>
       <if test="hearttm != null">
         #{hearttm,jdbcType=TIMESTAMP},
@@ -112,15 +118,10 @@
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="token != null">
-        #{token,jdbcType=VARCHAR},
-      </if>
-      <if test="address != null">
-        #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="disk != null">
-        #{disk,jdbcType=INTEGER},
+      <if test="grpcfaild != null">
+        #{grpcfaild,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
+
 </mapper>

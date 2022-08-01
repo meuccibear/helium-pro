@@ -154,6 +154,11 @@ public class HeliumDemo {
         throw new MsgException("没有可以使用的位置设备了");
     }
 
+
+    public static void main(String[] args) {
+        JSONObject json = HeliumUtils.roles("", "", null);
+        System.out.println(json);
+    }
     /**
      * get请求
      *

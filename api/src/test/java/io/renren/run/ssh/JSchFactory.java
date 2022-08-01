@@ -1,9 +1,9 @@
-package io.renren.ssh;
+package io.renren.run.ssh;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import io.renren.ssh.entity.ServerInformation;
+import io.renren.run.ssh.entity.ServerInformation;
 
 /**
  * @program: jsch

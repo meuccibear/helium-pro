@@ -1,11 +1,11 @@
-package io.renren.ssh;
+package io.renren.run.ssh;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.ObjectUtils;
-import io.renren.ssh.entity.AnsibleError;
-import io.renren.ssh.entity.AnsiblePack;
+import io.renren.run.ssh.entity.AnsibleError;
+import io.renren.run.ssh.entity.AnsiblePack;
 import lombok.SneakyThrows;
 import java.util.ArrayList;
 import java.util.HashMap;

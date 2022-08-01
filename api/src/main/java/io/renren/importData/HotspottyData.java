@@ -1,8 +1,6 @@
 package io.renren.importData;
 
-import com.alibaba.fastjson.TypeReference;
-import io.renren.common.gitUtils.BeanUtils;
-import io.renren.modules.business.entity.BusinessDeviceEntity;
+import io.renren.modules.business.entity.BusinessDevice;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

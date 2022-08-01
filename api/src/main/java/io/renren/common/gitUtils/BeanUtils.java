@@ -124,16 +124,19 @@ public class BeanUtils {
      */
     public static <T> T toJavaObject(Object obj, TypeReference<T> type) {
         String text = "";
-        if (obj instanceof String) {
-            text = (String) obj;
-            if (ObjectUtils.isEmpty(text)) {
-                text = "{}";
-            }
+        if(ObjectUtils.notIsEmpty(obj)){
+            if (obj instanceof String) {
+                text = (String) obj;
+                if (ObjectUtils.isEmpty(text)) {
+                    text = "{}";
+                }
 
-        } else {
-            text = JSON.toJSONString(obj);
+            } else {
+                text = JSON.toJSONString(obj);
+            }
+            return JSONObject.parseObject(text, type);
         }
-        return JSONObject.parseObject(text, type);
+        return null;
     }
 
     public static Object toJSON(Object data) {

@@ -140,6 +140,14 @@
             <el-button size="small" type="primary">导入数据</el-button>
           </el-upload>
         </el-form-item>
+        <el-form-item>
+          <el-button
+            v-if="isAuth('business:businessdevice:downloadDaily')"
+            @click="downloadDaily()"
+            type="success"
+            size="small"
+            plain>下载日报</el-button>
+        </el-form-item>
       </el-row>
     </el-form>
     <el-table
@@ -234,6 +242,7 @@
           align="center"
           sortable
           width="120"
+          :sort-method="sortByIP"
           :show-overflow-tooltip="true"
           label="ip">
         </el-table-column>
@@ -242,7 +251,7 @@
           header-align="center"
           align="center"
           sortable
-          width="160"
+          width="140"
           v-if="isAuth('business:businessdevice:mon')"
           label="24小时收益">
         </el-table-column>
@@ -251,7 +260,7 @@
           header-align="center"
           align="center"
           sortable
-          width="160"
+          width="90"
           v-if="isAuth('business:businessdevice:mon')"
           label="scale">
         </el-table-column>
@@ -269,14 +278,14 @@
             <el-tag v-else >未知</el-tag>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="height"
-          header-align="center"
-          align="center"
-          width="120"
-          :show-overflow-tooltip="true"
-          label="高度">
-        </el-table-column>
+<!--        <el-table-column-->
+<!--          prop="height"-->
+<!--          header-align="center"-->
+<!--          align="center"-->
+<!--          width="120"-->
+<!--          :show-overflow-tooltip="true"-->
+<!--          label="高度">-->
+<!--        </el-table-column>-->
       <el-table-column
           prop="disk"
           header-align="center"
@@ -286,15 +295,15 @@
           :show-overflow-tooltip="true"
           label="占用磁盘大小(%)">
         </el-table-column>
-        <el-table-column
-          prop="gap"
-          header-align="center"
-          align="center"
-          sortable
-          width="120"
-          :show-overflow-tooltip="true"
-          label="gap">
-        </el-table-column>
+<!--        <el-table-column-->
+<!--          prop="gap"-->
+<!--          header-align="center"-->
+<!--          align="center"-->
+<!--          sortable-->
+<!--          width="120"-->
+<!--          :show-overflow-tooltip="true"-->
+<!--          label="gap">-->
+<!--        </el-table-column>-->
         <el-table-column
           prop="online"
           header-align="center"
@@ -336,10 +345,46 @@
           prop="groupName"
           header-align="center"
           align="center"
-          width="160"
+          min-width="60"
           :show-overflow-tooltip="true"
           label="分组">
         </el-table-column>
+      <el-table-column
+        prop="muxtm"
+        header-align="center"
+        align="center"
+        sortable
+        width="240"
+        :show-overflow-tooltip="true"
+        label="muxtm">
+      </el-table-column>
+      <el-table-column
+        prop="minerver"
+        header-align="center"
+        align="center"
+        sortable
+        width="120"
+        :show-overflow-tooltip="true"
+        label="miner版本">
+      </el-table-column>
+      <el-table-column
+        prop="minerstat"
+        header-align="center"
+        align="center"
+        sortable
+        width="120"
+        :show-overflow-tooltip="true"
+        label="miner状态">
+      </el-table-column>
+      <el-table-column
+        prop="ver"
+        header-align="center"
+        align="center"
+        sortable
+        width="140"
+        :show-overflow-tooltip="true"
+        label="hntMan版本">
+      </el-table-column>
       <el-table-column
         prop="loratm"
         header-align="center"
@@ -353,6 +398,7 @@
         prop="witnesstm"
         v-if="isAuth('business:businessdevice:dev')"
         width="240"
+        sortable
         :show-overflow-tooltip="true"
         label="最后的见证【见证别人】">
       </el-table-column>
@@ -360,18 +406,19 @@
         prop="beacontm"
         v-if="isAuth('business:businessdevice:dev')"
         width="240"
+        sortable
         :show-overflow-tooltip="true"
         label="最后beacontm时间">
       </el-table-column>
-      <el-table-column
-        prop="lastwitness"
-        v-if="isAuth('business:businessdevice:dev')"
-        header-align="center"
-        align="center"
-        width="240"
-        :show-overflow-tooltip="true"
-        label="挑战者地址">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="lastwitness"-->
+<!--        v-if="isAuth('business:businessdevice:dev')"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        width="240"-->
+<!--        :show-overflow-tooltip="true"-->
+<!--        label="挑战者地址">-->
+<!--      </el-table-column>-->
         <el-table-column
           prop="pingpai"
           header-align="center"
@@ -388,14 +435,14 @@
           :show-overflow-tooltip="true"
           label="MAC地址">
         </el-table-column>
-        <el-table-column
-          prop="ownerNo"
-          header-align="center"
-          align="center"
-          width="120"
-          :show-overflow-tooltip="true"
-          label="钱包序号">
-        </el-table-column>
+<!--        <el-table-column-->
+<!--          prop="ownerNo"-->
+<!--          header-align="center"-->
+<!--          align="center"-->
+<!--          width="120"-->
+<!--          :show-overflow-tooltip="true"-->
+<!--          label="钱包序号">-->
+<!--        </el-table-column>-->
         <el-table-column
           prop="locationAddress"
           header-align="center"
@@ -418,15 +465,15 @@
           :show-overflow-tooltip="true"
           label="备注">
         </el-table-column>
-        <el-table-column
-          prop="cname"
-          header-align="center"
-          align="center"
-          sortable
-          width="120"
-          :show-overflow-tooltip="true"
-          label="分组名称">
-        </el-table-column>
+<!--        <el-table-column-->
+<!--          prop="cname"-->
+<!--          header-align="center"-->
+<!--          align="center"-->
+<!--          sortable-->
+<!--          width="120"-->
+<!--          :show-overflow-tooltip="true"-->
+<!--          label="分组名称">-->
+<!--        </el-table-column>-->
         <el-table-column
           prop="devtype"
           header-align="center"
@@ -435,14 +482,14 @@
           :show-overflow-tooltip="true"
           label="设备类型">
         </el-table-column>
-        <el-table-column
-          prop="gip"
-          align="center"
-          sortable
-          width="240"
-          :show-overflow-tooltip="true"
-          label="信号管理服务器内网ip">
-        </el-table-column>
+<!--        <el-table-column-->
+<!--          prop="gip"-->
+<!--          align="center"-->
+<!--          sortable-->
+<!--          width="240"-->
+<!--          :show-overflow-tooltip="true"-->
+<!--          label="信号管理服务器内网ip">-->
+<!--        </el-table-column>-->
         <el-table-column
           prop="remark"
           header-align="center"
@@ -654,6 +701,55 @@ export default {
         duration: 0
       })
       this.getDataList()
+    },
+    downloadDaily () {
+      this.$http({
+        url: this.$http.adornUrl('/business/businessdevice/downloadDaily'),
+        method: 'get'
+        // 首先设置responseType字段格式为 blob
+        // responseType: 'blob'
+      }).then((res) => {
+        // console.log(res)
+        // console.log(JSON.stringify(res))
+        // 为blob设置文件类型，这里以.xlsx为例
+        // let blob = new Blob([res],
+        //   {
+        //     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;'
+        //   }
+        // )
+        if (res.data.existence) {
+          let blob = new Blob([res.data.context])
+          // 创建一个临时的url指向blob对象
+          let url = window.URL.createObjectURL(blob)
+          let a = document.createElement('a')
+          a.href = url
+          a.download = '日报'
+          a.click()
+          // 释放这个临时的对象url
+          window.URL.revokeObjectURL(url)
+        } else {
+          this.$notify({
+            title: '提示',
+            message: res.data.msg,
+            duration: 0
+          })
+        }
+      })
+      // window.open(this.$http.adornUrl(`/business/businessdevice/businessdevice?token=${this.$cookie.get('token')}`), "_self")
+    },
+    download (item) {
+      // 下载文件
+      // 创建a标签
+      let a = document.createElement('a')
+      // 完整图片地址url连接  例如https://xxxx.cn/xxx/xxx/xxxx.xlsx   或者https://xxxx.cn/xxx/xxx/xxxx.png
+      let url = item.fileurls
+      fetch(url).then(res => res.blob()).then(blob => {
+        // blob地址
+        a.href = URL.createObjectURL(blob)
+        // 下载文件的名字
+        a.download = item.name
+        a.click()
+      })
     },
     sortByIP (obj1, obj2) {
       if (

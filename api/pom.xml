@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.renren</groupId>
     <artifactId>helium-fast</artifactId>
-    <version>1.1.9</version>
+    <version>1.2.0</version>
     <packaging>jar</packaging>
     <description>helium-fast</description>
 
@@ -308,14 +308,8 @@
             <artifactId>easyexcel</artifactId>
             <version>3.0.5</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.jcraft/jsch -->
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>0.1.55</version>
-        </dependency>
         <!--   SSH    -->
+        <!-- https://mvnrepository.com/artifact/com.jcraft/jsch -->
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
@@ -393,7 +387,6 @@
                             <include>${project.build.finalName}.jar</include>
                         </resource>
                     </resources>
-
                     <!--					<serverId>docker-hub</serverId>-->
                 </configuration>
                 <!-- 运行命令 mvn clean package docker:build 打包并生成docker镜像 -->

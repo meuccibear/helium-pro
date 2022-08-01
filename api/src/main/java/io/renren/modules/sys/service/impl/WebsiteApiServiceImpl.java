@@ -106,10 +106,19 @@ public class WebsiteApiServiceImpl extends HttpUtils implements WebsiteApiServic
         if (!websiteApiMap.containsKey(key)) {
             throw new IllegalArgumentException(String.format("没有该接口信息~", key, data));
         }
+
         WebsiteApi websiteApi = websiteApiMap.get(key);
-        return send(getMethod(websiteApi.getMethod()), StringUtils.formatKV(websiteApi.getFullLink(), data), BeanUtils.mergeToModel(new TypeReference<HashMap>() {{
-        }}, websiteApi.getParameter(), data), BeanUtils.toJavaObject(websiteApi.getHeaders(), new TypeReference<HashMap>() {{
+        return send(getMethod(websiteApi.getMethod()), StringUtils.formatV(websiteApi.getFullLink(), data),
+                BeanUtils.toJavaObject(StringUtils.formatKV(websiteApi.getParameter(), data), new TypeReference<HashMap>() {{}})
+                , BeanUtils.toJavaObject(websiteApi.getHeaders(), new TypeReference<HashMap>() {{
         }}));
+    }
+
+    public HttpResultData send(HttpUtils.Method method,String url, Object data, Object headers) throws MsgException {
+        return send(method, url,
+                BeanUtils.toJavaObject(data, new TypeReference<HashMap>() {{}})
+                , BeanUtils.toJavaObject(headers, new TypeReference<HashMap>() {{
+                }}));
     }
 
     public HttpResultData sendV(String key, Object... data) throws MsgException {

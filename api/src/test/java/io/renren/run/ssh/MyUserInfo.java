@@ -1,4 +1,4 @@
-package io.renren.ssh;
+package io.renren.run.ssh;
 
 import com.jcraft.jsch.UIKeyboardInteractive;
 import com.jcraft.jsch.UserInfo;

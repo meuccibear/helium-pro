@@ -1,4 +1,4 @@
-package io.renren.ssh.entity;
+package io.renren.run.ssh.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

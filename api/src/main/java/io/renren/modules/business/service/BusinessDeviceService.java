@@ -1,14 +1,10 @@
 package io.renren.modules.business.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.gitUtils.exception.MsgException;
-import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
-import io.renren.modules.business.entity.BusinessDeviceEntity;
+import io.renren.modules.business.entity.BusinessDevice;
 import io.renren.modules.domain.dto.DeviceDTO;
-import lombok.SneakyThrows;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -19,15 +15,15 @@ import java.util.Map;
  * @email sunlightcs@gmail.com
  * @date 2022-03-24 05:24:38
  */
-public interface BusinessDeviceService extends IService<BusinessDeviceEntity> {
+public interface BusinessDeviceService {
 
-    PageUtils queryPage(Map<String, Object> params);
+//    PageUtils queryPage(Map<String, Object> params);
 
-    void insertOrUpdate(BusinessDeviceEntity device);
+    void insertOrUpdate(BusinessDevice device);
 
-    int updateByAddress(@Param("updated") BusinessDeviceEntity updated);
+    int updateByAddress(@Param("updated") BusinessDevice updated);
 
-    void insertOrUpdate(List<BusinessDeviceEntity> devices);
+    void insertOrUpdate(List<BusinessDevice> devices);
 
     List<String> findAll();
 
@@ -35,11 +31,11 @@ public interface BusinessDeviceService extends IService<BusinessDeviceEntity> {
 
     R getAll(DeviceDTO deviceDTO);
 
+    String daily(DeviceDTO deviceDTO);
+
     void importData(MultipartFile file);
 
     void updateData(List<List<String>> lists, int index);
-
-//    void updateData1(List<List<String>> lists, int index, String filePath);
 
     void getDevice(Map<String, String> ownerNo, List<List<String>> lists, int index, String filePath) throws MsgException;
 
@@ -49,9 +45,41 @@ public interface BusinessDeviceService extends IService<BusinessDeviceEntity> {
 
     void dashboard(List<List<String>> lists, int i, String filePath);
 
+    int deleteByPrimaryKey(Long id);
+
+    int insert(BusinessDevice record);
+
+    int insertSelective(BusinessDevice record);
+
+    BusinessDevice selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(BusinessDevice record);
+
+    int updateByPrimaryKey(BusinessDevice record);
+
+//    int deleteByPrimaryKey(Long id);
+
+//    int insert(BusinessDevice record);
+//
+//    int insertSelective(BusinessDevice record);
+//
+//    BusinessDevice selectByPrimaryKey(Long id);
+//
+//    int updateByPrimaryKeySelective(BusinessDevice record);
+//
+//    int updateByPrimaryKey(BusinessDevice record);
+
 //    void addHotspottyGlobalDevice(List<List<String>> lists, int index, String filePath) throws MsgException;
 
 }
+
+
+
+
+
+
+
+
 
 
 

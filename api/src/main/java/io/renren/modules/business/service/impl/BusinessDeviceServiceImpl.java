@@ -9,6 +9,7 @@ import io.renren.common.gitUtils.http.FileUtils;
 import io.renren.common.utils.R;
 import io.renren.importData.HotspottyData;
 import io.renren.importData.HotspottyDataListener;
+import io.renren.modules.business.dao.BusinessDeviceMapper;
 import io.renren.modules.business.dao.Select;
 import io.renren.modules.business.service.MakersService;
 import io.renren.modules.domain.dto.DeviceDTO;
@@ -19,7 +20,6 @@ import io.renren.modules.helium.domain.Device;
 import io.renren.modules.helium.domain.deviceConfig.activity.RestBean;
 import io.renren.modules.sys.api.HeliumApi;
 import io.renren.modules.sys.api.domain.CorpseUtil;
-import io.renren.modules.sys.entity.SourceCorpse;
 import io.renren.modules.sys.service.GlobalDeviceService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -27,17 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.renren.common.utils.PageUtils;
-import io.renren.common.utils.Query;
-import io.renren.modules.business.dao.BusinessDeviceDao;
-import io.renren.modules.business.entity.BusinessDeviceEntity;
+import io.renren.modules.business.entity.BusinessDevice;
 import io.renren.modules.business.service.BusinessDeviceService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,7 +38,10 @@ import javax.annotation.Resource;
 
 @Slf4j
 @Service("businessDeviceService")
-public class BusinessDeviceServiceImpl extends ServiceImpl<BusinessDeviceDao, BusinessDeviceEntity> implements BusinessDeviceService {
+public class BusinessDeviceServiceImpl implements BusinessDeviceService {
+
+    @Resource
+    BusinessDeviceMapper businessDeviceMapper;
 
     @Resource
     HeliumApi heliumApi;
@@ -66,15 +62,15 @@ public class BusinessDeviceServiceImpl extends ServiceImpl<BusinessDeviceDao, Bu
     @Override
     public Map<String, Object> findSelect(DeviceDTO deviceDTO) {
         Map<String, Object> selectMap = new HashMap<>();
-        selectMap.put("onlines", baseMapper.findSelect(deviceDTO, 1));
-        selectMap.put("depllist", baseMapper.findSelect(deviceDTO, 2));
+        selectMap.put("onlines", businessDeviceMapper.findSelect(deviceDTO, 1));
+        selectMap.put("depllist", businessDeviceMapper.findSelect(deviceDTO, 2));
         return selectMap;
     }
 
     @Override
     public R getAll(DeviceDTO deviceDTO) {
-        List<BusinessDeviceEntity> businessDeviceEntities = baseMapper.selectAllPaging(deviceDTO);
-        List<BusinessDeviceEntity> deviceEntities = baseMapper.selectFilterable(deviceDTO);
+        List<BusinessDevice> businessDeviceEntities = businessDeviceMapper.selectAllPaging(deviceDTO);
+        List<BusinessDevice> deviceEntities = businessDeviceMapper.selectFilterable(deviceDTO);
 
         PageRRVO pageUtils = PageRRVO.build(deviceDTO, businessDeviceEntities, deviceEntities.size());
         R r = R.ok();
@@ -83,7 +79,26 @@ public class BusinessDeviceServiceImpl extends ServiceImpl<BusinessDeviceDao, Bu
         return r;
     }
 
-    private Map<String, Object> findSelect(List<BusinessDeviceEntity> businessDeviceEntities) {
+    @Override
+    public String daily(DeviceDTO deviceDTO) {
+        List<BusinessDevice> businessDeviceEntities = businessDeviceMapper.selectAllPaging(deviceDTO);
+        StringBuffer result = new StringBuffer();
+        for (BusinessDevice businessDeviceEntity : businessDeviceEntities) {
+            result.append(StringUtils.outStr("\t", businessDeviceEntity.getOneLevelName(), businessDeviceEntity.getTwoLevelName(), businessDeviceEntity.getManageName(), businessDeviceEntity.getAddress(), businessDeviceEntity.getRemark())).append("\n");
+        }
+        JSONObject returnResult = new JSONObject();
+        if(ObjectUtils.isEmpty(result.toString())){
+            returnResult.put("msg", "暂时没有有问题的设备~");
+            returnResult.put("existence", false);
+        } else {
+            returnResult.put("context", result.toString());
+            returnResult.put("existence", true);
+        }
+
+        return returnResult.toJSONString();
+    }
+
+    private Map<String, Object> findSelect(List<BusinessDevice> businessDeviceEntities) {
         Map<String, Object> result = new HashMap<>();
 
         //一级客户名称
@@ -98,7 +113,7 @@ public class BusinessDeviceServiceImpl extends ServiceImpl<BusinessDeviceDao, Bu
         Map<String, JSONObject> country = new HashMap<>();
         Map<String, JSONObject> city = new HashMap<>();
 
-        for (BusinessDeviceEntity businessDeviceEntity : businessDeviceEntities) {
+        for (BusinessDevice businessDeviceEntity : businessDeviceEntities) {
 
             putCount(oneLevelName, businessDeviceEntity.getOneLevelName());
             putCount(twoLevelName, businessDeviceEntity.getTwoLevelName());
@@ -182,68 +197,66 @@ public class BusinessDeviceServiceImpl extends ServiceImpl<BusinessDeviceDao, Bu
         return selects;
     }
 
+//    @Override
+//    public PageUtils queryPage(Map<String, Object> params) {
+//        String oneLevelName = (String) params.get("one_level_name");
+//        String twoLevelName = (String) params.get("two_level_name");
+//        String key = (String) params.get("key");
+//        IPage<BusinessDevice> page = this.page(
+//                new Query<BusinessDevice>().getPage(params),
+//                new QueryWrapper<BusinessDevice>()
+//                        .and(wrapper -> wrapper.eq(ObjectUtils.notIsEmpty(oneLevelName), "one_level_name", oneLevelName)
+//                                .or(ObjectUtils.notIsEmpty(twoLevelName), wrapper1 -> wrapper1.eq("two_level_name", twoLevelName))
+//                        )
+//                        .and(ObjectUtils.notIsEmpty(key), wrapper -> wrapper.eq("one_level_name", key)
+//                                .or(wrapper1 -> wrapper1.eq("two_level_name", key))
+//                        )
+//        );
+//
+//        return new PageUtils(page);
+//    }
+
+
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
-        String oneLevelName = (String) params.get("one_level_name");
-        String twoLevelName = (String) params.get("two_level_name");
-        String key = (String) params.get("key");
-        IPage<BusinessDeviceEntity> page = this.page(
-                new Query<BusinessDeviceEntity>().getPage(params),
-                new QueryWrapper<BusinessDeviceEntity>()
-                        .and(wrapper -> wrapper.eq(ObjectUtils.notIsEmpty(oneLevelName), "one_level_name", oneLevelName)
-                                .or(ObjectUtils.notIsEmpty(twoLevelName), wrapper1 -> wrapper1.eq("two_level_name", twoLevelName))
-                        )
-                        .and(ObjectUtils.notIsEmpty(key), wrapper -> wrapper.eq("one_level_name", key)
-                                .or(wrapper1 -> wrapper1.eq("two_level_name", key))
-                        )
-        );
-
-        return new PageUtils(page);
-    }
-
-
-    @Override
-    public void insertOrUpdate(BusinessDeviceEntity device) {
+    public void insertOrUpdate(BusinessDevice device) {
         if (StringUtils.isEmpty(device.getAddress())) {
             return;
         }
         device.setStatus(1);
-        String address = baseMapper.findAddressByAddress(device.getAddress());
+        String address = businessDeviceMapper.findAddressByAddress(device.getAddress());
         if (StringUtils.notIsEmpty(address)) {
             device.setUpdateTime(new Date());
-            baseMapper.updateByAddress(device);
+            businessDeviceMapper.updateByAddress(device);
         } else {
             device.setImportDataTime(new Date());
-            baseMapper.insertSelective(device);
+            businessDeviceMapper.insertSelective(device);
         }
     }
 
     @Override
-    public int updateByAddress(BusinessDeviceEntity updated) {
-        return baseMapper.updateByAddress(updated);
+    public int updateByAddress(BusinessDevice updated) {
+        return businessDeviceMapper.updateByAddress(updated);
     }
 
 
     @Override
-    public void insertOrUpdate(List<BusinessDeviceEntity> devices) {
-        for (BusinessDeviceEntity device : devices) {
+    public void insertOrUpdate(List<BusinessDevice> devices) {
+        for (BusinessDevice device : devices) {
             insertOrUpdate(device);
         }
     }
 
     @Override
     public List<String> findAll() {
-        return baseMapper.findAll();
+        return businessDeviceMapper.findAll();
     }
-
 
     @SneakyThrows
     @Override
     public void importData(MultipartFile file) {
-        baseMapper.clear();
+        businessDeviceMapper.clear();
         EasyExcel.read(file.getInputStream(), HotspottyData.class, new HotspottyDataListener(this)).sheet(1).doRead();
     }
-
 
     @Override
     @Async("taskExecutor")
@@ -253,9 +266,9 @@ public class BusinessDeviceServiceImpl extends ServiceImpl<BusinessDeviceDao, Bu
 
         LocalDateTime now = LocalDateTime.now();
         Device device = null;
-        BusinessDeviceEntity deviceEntity = null;
+        BusinessDevice deviceEntity = null;
         String address = null;
-        BusinessDeviceEntity businessDeviceEntity;
+        BusinessDevice businessDeviceEntity;
         for (int i = 0; i < addresss.size(); i++) {
             address = addresss.get(i);
             log.info(String.format("hash值：%s 线程序号：%d任务量：%d 开始查询第%d个设备信息 设备地址：%s", addresss.hashCode(), index, addresss.size(), i, addresss.get(i)));
@@ -264,36 +277,35 @@ public class BusinessDeviceServiceImpl extends ServiceImpl<BusinessDeviceDao, Bu
                 try {
                     device = heliumApi.getHotspotsByAddress(address);
                     if (ObjectUtils.notIsEmpty(device)) {
-                        businessDeviceEntity = new BusinessDeviceEntity();
-                        businessDeviceEntity.setAddress(device.getAddress());
-                        businessDeviceEntity.setName(device.getName().replaceAll("-", " "));
-                        businessDeviceEntity.setOnline(device.getStatus().getOnline());
-                        businessDeviceEntity.setCountry(device.getGeocode().getLong_country());
+                        deviceEntity = new BusinessDevice();
+                        deviceEntity.setAddress(device.getAddress());
+                        deviceEntity.setName(device.getName().replaceAll("-", " "));
+                        deviceEntity.setOnline(device.getStatus().getOnline());
+                        deviceEntity.setCountry(device.getGeocode().getLong_country());
 
-                        businessDeviceEntity.setCity(StringUtils.outStr(" ", device.getGeocode().getLong_city(), device.getGeocode().getLong_state()));
-                        businessDeviceEntity.setStreet(device.getGeocode().getLong_street());
-                        businessDeviceEntity.setHex(device.getLocation_hex());
-                        businessDeviceEntity.setTotal24h(device.getTotal());
-                        businessDeviceEntity.setOwner(device.getOwner());
-                        businessDeviceEntity.setUpdateTime(new Date());
-                        businessDeviceEntity.setDepllist(device.getDepllist());
-                        businessDeviceEntity.setScale(device.getReward_scale());
-                        businessDeviceEntity.setPingpai(makersService.selectNameByAddress(device.getPayer()));
-                        deviceEntity.setErrStatus(0);
-                    } else {
-                        deviceEntity = new BusinessDeviceEntity();
-                        deviceEntity.setAddress(address);
-                        deviceEntity.setErrStatus(1);
+                        deviceEntity.setCity(StringUtils.outStr(" ", device.getGeocode().getLong_city(), device.getGeocode().getLong_state()));
+                        deviceEntity.setStreet(device.getGeocode().getLong_street());
+                        deviceEntity.setHex(device.getLocation_hex());
+                        deviceEntity.setTotal24h(device.getTotal());
+                        deviceEntity.setOwner(device.getOwner());
                         deviceEntity.setUpdateTime(new Date());
+                        deviceEntity.setDepllist(device.getDepllist());
+                        deviceEntity.setScale(device.getReward_scale());
+                        deviceEntity.setPingpai(makersService.selectNameByAddress(device.getPayer()));
+                        deviceEntity.setErrStatus(1);
                     }
                 } catch (Exception e) {
                     log.error("【getHotspotsByAddress失败~】" + address, e);
+                    deviceEntity = new BusinessDevice();
+                    deviceEntity.setAddress(address);
+                    deviceEntity.setErrStatus(2);
+                    deviceEntity.setUpdateTime(new Date());
                 }
 
                 try {
                     deviceEntity.setTotal24h(heliumApi.getHotspotsTotal(2, address));
                 } catch (Exception e) {
-                    deviceEntity.setErrStatus(2);
+                    deviceEntity.setErrStatus(3);
                     log.error("【setTotal24h失败~】" + address, e);
                 }
                 try {
@@ -303,48 +315,17 @@ public class BusinessDeviceServiceImpl extends ServiceImpl<BusinessDeviceDao, Bu
                     }
                 } catch (Exception e) {
                     log.error("【setDepllist失败~】" + address, e);
-                    deviceEntity.setErrStatus(3);
+                    deviceEntity.setErrStatus(4);
                 }
 
                 log.info("【updateByAddress】{}", JSON.toJSONString(deviceEntity));
-                baseMapper.updateByAddress(deviceEntity);
+                businessDeviceMapper.updateByAddress(deviceEntity);
                 device = null;
             }
         }
         log.info("任务结束：hash值：{} 线程序号：{} 查询{}台设备 所消耗的时间{}", addresss.hashCode(), index, addresss.size(), DateUtils.calculationTimeConsuming(now));
 
     }
-
-//    @Override
-//    @Async("taskExecutor")
-//    public void updateData1(List<List<String>> lists, int index, String filePath) {
-//        List<String> addresss = lists.get(index);
-//        log.info(String.format("开始执行任务：hash值：%s 线程序号：%d任务量：%d", addresss.hashCode(), index, addresss.size()));
-//
-//        LocalDateTime now = LocalDateTime.now();
-//        String cityid = null;
-//
-//        for (int i = 0; i < addresss.size(); i++) {
-//            cityid = addresss.get(i);
-//            log.info(String.format("hash值：%s 线程序号：%d任务量：%d 开始查询第%d个设备信息 设备地址：%s", addresss.hashCode(), index, addresss.size(), i, addresss.get(i)));
-//
-//            try {
-//                List<Device> devices = heliumApi.getHotspotsByCities(cityid);
-//                List<SourceCorpse> sourceCorpses = corpseUtil.checkDevice(devices, 5);
-//                for (SourceCorpse sourceCorps : sourceCorpses) {
-//                    FileUtils.writeln(filePath, StringUtils.outStr("\t", sourceCorps.getHex(), sourceCorps.getCityId(), sourceCorps.getAddress(),
-//                                    sourceCorps.getBottomScanle(), sourceCorps.getCount(), sourceCorps.getOfflinecount(), sourceCorps.getOnlinecount(),
-//                                    sourceCorps.getCountry(), sourceCorps.getCity(), sourceCorps.getOfflinecount() / (sourceCorps.getCount() + 8)),
-//                            true, true);
-//                }
-//            } catch (MsgException | URISyntaxException e) {
-//                log.error("[findCorpseS]", e);
-//            }
-//        }
-//        log.info("任务结束：hash值：{} 线程序号：{} 查询{}台设备 所消耗的时间{}", addresss.hashCode(), index, addresss.size(), DateUtils.calculationTimeConsuming(now));
-//
-//    }
-
 
     @Override
     @Async("taskExecutor")
@@ -464,6 +445,66 @@ public class BusinessDeviceServiceImpl extends ServiceImpl<BusinessDeviceDao, Bu
 
     }
 
+    @Override
+    public int deleteByPrimaryKey(Long id) {
+        return businessDeviceMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public int insert(BusinessDevice record) {
+        return businessDeviceMapper.insert(record);
+    }
+
+    @Override
+    public int insertSelective(BusinessDevice record) {
+        return businessDeviceMapper.insertSelective(record);
+    }
+
+    @Override
+    public BusinessDevice selectByPrimaryKey(Long id) {
+        return businessDeviceMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public int updateByPrimaryKeySelective(BusinessDevice record) {
+        return businessDeviceMapper.updateByPrimaryKeySelective(record);
+    }
+
+    @Override
+    public int updateByPrimaryKey(BusinessDevice record) {
+        return businessDeviceMapper.updateByPrimaryKey(record);
+    }
+
+//    @Override
+//    public int deleteByPrimaryKey(Long id) {
+//        return businessDeviceMapper.deleteByPrimaryKey(id);
+//    }
+
+//    @Override
+//    public int insert(BusinessDevice record) {
+//        return businessDeviceMapper.insert(record);
+//    }
+//
+//    @Override
+//    public int insertSelective(BusinessDevice record) {
+//        return businessDeviceMapper.insertSelective(record);
+//    }
+//
+//    @Override
+//    public BusinessDevice selectByPrimaryKey(Long id) {
+//        return businessDeviceMapper.selectByPrimaryKey(id);
+//    }
+//
+//    @Override
+//    public int updateByPrimaryKeySelective(BusinessDevice record) {
+//        return businessDeviceMapper.updateByPrimaryKeySelective(record);
+//    }
+//
+//    @Override
+//    public int updateByPrimaryKey(BusinessDevice record) {
+//        return businessDeviceMapper.updateByPrimaryKey(record);
+//    }
+
 //    @SneakyThrows
 //    @Async("taskExecutor")
 //    public void addHotspottyGlobalDevice(List<List<String>> lists, int index, String filePath) throws MsgException {
@@ -486,6 +527,14 @@ public class BusinessDeviceServiceImpl extends ServiceImpl<BusinessDeviceDao, Bu
 //    }
 
 }
+
+
+
+
+
+
+
+
 
 
 

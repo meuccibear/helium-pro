@@ -93,19 +93,28 @@ public class HeliumTest {
     @Test
     public void showAvailableHexs() throws MsgException {
         String groupStr =
-                        "852db1a3fffffff\t8\n" +
-                                "8639220cfffffff\t4\n" +
-                                "8639220efffffff\t4\n" +
-                                "861e1b2b7ffffff\t4\n" +
-                                "861e1b297ffffff\t4\n" +
-                                "861ec0d6fffffff\t4\n" +
-                                "861ec099fffffff\t4\n" +
-                                "86194d1b7ffffff\t4\n" +
-                                "86194d1a7ffffff\t4\n" +
-                                "863f68d87ffffff\t4\n" +
-                                "863f68d8fffffff\t4\n" +
-                                "863f6811fffffff\t4\n" +
-                                "863f6812fffffff\t4"  ;
+                        "86395644fffffff\t4\n" +
+                        "863956737ffffff\t4\n" +
+                        "862c2a06fffffff\t4\n" +
+                        "862c2a067ffffff\t4\n" +
+                        "863f646b7ffffff\t4\n" +
+                        "863f64687ffffff\t4\n" +
+                        "851fa4cbfffffff\t8\n" +
+                        "85392207fffffff\t8\n" +
+                        "851ef593fffffff\t8\n" +
+                        "861f0d557ffffff\t4\n" +
+                        "861f0d5afffffff\t4\n" +
+                        "86395c8afffffff\t4\n" +
+                        "86395c8c7ffffff\t4\n" +
+                        "86186a25fffffff\t1\n" +
+                        "86186a2efffffff\t7\n" +
+                        "863965a5fffffff\t4\n" +
+                        "861f92da7ffffff\t4\n" +
+                        "861845267ffffff\t6\n" +
+                        "86186ac97ffffff\t1\n" +
+                        "86186ad9fffffff\t1\n" +
+                        "861f15c27ffffff\t4\n" +
+                        "861f15d47ffffff\t4"  ;
         String filePath = "../data/result/坐标_" + System.currentTimeMillis();
 
         List<List<String>> groupTable = StringUtils.toTableList(groupStr);

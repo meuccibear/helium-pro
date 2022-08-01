@@ -5,9 +5,12 @@ import io.renren.modules.business.entity.BusinessLog;
 
 public interface BusinessLogService {
 
-    int insertSelective(BusinessLog record);
+    void insertSelective(BusinessLog record);
 
 }
+
+
+
 
 
 

@@ -15,4 +15,4 @@ COPY dist/ /usr/share/nginx/html/
 # docker save -o hnt-vue.tar hnt-vue:v1.0
 #
 # npm run build --pord
-# docker build -t zhuozhuang/helium-vue:1.1.9 .
+# docker build -t zhuozhuang/helium-vue:1.2.0 .

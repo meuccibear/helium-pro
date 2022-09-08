@@ -35,9 +35,9 @@ public interface BusinessDeviceService {
 
     void importData(MultipartFile file);
 
-    void updateData(List<List<String>> lists, int index);
+    void updateData(Map<String, String> makersDictionary, List<List<String>> lists, int index);
 
-    void getDevice(Map<String, String> ownerNo, List<List<String>> lists, int index, String filePath) throws MsgException;
+    void getDevice(Map<String, String> makersDictionary,Map<String, String> ownerNo, List<List<String>> lists, int index, String filePath) throws MsgException;
 
     void addHeliumGlobalDevice(List<List<String>> lists, int index, String filePath) throws MsgException;
 

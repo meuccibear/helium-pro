@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.uber.h3core.H3Core;
 import io.renren.Hex;
+import io.renren.common.HeliumHttpUtils;
 import io.renren.common.gitUtils.JSONUtils;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.StringUtils;
@@ -12,6 +13,7 @@ import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
 import io.renren.common.gitUtils.map.NumMap;
 import io.renren.modules.business.service.BusinessDeviceService;
+import io.renren.modules.business.service.MakersService;
 import io.renren.modules.helium.*;
 import io.renren.modules.helium.domain.LeanData;
 import io.renren.modules.helium.domain.Result;
@@ -54,14 +56,16 @@ public class HeliumTest {
     @Autowired
     Bobcat bobcat;
 
-    @Autowired
-    HeliumHttpUtils heliumHttpUtils;
+    HeliumHttpUtils heliumHttpUtils = new HeliumHttpUtils();
 
     @Autowired
     BusinessDeviceService businessDeviceService;
 
     @Autowired
     GlobalDeviceService globalDeviceService;
+
+    @Autowired
+    MakersService makersService;
 
 
     //        String groupStr =
@@ -83,6 +87,66 @@ public class HeliumTest {
 //                        "852d3307fffffff\t14\n" +
 //                        "861e1b2b7ffffff\t6\n" ;
 
+
+    @Test
+    public void isDenylist() throws MsgException, URISyntaxException {
+        String aa =
+                "883f24660dfffff\t1\n" +
+                        "883f24674bfffff\t1\n" +
+                        "883f24670bfffff\t1\n" +
+                        "883f2475b5fffff\t1\n" +
+                        "883f2475abfffff\t1\n" +
+                        "883f2462d3fffff\t1\n" +
+                        "883f246283fffff\t1\n" +
+                        "883f26c4d7fffff\t1\n" +
+                        "883f26c48bfffff\t1\n" +
+                        "883f26c499fffff\t1\n" +
+                        "883f261a4bfffff\t1\n" +
+                        "883f261a47fffff\t1\n" +
+                        "883f261b5bfffff\t1\n" +
+                        "883f261a0bfffff\t1\n" +
+                        "881e84ce03fffff\t1\n" +
+                        "881e84ce57fffff\t1\n" +
+                        "881e84ceb1fffff\t1\n" +
+                        "881e84cecbfffff\t1\n" +
+                        "881e84c5a9fffff\t1\n" +
+                        "881e84c581fffff\t1\n" +
+                        "881e84c599fffff\t1\n" +
+                        "861e8b14fffffff\t2\n" +
+                        "861e8b16fffffff\t2\n" +
+                        "861e8ba97ffffff\t2\n" +
+                        "861e8bab7ffffff\t2\n" +
+                        "881e8b1addfffff\t1\n" +
+                        "881e8b1ad7fffff\t1\n" +
+                        "861e8b107ffffff\t3\n" +
+                        "861e8b137ffffff\t1\n" +
+                        "861e8bc4fffffff\t2\n" +
+                        "861e81c9fffffff\t2\n" +
+                        "881e81c8abfffff\t1\n" +
+                        "881e81c8ebfffff\t1\n" +
+                        "861e81527ffffff\t2\n" +
+                        "881e815351fffff\t1\n" +
+                        "881e81531bfffff\t1\n" +
+                        "86190930fffffff\t4\n" +
+                        "86190922fffffff\t4\n" +
+                        "861951877ffffff\t5\n" +
+                        "8619518c7ffffff\t4\n" +
+                        "85194a9bfffffff\t8";
+
+
+        StringBuffer sb = new StringBuffer();
+
+        for (String hex : aa.split("\n")) {
+            if (StringUtils.notIsEmpty(hex) && !notIsDevice(hex)) {
+                sb.append(hex).append("\n");
+            }
+//            System.out.println(h3.h3ToParentAddress(s, 5));
+        }
+        System.out.println(sb.toString());
+
+    }
+
+
     /**
      * @throws
      * @title 显示可用hex
@@ -92,29 +156,89 @@ public class HeliumTest {
      */
     @Test
     public void showAvailableHexs() throws MsgException {
+
         String groupStr =
-                        "86395644fffffff\t4\n" +
-                        "863956737ffffff\t4\n" +
-                        "862c2a06fffffff\t4\n" +
-                        "862c2a067ffffff\t4\n" +
-                        "863f646b7ffffff\t4\n" +
-                        "863f64687ffffff\t4\n" +
-                        "851fa4cbfffffff\t8\n" +
-                        "85392207fffffff\t8\n" +
-                        "851ef593fffffff\t8\n" +
-                        "861f0d557ffffff\t4\n" +
-                        "861f0d5afffffff\t4\n" +
-                        "86395c8afffffff\t4\n" +
-                        "86395c8c7ffffff\t4\n" +
-                        "86186a25fffffff\t1\n" +
-                        "86186a2efffffff\t7\n" +
-                        "863965a5fffffff\t4\n" +
-                        "861f92da7ffffff\t4\n" +
-                        "861845267ffffff\t6\n" +
-                        "86186ac97ffffff\t1\n" +
-                        "86186ad9fffffff\t1\n" +
-                        "861f15c27ffffff\t4\n" +
-                        "861f15d47ffffff\t4"  ;
+                "86186a2efffffff\t3\n" +
+                        "86186a2c7ffffff\t3\n" +
+                        "86186a2e7ffffff\t2\n" +
+                        "861fb5447ffffff\t2\n" +
+                        "861fb546fffffff\t3\n" +
+                        "871fb5734ffffff\t2\n" +
+                        "871fb5714ffffff\t1\n" +
+                        "871fb55b1ffffff\t3\n" +
+                        "871fb558cffffff\t3\n" +
+                        "871fb5595ffffff\t2\n" +
+                        "861fb1577ffffff\t3\n" +
+                        "861fb152fffffff\t3\n" +
+                        "861fb1cd7ffffff\t2\n" +
+                        "871fb14f5ffffff\t2\n" +
+                        "871fb1450ffffff\t2\n" +
+                        "861fb141fffffff\t3\n" +
+                        "881fb140a1fffff\t1\n" +
+                        "8618690afffffff\t3\n" +
+                        "86186901fffffff\t3\n" +
+                        "8618690f7ffffff\t2\n" +
+                        "86184d367ffffff\t3\n" +
+                        "86184dacfffffff\t3\n" +
+                        "86184d377ffffff\t1\n" +
+                        "87184d329ffffff\t1\n" +
+                        "881f14d361fffff\t1\n" +
+                        "86196d967ffffff\t3\n" +
+                        "86196d977ffffff\t3\n" +
+                        "88196d9297fffff\t1\n" +
+                        "86394229fffffff\t3\n" +
+                        "86395c92fffffff\t2\n" +
+                        "86395c977ffffff\t3\n" +
+                        "86395cb27ffffff\t3\n" +
+                        "8839434d0dfffff\t1\n" +
+                        "8839434d0bfffff\t1\n" +
+                        "8839434d1dfffff\t1\n" +
+                        "86394348fffffff\t2\n" +
+                        "861f15c27ffffff\t2\n" +
+                        "861f15c2fffffff\t2\n" +
+                        "861f15d47ffffff\t4\n" +
+                        "861f14acfffffff\t2\n" +
+                        "861f14aefffffff\t2\n" +
+                        "861f14a5fffffff\t2\n" +
+                        "861f14a57ffffff\t2";
+        String filePath = "../data/result/坐标_" + System.currentTimeMillis();
+
+        List<List<String>> groupTable = StringUtils.toTableList(groupStr);
+        for (List<String> strings : groupTable) {
+            try {
+                getLocations(filePath, strings.get(0), Integer.parseInt(strings.get(1)));
+            } catch (Exception e) {
+                e.printStackTrace();
+                FileUtils.writeln(String.format(filePath, strings.get(0)), "【有问题】" + strings.get(0), true, true);
+            }
+        }
+
+    }
+
+
+    @Test
+    public void showAvailableHexs1() throws MsgException {
+
+        String groupStr =
+                "86411216fffffff\t2\n" +
+                        "864112147ffffff\t2\n" +
+                        "864112b97ffffff\t2\n" +
+                        "864112b9fffffff\t2\n" +
+                        "864112b87ffffff\t2\n" +
+                        "884112b8e3fffff\t1\n" +
+                        "884112b8c7fffff\t1\n" +
+                        "864112a07ffffff\t2\n" +
+                        "864112a27ffffff\t2\n" +
+                        "864112887ffffff\t2\n" +
+                        "8641128b7ffffff\t3\n" +
+                        "864112d4fffffff\t3\n" +
+                        "8639564dfffffff\t2\n" +
+                        "8639564c7ffffff\t3\n" +
+                        "8639564efffffff\t3\n" +
+                        "852db18bfffffff\t7\n" +
+                        "862c2a31fffffff\t3\n" +
+                        "862c2a307ffffff\t2\n" +
+                        "862c2a317ffffff\t2";
         String filePath = "../data/result/坐标_" + System.currentTimeMillis();
 
         List<List<String>> groupTable = StringUtils.toTableList(groupStr);
@@ -150,22 +274,23 @@ public class HeliumTest {
 //        log.info(JSON.toJSONString(sourceCorpses));
         List<String> lines = FileUtils.readLines("./data/hotspotty.txt");
         String wall = "";
+        Map<String, String> makersDictionary = makersService.getMakersDictionary();
         Map<String, String> ownerNo = formatOwnerNo(wall);
-        List<List<String>> lists = ObjectUtils.averageAssign(lines, 200);
+        List<List<String>> lists = ObjectUtils.averageAssignPartition(lines, 200);
         for (int i = 0; i < lists.size(); i++) {
-            if(lists.get(i).size() > 0){
+            if (lists.get(i).size() > 0) {
                 log.info("num{}\t{}\t{}", i, lists.get(i).size(), JSON.toJSONString(lists.get(i)));
-                businessDeviceService.getDevice(ownerNo, lists, i, filePath);
+                businessDeviceService.getDevice(makersDictionary, ownerNo, lists, i, filePath);
             }
         }
     }
 
     /**
+     * @throws
      * @title 获取Bobcat设备的miner信息
      * @description
      * @author Mr.Lv lvzhuozhuang@foxmail.com
      * @updateTime 2022/7/28 14:41
-     * @throws
      */
     @Test
     public void getBobcatMinerJson() throws MsgException {
@@ -181,7 +306,6 @@ public class HeliumTest {
             bobcat.re(s, filePath);
         }
     }
-
 
 
     @Test
@@ -228,7 +352,7 @@ public class HeliumTest {
     }
 
     @Test
-    public void run () throws MsgException {
+    public void run() throws MsgException {
         JSONArray makers = (JSONArray) heliumApi.getResultV("makers");
         JSONObject jsonObject;
         for (int i = 0; i < makers.size(); i++) {
@@ -251,13 +375,30 @@ public class HeliumTest {
         int res = H3Core.newInstance().h3GetResolution(hex);
 
         // 检验方块等级
-        if (res < 0 || res > 8) {
+        if (res > 8 || res < 0) {
             throw new IllegalArgumentException(String.format("resolution %d is out of range (must be 0 < res < 8)", res));
         }
+
+//        if (8 == res) {
+//            try {
+//                if (StringUtils.notIsEmpty(hex)) {
+//                    com.uber.h3core.util.GeoCoord geoCoord = HexUtils.h3.h3ToGeo(hex);
+//                    FileUtils.writeln(filePath, geoCoord.lat + "\t" + geoCoord.lng + "\t" + hex + "\t" + notIsDevice(hex), true, true);
+//                }
+//            } catch (URISyntaxException e) {
+//                e.printStackTrace();
+//            }
+//            return;
+//        }
 
 //        List<LeanData> cHexs = getDuplicateRemovalCHexsByHex(hex);
         // 获取所有的方块
         List<String> cHexs = getNullLocalhost(hex);
+
+        if (0 == cHexs.size()) {
+            FileUtils.writeln(filePath, String.format("%s 可以使用的位置只有%d个, 不够%d个", hex, cHexs.size(), num), true, true);
+            return;
+        }
 
         if (num > cHexs.size()) {
             FileUtils.writeln(filePath, String.format("%s 可以使用的位置只有%d个, 不够%d个", hex, cHexs.size(), num), true, true);
@@ -276,6 +417,7 @@ public class HeliumTest {
                 FileUtils.writeln(filePath, geoCoord.getLat() + "\t" + geoCoord.getLng() + "\t" + geoCoord.getCHex() + "\t" + geoCoord.getSouHex(), true, true);
             }
         }
+
     }
 
     /**

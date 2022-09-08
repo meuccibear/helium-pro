@@ -179,26 +179,21 @@ public class HexUtils {
 //
 //        System.out.println(h3.h3GetResolution("881e21b115fffff"));
 
-        String aa ="8840b24505fffff\n" +
-                "8840b24517fffff\n" +
-                "8840b24503fffff\n" +
-                "8840b24e65fffff\n" +
-                "8840b24e05fffff\n" +
-                "8840b24e41fffff\n" +
-                "8840b24aabfffff\n" +
-                "8840b24abdfffff\n" +
-                "8840b24aebfffff\n" +
-                "8840b241c3fffff\n" +
-                "8840b241abfffff\n" +
-                "8840b241e1fffff\n" +
-                "8840b2408dfffff\n" +
-                "8840b240c3fffff\n" +
-                "8840b240adfffff\n" +
-                "8840b211bdfffff\n";
+//        String aa ="88408e2ed3fffff\n" +
+//                "88408e25a1fffff\n" +
+//                "88408e25e1fffff\n" +
+//                "88408e2c47fffff\n" +
+//                "88408e2595fffff\n" +
+//                "88408e2f59fffff\n" +
+//                "88408e2e2dfffff\n" +
+//                "88408e2d59fffff";
+//
+//        for (String s : aa.split("\n")) {;
+//            System.out.println(h3.h3ToParentAddress(s, 5));
+//        }
 
-        for (String s : aa.split("\n")) {
-            System.out.println(h3.h3ToParentAddress(s, 6));
-        }
+
+//        41.992454492393556	13.916168336356302	881e81531bfffff	false
 
     }
 

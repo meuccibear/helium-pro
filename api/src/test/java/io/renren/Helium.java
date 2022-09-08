@@ -1,12 +1,10 @@
 package io.renren;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import io.renren.common.gitUtils.*;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
-import io.renren.modules.helium.GeoCoord;
-import io.renren.modules.helium.HeliumHttpUtils;
+//import io.renren.common.HeliumHttpUtils;
 import io.renren.modules.helium.HeliumUtils;
 import io.renren.modules.helium.domain.Device;
 import io.renren.modules.sys.api.HeliumApi;
@@ -16,8 +14,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.io.File;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
@@ -40,8 +36,8 @@ public class Helium {
     HeliumApi heliumApi;
 
 
-    @Autowired
-    HeliumHttpUtils heliumHttpUtils;
+//    @Autowired
+//    HeliumHttpUtils heliumHttpUtils;
 
 //    @SneakyThrows
 //    @Test

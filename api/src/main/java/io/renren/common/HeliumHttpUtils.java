@@ -1,4 +1,4 @@
-package io.renren.modules.helium;
+package io.renren.common;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -10,6 +10,10 @@ import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
 import io.renren.common.gitUtils.map.NumMap;
+import io.renren.modules.helium.GeoCoord;
+import io.renren.modules.helium.HexUtils;
+import io.renren.modules.helium.HotsPottyHttpUtils;
+import io.renren.modules.helium.NumUtils;
 import io.renren.modules.helium.domain.Device;
 import io.renren.modules.helium.domain.HotspotsProfit;
 import io.renren.modules.helium.domain.LeanData;
@@ -17,8 +21,6 @@ import io.renren.modules.helium.domain.Result;
 import io.renren.modules.sys.entity.DataHttp;
 import io.renren.modules.sys.service.DataHttpService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -37,7 +39,6 @@ import java.util.Map;
  * @create: 2022-04-12 04:11
  * @Version 1.0
  **/
-@Component
 @Slf4j
 public class HeliumHttpUtils extends HttpUtils {
 
@@ -183,7 +184,6 @@ public class HeliumHttpUtils extends HttpUtils {
         }
         httpService.insert(new DataHttp(method.name(), url, JSON.toJSONString(entityParameter), JSON.toJSONString(httpResultData), 1));
     }
-
 
     /**
      * @param parentHex 父级Hex

@@ -13,7 +13,7 @@ import java.util.Map;
 public class HttpResultData {
 
     //状态
-    private int status;
+    private Integer status;
 
     public static final int SUCCESS = 200;
 

@@ -452,13 +452,15 @@ public class HttpUtilsx {
         HttpResponse response = null;
         try {
             response = client.execute(request);
+        } catch (HttpHostConnectException e){
+
         } catch (IOException e) {
             e.printStackTrace();
             throw new MsgException("IO异常");
         }
 
         //获取响应码
-        int statusCode = response.getStatusLine().getStatusCode();
+        Integer statusCode = response.getStatusLine().getStatusCode();
 
         //获取返回对象
         HttpEntity entity = response.getEntity();

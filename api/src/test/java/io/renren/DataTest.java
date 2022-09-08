@@ -9,11 +9,16 @@
 package io.renren;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import io.renren.business.domin.BusinessLogDTO;
+import io.renren.common.gitUtils.BeanUtils;
+import io.renren.common.gitUtils.DateUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.modules.business.dao.BusinessDeviceDao;
 import io.renren.modules.business.entity.BusinessDevice;
-import io.renren.modules.helium.HeliumHttpUtils;
+//import io.renren.common.HeliumHttpUtils;
+import io.renren.modules.business.entity.BusinessLog;
 import io.renren.modules.sys.api.HeliumApi;
 import io.renren.modules.sys.service.GlobalDeviceService;
 import lombok.SneakyThrows;
@@ -41,8 +46,8 @@ public class DataTest {
     @Resource
     BusinessDeviceDao businessDeviceDao;
 
-    @Autowired
-    HeliumHttpUtils heliumHttpUtils;
+//    @Autowired
+//    HeliumHttpUtils heliumHttpUtils;
 
     @Autowired
     GlobalDeviceService globalDeviceService;
@@ -61,6 +66,11 @@ public class DataTest {
 //        BusinessDevice businessDeviceEntity = hotspotsByAddress.toDBDeviceEntity();
 //        log.info(JSON.toJSONString(businessDeviceEntity));
 //        businessDeviceDao.updateByAddress(businessDeviceEntity);
+
+        BusinessLog businessLog = BeanUtils.toJavaObject("{\"loratm\": \"2022-08-05 11:43:06\"}", new TypeReference<BusinessLog>() {{
+        }});
+        System.out.println(DateUtils.asStr(4,businessLog.getLoratm()));
+
     }
 
     @SneakyThrows
@@ -75,14 +85,19 @@ public class DataTest {
 
     @Test
     public void asd() throws MsgException {
+
+        BusinessLogDTO businessLogDTO = BeanUtils.toJavaObject("{\"loratm\":1659435301.8079479}", new TypeReference<BusinessLogDTO>() {{
+        }});
+
+        System.out.println(BeanUtils.toJSONObject(businessLogDTO));
 //        Map<String, String> parameter = new HashMap<>();
 //        parameter.put("address", "${address}");
 //        parameter.put("min_time", "-30 day");
 //        parameter.put("max_time", DateUtils.asStr(LocalDateTime.now(ZoneOffset.UTC), "UTC"));
 //        parameter.put("bucket", "day");
 //        System.out.println(JSON.toJSONString(parameter));
-        HttpResultData post = heliumHttpUtils.post();
-        System.out.println(JSON.toJSONString(post.getResult()));
+//        HttpResultData post = heliumHttpUtils.post();
+//        System.out.println(JSON.toJSONString(post.getResult()));
     }
 
 }

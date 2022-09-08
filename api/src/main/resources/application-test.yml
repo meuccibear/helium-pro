@@ -1,11 +1,13 @@
+
 spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         druid:
             driver-class-name: com.mysql.cj.jdbc.Driver
-            url: jdbc:mysql://localhost:3306/renren_fast?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-            username: renren
-            password: 123456
+            url: jdbc:mysql://103.149.26.144:3356/helium_pro_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
+#            url: jdbc:mysql://152.32.253.209:3306/helium_pro?serverTimezone=Asia/Shanghai&useSSL=false&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+            username: root
+            password: Zp1949@@
             initial-size: 10
             max-active: 100
             min-idle: 10
@@ -15,15 +17,19 @@ spring:
             time-between-eviction-runs-millis: 60000
             min-evictable-idle-time-millis: 300000
             #Oracle需要打开注释
-            #validation-query: SELECT 1 FROM DUAL
+#            validation-query: SELECT 1 FROM DUAL
+#            test-on-borrow: false
+#            test-on-return: false
+            validation-query: SELECT 1
             test-while-idle: true
-            test-on-borrow: false
-            test-on-return: false
+            test-on-borrow: true
+            test-on-return: true
             stat-view-servlet:
                 enabled: true
                 url-pattern: /druid/*
                 #login-username: admin
                 #login-password: admin
+                allow: 152.32.253.209,10.7.149.194
             filter:
                 stat:
                     log-slow-sql: true
@@ -32,6 +38,7 @@ spring:
                 wall:
                     config:
                         multi-statement-allow: true
+            query-timeout: 7
 
 
 ##多数据源的配置

@@ -345,7 +345,7 @@
           prop="groupName"
           header-align="center"
           align="center"
-          min-width="60"
+          width="100"
           :show-overflow-tooltip="true"
           label="分组">
         </el-table-column>

@@ -1,9 +1,10 @@
 package io.renren.modules.business.service;
 
 import java.util.List;
+import java.util.Map;
+
 import io.renren.modules.business.entity.Makers;
 public interface MakersService{
-
 
     int deleteByPrimaryKey(Long makersId);
 
@@ -24,4 +25,6 @@ public interface MakersService{
     int insertOrUpdateSelective(Makers record);
 
     String selectNameByAddress(String address);
+
+    Map<String, String> getMakersDictionary();
 }

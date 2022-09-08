@@ -41,6 +41,7 @@ hs_err_pid*
 
 
 generator/.idea
+generator/target
 
 vue/.idea
 vue/node_modules

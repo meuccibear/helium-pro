@@ -14,6 +14,7 @@ import io.renren.common.gitUtils.http.HttpUtilsx;
 import io.renren.modules.helium.domain.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -71,23 +72,27 @@ public class HeliumUtils {
         }
 
         JSONObject jsonObject = getJSONObject(url, parameter);
-        JSONArray jsonArray = (JSONArray) JSONUtils.jsGetData(jsonObject, "data");
+//        if (null != jsonObject) {
+            JSONArray jsonArray = (JSONArray) JSONUtils.jsGetData(jsonObject, "data");
 
-        List<HotspotsProfit> hotspotsProfits = BeanUtils.toJavaObject(jsonArray, new TypeReference<List<HotspotsProfit>>() {
-        });
+            List<HotspotsProfit> hotspotsProfits = BeanUtils.toJavaObject(jsonArray, new TypeReference<List<HotspotsProfit>>() {
+            });
 //        System.out.println("------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ");
-        double total = 0.0;
-        LocalDateTime date = hotspotsProfits.get(0).getTimestamp();
-        date = date.minusDays(1);
+            double total = 0.0;
+            LocalDateTime date = hotspotsProfits.get(0).getTimestamp();
+            date = date.minusDays(1);
 //        System.out.println(DateUtils.asStr(4, date));
-        for (HotspotsProfit hotspotsProfit : hotspotsProfits) {
-            if (date.compareTo(hotspotsProfit.getTimestamp()) < 0) {
-                total += hotspotsProfit.getTotal();
+            for (HotspotsProfit hotspotsProfit : hotspotsProfits) {
+                if (date.compareTo(hotspotsProfit.getTimestamp()) < 0) {
+                    total += hotspotsProfit.getTotal();
 //                System.out.println(DateUtils.asStr(4, hotspotsProfit.getTimestamp()) + " " + hotspotsProfit.getSum() + " " + hotspotsProfit.getTotal());
+                }
             }
-        }
 //        System.out.println(total);
-        return total;
+            return total;
+//        }
+//
+//        return -1;
 //        System.out.println(progressBar((int) (total * 100)));
     }
 
@@ -188,7 +193,12 @@ public class HeliumUtils {
 //            e.printStackTrace();
 //        }
         HttpResultData httpResultData = HttpUtilsx.get(WWW + url, parameter, new HashMap<>());
-        return JSON.parseObject(httpResultData.getResult());
+        log.info("httpResultData:{}{}", url, JSON.toJSONString(httpResultData));
+
+//        if (200 != httpResultData.getStatus()) {
+            return JSON.parseObject(httpResultData.getResult());
+//        }
+//        return null;
     }
 
 
@@ -548,7 +558,7 @@ public class HeliumUtils {
     //        GeoCoord geoCoord = getRandomDevice(completedRewardsBean);
     //        System.out.println(geoCoord.toString());
 
-    public void showRoles(String id) throws MsgException {
+    public static void showRoles(String id) throws MsgException {
         List<Role> restBean = roles(id);
         for (Role role : restBean) {
             role.init();
@@ -559,11 +569,11 @@ public class HeliumUtils {
     }
 
     /**
+     * @throws
      * @title 查看Hotspotty网站Hex情况
      * @description
      * @author Mr.Lv lvzhuozhuang@foxmail.com
      * @updateTime 2022/4/13 13:51
-     * @throws
      */
     public static String dashboard(String hex) throws MsgException {
         List<LeanData> leanDataL = getCHexsByHex(hex, 5);
@@ -593,4 +603,8 @@ public class HeliumUtils {
         return StringUtils.outStr("\t", hex, leanDataL.size(), leanDataL.size() - onlineNum, onlineNum, (((leanDataL.size() - onlineNum) * 100) / leanDataL.size()) + "%", scF, scL);
     }
 
+
+    public static void main(String[] args) throws MsgException {
+        showRoles("112Qg8YJPzAhiVvuMS6HKtr5t2ttYDFSrUz9CYr7dqW2CpUZFBzA");
+    }
 }

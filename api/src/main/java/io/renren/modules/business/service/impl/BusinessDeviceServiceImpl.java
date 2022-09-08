@@ -3,6 +3,7 @@ package io.renren.modules.business.service.impl;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import io.renren.common.HeliumHttpUtils;
 import io.renren.common.gitUtils.*;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
@@ -13,7 +14,6 @@ import io.renren.modules.business.dao.BusinessDeviceMapper;
 import io.renren.modules.business.dao.Select;
 import io.renren.modules.business.service.MakersService;
 import io.renren.modules.domain.dto.DeviceDTO;
-import io.renren.modules.helium.HeliumHttpUtils;
 import io.renren.modules.helium.HeliumUtils;
 import io.renren.modules.helium.HexUtils;
 import io.renren.modules.helium.domain.Device;
@@ -52,12 +52,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
     @Autowired
     GlobalDeviceService globalDeviceService;
 
-    @Autowired
-    HeliumHttpUtils heliumHttpUtils;
-
-    @Resource
-    MakersService makersService;
-
+//    HeliumHttpUtils heliumHttpUtils = new HeliumHttpUtils();
 
     @Override
     public Map<String, Object> findSelect(DeviceDTO deviceDTO) {
@@ -84,10 +79,10 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         List<BusinessDevice> businessDeviceEntities = businessDeviceMapper.selectAllPaging(deviceDTO);
         StringBuffer result = new StringBuffer();
         for (BusinessDevice businessDeviceEntity : businessDeviceEntities) {
-            result.append(StringUtils.outStr("\t", businessDeviceEntity.getOneLevelName(), businessDeviceEntity.getTwoLevelName(), businessDeviceEntity.getManageName(), businessDeviceEntity.getAddress(), businessDeviceEntity.getRemark())).append("\n");
+            result.append(StringUtils.outStr("\t", businessDeviceEntity.getOneLevelName(), businessDeviceEntity.getTwoLevelName(), businessDeviceEntity.getManageName(), businessDeviceEntity.getAddress(), businessDeviceEntity.getPublicIp(), businessDeviceEntity.getIp(), businessDeviceEntity.getRemark())).append("\n");
         }
         JSONObject returnResult = new JSONObject();
-        if(ObjectUtils.isEmpty(result.toString())){
+        if (ObjectUtils.isEmpty(result.toString())) {
             returnResult.put("msg", "暂时没有有问题的设备~");
             returnResult.put("existence", false);
         } else {
@@ -260,7 +255,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
 
     @Override
     @Async("taskExecutor")
-    public void updateData(List<List<String>> lists, int index) {
+    public void updateData(Map<String, String> makersDictionary, List<List<String>> lists, int index) {
         List<String> addresss = lists.get(index);
         log.info(String.format("开始执行任务：hash值：%s 线程序号：%d任务量：%d", addresss.hashCode(), index, addresss.size()));
 
@@ -268,7 +263,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         Device device = null;
         BusinessDevice deviceEntity = null;
         String address = null;
-        BusinessDevice businessDeviceEntity;
+
         for (int i = 0; i < addresss.size(); i++) {
             address = addresss.get(i);
             log.info(String.format("hash值：%s 线程序号：%d任务量：%d 开始查询第%d个设备信息 设备地址：%s", addresss.hashCode(), index, addresss.size(), i, addresss.get(i)));
@@ -291,18 +286,20 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
                         deviceEntity.setUpdateTime(new Date());
                         deviceEntity.setDepllist(device.getDepllist());
                         deviceEntity.setScale(device.getReward_scale());
-                        deviceEntity.setPingpai(makersService.selectNameByAddress(device.getPayer()));
+                        deviceEntity.setPingpai(makersDictionary.get(device.getPayer()));
                         deviceEntity.setErrStatus(1);
                     }
                 } catch (Exception e) {
                     log.error("【getHotspotsByAddress失败~】" + address, e);
-                    deviceEntity = new BusinessDevice();
-                    deviceEntity.setAddress(address);
-                    deviceEntity.setErrStatus(2);
-                    deviceEntity.setUpdateTime(new Date());
                 }
 
                 try {
+                    if (ObjectUtils.isEmpty(deviceEntity)) {
+                        deviceEntity = new BusinessDevice();
+                        deviceEntity.setAddress(address);
+                        deviceEntity.setErrStatus(2);
+                        deviceEntity.setUpdateTime(new Date());
+                    }
                     deviceEntity.setTotal24h(heliumApi.getHotspotsTotal(2, address));
                 } catch (Exception e) {
                     deviceEntity.setErrStatus(3);
@@ -329,7 +326,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
 
     @Override
     @Async("taskExecutor")
-    public void getDevice(Map<String, String> ownerNo, List<List<String>> lists, int index, String filePath) throws MsgException {
+    public void getDevice(Map<String, String> makersDictionary, Map<String, String> ownerNo, List<List<String>> lists, int index, String filePath) throws MsgException {
         List<String> addresss = lists.get(index);
         log.info(String.format("开始执行任务：hash值：%s 线程序号：%d任务量：%d", addresss.hashCode(), index, addresss.size()));
 
@@ -346,29 +343,44 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
             Device device = null;
             try {
                 device = heliumApi.getHotspotsByAddress(address);
+                log.info("device {}", device);
                 de = heliumApi.denylist(address);
                 hotspotsTotal = HeliumUtils.getHotspotsTotal(2, address);
-                cl = heliumHttpUtils.client(address);
+                cl = new HeliumHttpUtils().client(address);
 
                 clJson = "";
                 if (ObjectUtils.notIsEmpty(cl)) {
-                    clJson = StringUtils.outStr("\t", JSONUtils.jsGetData(cl, "client.usesig"), JSONUtils.jsGetData(cl, "client.cname"));
+                    clJson = StringUtils.outStr("\t", JSONUtils.jsGetData(cl, "client.usesig"), JSONUtils.jsGetData(cl, "client.group"));
                 } else {
                     clJson = StringUtils.outStr("\t", "", "");
                 }
 
                 if (ObjectUtils.notIsEmpty(ownerNo)) {
                     // 对应钱包序号
-                    FileUtils.writeln(filePath, StringUtils.outStr("\t", address, de, clJson, device.getName().replaceAll("-", " "), device.getOwner(), ownerNo.get(device.getOwner()), device.getStatus().getOnline(), device.getStatus().getIp(), device.getGeocode().getLong_country(), device.getGeocode().getLong_city(), hotspotsTotal, device.getLat(), device.getLng(), device.getLocation_hex(), ObjectUtils.notIsEmpty(device.getLocation_hex()) ? HexUtils.h3.h3ToParentAddress(device.getLocation_hex(), 5) : ""), true, true);
+                    FileUtils.writeln(filePath, StringUtils.outStr("\t", address, makersDictionary.get(device.getPayer()), de, clJson, device.getName().replaceAll("-", " "), device.getOwner(), ownerNo.get(device.getOwner()), device.getStatus().getOnline(), device.getStatus().getIp(), device.getGeocode().getLong_country(), device.getGeocode().getLong_city(), hotspotsTotal, device.getLat(), device.getLng(), device.getLocation_hex(), ObjectUtils.notIsEmpty(device.getLocation_hex()) ? HexUtils.h3.h3ToParentAddress(device.getLocation_hex(), 5) : ""), true, true);
                 } else {
+                    System.out.println(device.getPayer());
                     // 基础
-                    FileUtils.writeln(filePath, StringUtils.outStr("\t", address, de, clJson, device.getName().replaceAll("-", " "), device.getOwner(), device.getStatus().getOnline(), device.getStatus().getIp(), device.getGeocode().getLong_country(), device.getGeocode().getLong_city(), hotspotsTotal, device.getLat(), device.getLng(), device.getLocation_hex(), ObjectUtils.notIsEmpty(device.getLocation_hex()) ? HexUtils.h3.h3ToParentAddress(device.getLocation_hex(), 5) : ""), true, true);
+                    FileUtils.writeln(filePath, StringUtils.outStr("\t",
+                                    address,
+                                    makersDictionary.get(device.getPayer()),
+                                    de,
+                                    clJson,
+                                    device.getName().replaceAll("-", " "),
+                                    device.getOwner(), device.getStatus().getOnline(),
+                                    device.getStatus().getIp(), device.getGeocode().getLong_country(),
+                                    device.getGeocode().getLong_city(), hotspotsTotal,
+                                    device.getLat(), device.getLng(), device.getLocation_hex(),
+                                    ObjectUtils.notIsEmpty(device.getLocation_hex()) ? HexUtils.h3.h3ToParentAddress(device.getLocation_hex(), 5) : ""),
+                            true, true);
+
                 }
                 //  FileUtils.writeln(filePath, StringUtils.outStr("\t", address, de, device.getName().replaceAll("-", " "), device.getOwner(), device.getStatus().getOnline(), device.getStatus().getIp(), device.getGeocode().getLong_country(), device.getGeocode().getLong_city(), hotspotsTotal, device.getLat(), device.getLng(), device.getLocation_hex(), ObjectUtils.notIsEmpty(device.getLocation_hex()) ? HexUtils.h3.h3ToParentAddress(device.getLocation_hex(), 5) : ""), true, true);
 
 //                FileUtils.writeln(filePath, StringUtils.outStr(",", address, device.getLat(), device.getLng()), true, true);
             } catch (MsgException e) {
                 log.error("没有找到设备 " + address, e);
+                FileUtils.writeln(filePath, address + "\t找不到设备", true, true);
             }
 
         }

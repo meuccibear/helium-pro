@@ -14,7 +14,7 @@ spring:
     name: Helium
   # 环境 dev|test|prod
   profiles:
-    active: prod
+    active: dev
   # jackson时间格式化
   jackson:
     time-zone: GMT+8
@@ -78,7 +78,7 @@ renren:
     header: token
 
 logging:
-  config: classpath:alogback-spring.xml
+  config: classpath:logback-spring.xml
   path: ./logs
   level:
     io:

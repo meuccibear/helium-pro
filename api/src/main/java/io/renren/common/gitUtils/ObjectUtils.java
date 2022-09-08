@@ -262,7 +262,13 @@ public class ObjectUtils {
         }
     }
 
-    public static List<List<String>> averageAssign(List<String> data, int n) {
+    /**
+     * 平均分配分割
+     * @param data
+     * @param n
+     * @return
+     */
+    public static List<List<String>> averageAssignPartition(List<String> data, int n) {
         List<List<String>> datas = new ArrayList<>();
 
         if (ObjectUtils.notIsEmpty(data)) {

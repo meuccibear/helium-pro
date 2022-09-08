@@ -70,7 +70,7 @@ public class HeliumApi {
     }
 
     public Double getHotspotsTotal(int typeId, String address) throws MsgException {
-        Map<String, String> parameter = new HashMap<>();
+        Map<String, Object> parameter = new HashMap<>();
         parameter.put("address", address);
         parameter.put("min_time", "-30 day");
         parameter.put("max_time", DateUtils.asStr(LocalDateTime.now(ZoneOffset.UTC), "UTC"));
@@ -107,7 +107,7 @@ public class HeliumApi {
 
     public Boolean denylist(String address) throws MsgException {
         HttpResultData httpResultData = websiteApiService.sendV("isDenylist", address);
-        log.info("Result{}", httpResultData.getResult());
+//        log.info("Result{}", httpResultData.getResult());
         if (ObjectUtils.isEmpty(httpResultData.getResult())) {
             return null;
         }
@@ -303,7 +303,7 @@ public class HeliumApi {
         return null;
     }
 
-    public Result getResultKV(String apiKey, Object data) throws MsgException {
+    public Result getResultKV(String apiKey, Map<String, Object> data) throws MsgException {
         HttpResultData httpResultData = websiteApiService.sendKV(apiKey, data);
         if (ObjectUtils.notIsEmpty(httpResultData.getResult())) {
             return BeanUtils.toJavaObject(httpResultData.getResult(), new TypeReference<Result>() {

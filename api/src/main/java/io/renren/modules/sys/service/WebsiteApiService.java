@@ -4,6 +4,9 @@ import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
 import io.renren.modules.sys.entity.WebsiteApi;
+
+import java.util.Map;
+
 public interface WebsiteApiService  {
 
     int deleteByPrimaryKey(Integer id);
@@ -22,6 +25,6 @@ public interface WebsiteApiService  {
 
     HttpResultData sendV(String apiKey, Object... data) throws MsgException;
 
-    HttpResultData sendKV(String apiKey, Object data) throws MsgException;
+    HttpResultData sendKV(String apiKey, Map<String, Object> data) throws MsgException;
 
 }

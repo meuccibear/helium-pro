@@ -18,14 +18,11 @@ import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
-import io.renren.common.gitUtils.http.HttpUtilsx;
 import io.renren.modules.business.entity.BusinessLog;
 import io.renren.modules.business.service.BusinessDeviceService;
 import io.renren.modules.business.service.BusinessLogService;
 import io.renren.modules.sys.service.WebsiteApiService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -58,25 +55,26 @@ public class DiagnosisTask implements ITask {
         try {
             HttpResultData httpResultData = websiteApiService.send(HttpUtils.Method.GET, params, null, null);
 //            HttpResultData httpResultData = HttpUtilsx.get(params);
-            Object o = JSONUtils.toJson(httpResultData.getResult());
-            log.info(o.getClass().toString());
+            Object data = JSONUtils.toJson(httpResultData.getResult());
 
-            if (o instanceof JSONObject) {
-                JSONObject jsonObject = (JSONObject) o;
+            if (data instanceof JSONObject) {
+                JSONObject jsonObject = (JSONObject) data;
                 List<String> addresss = businessDeviceService.findAll();
                 BusinessLog businessLog = new BusinessLog();
                 for (String address : addresss) {
                     try {
                         businessLog = BeanUtils.toJavaObject(jsonObject.get(address), new TypeReference<BusinessLog>() {{
                         }});
-                        businessLogService.insertSelective(businessLog);
+                        if(ObjectUtils.notIsEmpty(businessLog)){
+                            businessLogService.insertSelective(businessLog);
+                        }
                     } catch (Exception e) {
                         log.debug("DiagnosisTask JSON {}{}", JSON.toJSONString(businessLog), e.toString());
                     }
                 }
-            } else if (o instanceof JSONArray) {
+            } else if (data instanceof JSONArray) {
 //                List<BusinessLog> businessLogs = BeanUtils.toJavaObject(httpResultData.getResult(), new TypeReference<List<BusinessLog>>() {{}});
-                List<BusinessLog> businessLogs = BeanUtils.toJavaObject(o, new TypeReference<List<BusinessLog>>() {{}});
+                List<BusinessLog> businessLogs = BeanUtils.toJavaObject(data, new TypeReference<List<BusinessLog>>() {{}});
                 for (BusinessLog businessLog : businessLogs) {
                     try {
                         businessLogService.insertSelective(businessLog);

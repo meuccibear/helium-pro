@@ -10,7 +10,7 @@ package io.renren;
 import com.alibaba.fastjson.JSON;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
-import io.renren.modules.helium.HeliumHttpUtils;
+//import io.renren.common.HeliumHttpUtils;
 import io.renren.modules.helium.HeliumUtils;
 import io.renren.modules.sys.service.GlobalDeviceService;
 import lombok.SneakyThrows;
@@ -34,17 +34,17 @@ import java.util.Map;
 @Slf4j
 public class HeliumDBTest {
 
-    @Autowired
-    HeliumHttpUtils heliumHttpUtils;
+//    @Autowired
+//    HeliumHttpUtils heliumHttpUtils;
 
     @Autowired
     GlobalDeviceService globalDeviceService;
 
-    @SneakyThrows
-    @Test
-    public void run() {
-        System.out.println(JSON.toJSONString(heliumHttpUtils.getCHexsByHex("8565010ffffffff", 5)));
-    }
+//    @SneakyThrows
+//    @Test
+//    public void run() {
+//        System.out.println(JSON.toJSONString(heliumHttpUtils.getCHexsByHex("8565010ffffffff", 5)));
+//    }
 
     /**
      * @title 查询尸体
@@ -71,7 +71,7 @@ public class HeliumDBTest {
     }
 
 
-    @Test
+//    @Test
     /** 获取去重之后的Hex
      * @title getDuplicateRemovalCHexsByHex
      * @description
@@ -79,13 +79,13 @@ public class HeliumDBTest {
      * @updateTime 2022/4/13 16:24
      * @throws
      */
-    public void getDuplicateRemovalCHexsByHex() {
-        try {
-            heliumHttpUtils.getDuplicateRemovalCHexsByHex("8531a877fffffff", 5);
-        } catch (MsgException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void getDuplicateRemovalCHexsByHex() {
+//        try {
+//            heliumHttpUtils.getDuplicateRemovalCHexsByHex("8531a877fffffff", 5);
+//        } catch (MsgException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Test
     public void hotspottyDashboard() throws MsgException {

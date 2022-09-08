@@ -101,7 +101,7 @@ public class WebsiteApiServiceImpl extends HttpUtils implements WebsiteApiServic
     };
 
     @Override
-    public HttpResultData sendKV(String key, Object data) throws MsgException {
+    public HttpResultData sendKV(String key, Map<String, Object> data) throws MsgException {
         init();
         if (!websiteApiMap.containsKey(key)) {
             throw new IllegalArgumentException(String.format("没有该接口信息~", key, data));

@@ -50,10 +50,10 @@ public class TimedRefreshDataTest {
     @SneakyThrows
     @Test
     public void run() {
-        List<List<String>> lists = ObjectUtils.averageAssign(businessDeviceService.findAll(), 5);
-        for (int i = 0; i < lists.size(); i++) {
-            businessDeviceService.updateData(lists, i);
-        }
+//        List<List<String>> lists = ObjectUtils.averageAssignPartition(businessDeviceService.findAll(), 5);
+//        for (int i = 0; i < lists.size(); i++) {
+//            businessDeviceService.updateData(makersDictionary, lists, i);
+//        }
 //        businessDeviceService.updateData(lists.get(0), "0");
 //        businessDeviceService.updateData(new ArrayList<String>() {{
 //            add("112FTJDurzT9SQTwRQkL9Cv22qXLiF9PuaSYhz3qMy7Y1QGghXF8");
@@ -105,11 +105,11 @@ public class TimedRefreshDataTest {
 //        log.info(JSON.toJSONString(sourceCorpses));
         List<String> lines = FileUtils.readLines("./data/hotspotty.txt");
 //
-        List<List<String>> lists = ObjectUtils.averageAssign(lines, 200);
+        List<List<String>> lists = ObjectUtils.averageAssignPartition(lines, 200);
 //        设备地址	黑名单（true:黑机 false:白机器）	名称	钱包	状态	网络地址	国家	城市	24H收益	经纬度
         for (int i = 0; i < lists.size(); i++) {
             log.info("num{}\t{}\t{}", i, lists.get(i).size(), JSON.toJSONString(lists.get(i)));
-            businessDeviceService.getDevice(null, lists, i, filePath);
+//            businessDeviceService.getDevice(null, lists, i, filePath);
         }
     }
 
@@ -127,7 +127,7 @@ public class TimedRefreshDataTest {
 //        List<String> sourceCorpses = globalDeviceService.selectHex5ByLongCountry("China");
         List<String> sourceCorpses = FileUtils.readLines("./data/hex5s");
 
-        List<List<String>> lists = ObjectUtils.averageAssign(sourceCorpses, 200);
+        List<List<String>> lists = ObjectUtils.averageAssignPartition(sourceCorpses, 200);
         for (int i = 0; i < lists.size(); i++) {
             log.info("num{}\t{}\t{}", i, lists.get(i).size(), JSON.toJSONString(lists.get(i)));
             businessDeviceService.dashboard(lists, i, filePath);
@@ -196,7 +196,7 @@ public class TimedRefreshDataTest {
         }});
         log.info("查询到了{}条数据", cityids.size());
 
-        List<List<String>> lists = ObjectUtils.averageAssign(cityids, 200);
+        List<List<String>> lists = ObjectUtils.averageAssignPartition(cityids, 200);
 
         for (int i = 0; i < lists.size(); i++) {
             businessDeviceService.addHeliumGlobalDevice(lists, i, filePath);
@@ -211,7 +211,7 @@ public class TimedRefreshDataTest {
         log.info("查询到了{}条数据", cursors.size());
 //        @Autowired
 //        GlobalDeviceService globalDeviceService;
-        List<List<String>> lists = ObjectUtils.averageAssign(cursors, 400);
+        List<List<String>> lists = ObjectUtils.averageAssignPartition(cursors, 400);
         for (int i = 0; i < lists.size(); i++) {
             if(ObjectUtils.notIsEmpty(lists.get(i))){
                 businessDeviceService.addHeliumGlobalDevicev2(lists, i, filePath);

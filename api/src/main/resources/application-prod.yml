@@ -4,9 +4,9 @@ spring:
         type: com.alibaba.druid.pool.DruidDataSource
         druid:
             driver-class-name: com.mysql.cj.jdbc.Driver
-#            url: jdbc:mysql://103.149.26.144:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
 #            url: jdbc:mysql://103.149.26.144:3356/helium_pro_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
-            url: jdbc:mysql://10.7.149.194:3356/helium_pro_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
+#            url: jdbc:mysql://103.149.26.144:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
+            url: jdbc:mysql://10.7.149.194:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
             username: root
             password: Zp1949@@
 #            url: jdbc:mysql://120.27.213.236:3356/helium_pro_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
@@ -33,7 +33,7 @@ spring:
                 url-pattern: /druid/*
                 #login-username: admin
                 #login-password: admin
-                allow: 127.0.0.1,152.32.253.209
+                allow: localhost,127.0.0.1,152.32.253.209,10.7.149.194
             filter:
                 stat:
                     log-slow-sql: true

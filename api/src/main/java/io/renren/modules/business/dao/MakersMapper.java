@@ -1,7 +1,10 @@
 package io.renren.modules.business.dao;
+import io.renren.modules.business.dao.SelectAddressAndNameResult;
 
 import io.renren.modules.business.entity.Makers;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -51,5 +54,7 @@ public interface MakersMapper {
     int insertOrUpdateSelective(Makers record);
 
     String selectNameByAddress(@Param("address")String address);
+
+    List<Makers> selectAll();
 
 }

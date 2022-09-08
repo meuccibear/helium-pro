@@ -37,11 +37,11 @@ public class StringUtils<resultMap> {
     public static String substringSup(String str, String beginStr, String endStr) {
         beginStr = StringUtils.clearSpace(beginStr);
         endStr = StringUtils.clearSpace(endStr);
-        return substring(str, beginStr, endStr);
+        return substringx(str, beginStr, endStr);
 
     }
 
-    public static String substring(String str, String beginStr, String endStr) {
+    public static String substringx(String str, String beginStr, String endStr) {
         int beginIndex = str.indexOf(beginStr);
         if (beginIndex > -1) {
             String lastStr = str.substring(beginIndex + beginStr.length() - beginStr.length(), str.length());
@@ -56,6 +56,37 @@ public class StringUtils<resultMap> {
         return "";
     }
 
+    /**
+     * @throws
+     * @title 截取字符串高级版
+     * @description
+     * @author Mr.Lv lvzhuozhuang@foxmail.com
+     * @updateTime 2022/7/25 16:33
+     */
+    public static String substring(String str, String beginStr, String endStr) {
+        Integer beginIndex;
+        String lastStr = null;
+        if (beginStr != null) {
+            beginIndex = str.indexOf(beginStr);
+
+            if (beginIndex > -1) {
+                lastStr = str.substring(beginIndex + beginStr.length(), str.length());
+            }
+        } else {
+            lastStr = str;
+        }
+
+        if (null != lastStr && null != endStr) {
+            int lastIndex = lastStr.indexOf(endStr);
+            if (StringUtils.notIsEmpty(lastIndex) && lastIndex > -1) {
+                return lastStr.substring(0, lastIndex).toString().replaceAll(" ", "");
+            } else {
+                return "";
+            }
+        }
+
+        return "";
+    }
 
     public static String getString(String res, String regex) {
         regex = StringUtils.clearSpace(regex);
@@ -101,7 +132,7 @@ public class StringUtils<resultMap> {
         StringBuffer stringBuffer = new StringBuffer();
         for (Object clo : clos) {
 //            if (ObjectUtils.notIsEmpty(clo)) {
-            stringBuffer.append(clo);
+                stringBuffer.append(clo);
 //            }
             stringBuffer.append(str);
         }
@@ -192,19 +223,35 @@ public class StringUtils<resultMap> {
             return str;
         }
         for (Object data : datas) {
-            str = str.replace(substring(str, "$", "}"), String.valueOf(data));
+            str = str.replace(substringx(str, "$", "}"), String.valueOf(data));
         }
         return str;
     }
 
+    public static String formatV(String str, Map<String, Object> datas) {
+        if (ObjectUtils.isEmpty(str) || ObjectUtils.isEmpty(datas)) {
+            return str;
+        }
+        String name = "";
+//        for (Object data : datas) {
+        name = substringx(str, "${", "}");
+        str = str.replace(name, String.valueOf(datas.get(substring(str, "${", "}"))));
+//        }
+        return str;
+    }
 
     public static void main(String[] args) {
-//        System.out.println(substring("ap:12)", "ap:", ")"));
-//        System.out.println(formatV("我是${name}", "asd"));
+//        System.out.println(substringx("ap:12)", "ap:", ")"));
+//        Map<String,Object> jsonObject = new HashMap<>();
+//        jsonObject.put("name", "cursora");
+//        System.out.println(formatV("我是${name}", jsonObject));
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("cursor", "cursora");
         System.out.println(formatKV("{ \"cursor\": \"${cursor}\" }", jsonObject.toJSONString()));
-//        System.out.println(substring("我是${name}", "$", "}"));
+
+
+//        System.out.println(substringx("我是${name}", "$", "}"));
 
     }
 

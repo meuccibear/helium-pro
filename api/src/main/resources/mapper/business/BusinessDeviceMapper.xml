@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.renren.modules.business.dao.BusinessDeviceMapper">
+  <resultMap id="BaseResultMap" type="io.renren.modules.business.entity.BusinessDevice">
+    <!--@mbg.generated-->
+    <!--@Table business_device-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="one_level_name" jdbcType="VARCHAR" property="oneLevelName" />
+    <result column="two_level_name" jdbcType="VARCHAR" property="twoLevelName" />
+    <result column="en" jdbcType="VARCHAR" property="en" />
+    <result column="manage_name" jdbcType="VARCHAR" property="manageName" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="pingpai" jdbcType="VARCHAR" property="pingpai" />
+    <result column="public_ip" jdbcType="VARCHAR" property="publicIp" />
+    <result column="mac" jdbcType="VARCHAR" property="mac" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="owner" jdbcType="VARCHAR" property="owner" />
+    <result column="disk" jdbcType="DOUBLE" property="disk" />
+    <result column="total24h" jdbcType="DOUBLE" property="total24h" />
+    <result column="total7d" jdbcType="DOUBLE" property="total7d" />
+    <result column="total30d" jdbcType="DOUBLE" property="total30d" />
+    <result column="online" jdbcType="VARCHAR" property="online" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="street" jdbcType="VARCHAR" property="street" />
+    <result column="depllist" jdbcType="INTEGER" property="depllist" />
+    <result column="scale" jdbcType="DOUBLE" property="scale" />
+    <result column="Hex" jdbcType="VARCHAR" property="hex" />
+    <result column="Hex5" jdbcType="VARCHAR" property="hex5" />
+    <result column="active_time" jdbcType="TIMESTAMP" property="activeTime" />
+    <result column="location_address" jdbcType="VARCHAR" property="locationAddress" />
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <result column="re" jdbcType="VARCHAR" property="re" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="devtype" jdbcType="VARCHAR" property="devtype" />
+    <result column="loratm" jdbcType="TIMESTAMP" property="loratm" />
+    <result column="witnesstm" jdbcType="TIMESTAMP" property="witnesstm" />
+    <result column="muxtm" jdbcType="TIMESTAMP" property="muxtm" />
+    <result column="minerver" jdbcType="VARCHAR" property="minerver" />
+    <result column="minerstat" jdbcType="VARCHAR" property="minerstat" />
+    <result column="ver" jdbcType="VARCHAR" property="ver" />
+    <result column="grpcfaild" jdbcType="INTEGER" property="grpcfaild" />
+    <result column="beacontm" jdbcType="TIMESTAMP" property="beacontm" />
+    <result column="import_data_time" jdbcType="TIMESTAMP" property="importDataTime" />
+    <result column="update_status_time" jdbcType="INTEGER" property="updateStatusTime" />
+    <result column="hearttm" jdbcType="TIMESTAMP" property="hearttm" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="err_status" jdbcType="INTEGER" property="errStatus" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, one_level_name, two_level_name, en, manage_name, group_name, pingpai, public_ip,
+    mac, `name`, address, `owner`, `disk`, total24h, total7d, total30d, `online`, country,
+    city, street, depllist, `scale`, Hex, Hex5, active_time, location_address, `date`,
+    re, ip, devtype, loratm, witnesstm, muxtm, minerver, minerstat, ver, grpcfaild, beacontm,
+    import_data_time, update_status_time, hearttm, `status`, err_status, update_time,
+    remark
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from business_device
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from business_device
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="io.renren.modules.business.entity.BusinessDevice">
+    <!--@mbg.generated-->
+    insert into business_device (id, one_level_name, two_level_name,
+      en, manage_name, group_name,
+      pingpai, public_ip, mac,
+      `name`, address, `owner`,
+      `disk`, total24h, total7d,
+      total30d, `online`, country,
+      city, street, depllist,
+      `scale`, Hex, Hex5, active_time,
+      location_address, `date`, re,
+      ip, devtype, loratm,
+      witnesstm, muxtm, minerver,
+      minerstat, ver, grpcfaild,
+      beacontm, import_data_time, update_status_time,
+      hearttm, `status`, err_status,
+      update_time, remark)
+    values (#{id,jdbcType=BIGINT}, #{oneLevelName,jdbcType=VARCHAR}, #{twoLevelName,jdbcType=VARCHAR},
+      #{en,jdbcType=VARCHAR}, #{manageName,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR},
+      #{pingpai,jdbcType=VARCHAR}, #{publicIp,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR},
+      #{disk,jdbcType=DOUBLE}, #{total24h,jdbcType=DOUBLE}, #{total7d,jdbcType=DOUBLE},
+      #{total30d,jdbcType=DOUBLE}, #{online,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR},
+      #{city,jdbcType=VARCHAR}, #{street,jdbcType=VARCHAR}, #{depllist,jdbcType=INTEGER},
+      #{scale,jdbcType=DOUBLE}, #{hex,jdbcType=VARCHAR}, #{hex5,jdbcType=VARCHAR}, #{activeTime,jdbcType=TIMESTAMP},
+      #{locationAddress,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, #{re,jdbcType=VARCHAR},
+      #{ip,jdbcType=VARCHAR}, #{devtype,jdbcType=VARCHAR}, #{loratm,jdbcType=TIMESTAMP},
+      #{witnesstm,jdbcType=TIMESTAMP}, #{muxtm,jdbcType=TIMESTAMP}, #{minerver,jdbcType=VARCHAR},
+      #{minerstat,jdbcType=VARCHAR}, #{ver,jdbcType=VARCHAR}, #{grpcfaild,jdbcType=INTEGER},
+      #{beacontm,jdbcType=TIMESTAMP}, #{importDataTime,jdbcType=TIMESTAMP}, #{updateStatusTime,jdbcType=INTEGER},
+      #{hearttm,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{errStatus,jdbcType=INTEGER},
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="io.renren.modules.business.entity.BusinessDevice">
+    <!--@mbg.generated-->
+    insert into business_device
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="oneLevelName != null">
+        one_level_name,
+      </if>
+      <if test="twoLevelName != null">
+        two_level_name,
+      </if>
+      <if test="en != null">
+        en,
+      </if>
+      <if test="manageName != null">
+        manage_name,
+      </if>
+      <if test="groupName != null">
+        group_name,
+      </if>
+      <if test="pingpai != null">
+        pingpai,
+      </if>
+      <if test="publicIp != null">
+        public_ip,
+      </if>
+      <if test="mac != null">
+        mac,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="owner != null">
+        `owner`,
+      </if>
+      <if test="disk != null">
+        `disk`,
+      </if>
+      <if test="total24h != null">
+        total24h,
+      </if>
+      <if test="total7d != null">
+        total7d,
+      </if>
+      <if test="total30d != null">
+        total30d,
+      </if>
+      <if test="online != null">
+        `online`,
+      </if>
+      <if test="country != null">
+        country,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+      <if test="street != null">
+        street,
+      </if>
+      <if test="depllist != null">
+        depllist,
+      </if>
+      <if test="scale != null">
+        `scale`,
+      </if>
+      <if test="hex != null">
+        Hex,
+      </if>
+      <if test="hex5 != null">
+        Hex5,
+      </if>
+      <if test="activeTime != null">
+        active_time,
+      </if>
+      <if test="locationAddress != null">
+        location_address,
+      </if>
+      <if test="date != null">
+        `date`,
+      </if>
+      <if test="re != null">
+        re,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="devtype != null">
+        devtype,
+      </if>
+      <if test="loratm != null">
+        loratm,
+      </if>
+      <if test="witnesstm != null">
+        witnesstm,
+      </if>
+      <if test="muxtm != null">
+        muxtm,
+      </if>
+      <if test="minerver != null">
+        minerver,
+      </if>
+      <if test="minerstat != null">
+        minerstat,
+      </if>
+      <if test="ver != null">
+        ver,
+      </if>
+      <if test="grpcfaild != null">
+        grpcfaild,
+      </if>
+      <if test="beacontm != null">
+        beacontm,
+      </if>
+      <if test="importDataTime != null">
+        import_data_time,
+      </if>
+      <if test="updateStatusTime != null">
+        update_status_time,
+      </if>
+      <if test="hearttm != null">
+        hearttm,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="errStatus != null">
+        err_status,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="oneLevelName != null">
+        #{oneLevelName,jdbcType=VARCHAR},
+      </if>
+      <if test="twoLevelName != null">
+        #{twoLevelName,jdbcType=VARCHAR},
+      </if>
+      <if test="en != null">
+        #{en,jdbcType=VARCHAR},
+      </if>
+      <if test="manageName != null">
+        #{manageName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="pingpai != null">
+        #{pingpai,jdbcType=VARCHAR},
+      </if>
+      <if test="publicIp != null">
+        #{publicIp,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null">
+        #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null">
+        #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="disk != null">
+        #{disk,jdbcType=DOUBLE},
+      </if>
+      <if test="total24h != null">
+        #{total24h,jdbcType=DOUBLE},
+      </if>
+      <if test="total7d != null">
+        #{total7d,jdbcType=DOUBLE},
+      </if>
+      <if test="total30d != null">
+        #{total30d,jdbcType=DOUBLE},
+      </if>
+      <if test="online != null">
+        #{online,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="street != null">
+        #{street,jdbcType=VARCHAR},
+      </if>
+      <if test="depllist != null">
+        #{depllist,jdbcType=INTEGER},
+      </if>
+      <if test="scale != null">
+        #{scale,jdbcType=DOUBLE},
+      </if>
+      <if test="hex != null">
+        #{hex,jdbcType=VARCHAR},
+      </if>
+      <if test="hex5 != null">
+        #{hex5,jdbcType=VARCHAR},
+      </if>
+      <if test="activeTime != null">
+        #{activeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="locationAddress != null">
+        #{locationAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="re != null">
+        #{re,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="devtype != null">
+        #{devtype,jdbcType=VARCHAR},
+      </if>
+      <if test="loratm != null">
+        #{loratm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="witnesstm != null">
+        #{witnesstm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="muxtm != null">
+        #{muxtm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="minerver != null">
+        #{minerver,jdbcType=VARCHAR},
+      </if>
+      <if test="minerstat != null">
+        #{minerstat,jdbcType=VARCHAR},
+      </if>
+      <if test="ver != null">
+        #{ver,jdbcType=VARCHAR},
+      </if>
+      <if test="grpcfaild != null">
+        #{grpcfaild,jdbcType=INTEGER},
+      </if>
+      <if test="beacontm != null">
+        #{beacontm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="importDataTime != null">
+        #{importDataTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateStatusTime != null">
+        #{updateStatusTime,jdbcType=INTEGER},
+      </if>
+      <if test="hearttm != null">
+        #{hearttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="errStatus != null">
+        #{errStatus,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.business.entity.BusinessDevice">
+    <!--@mbg.generated-->
+    update business_device
+    <set>
+      <if test="oneLevelName != null">
+        one_level_name = #{oneLevelName,jdbcType=VARCHAR},
+      </if>
+      <if test="twoLevelName != null">
+        two_level_name = #{twoLevelName,jdbcType=VARCHAR},
+      </if>
+      <if test="en != null">
+        en = #{en,jdbcType=VARCHAR},
+      </if>
+      <if test="manageName != null">
+        manage_name = #{manageName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="pingpai != null">
+        pingpai = #{pingpai,jdbcType=VARCHAR},
+      </if>
+      <if test="publicIp != null">
+        public_ip = #{publicIp,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null">
+        mac = #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null">
+        `owner` = #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="disk != null">
+        `disk` = #{disk,jdbcType=DOUBLE},
+      </if>
+      <if test="total24h != null">
+        total24h = #{total24h,jdbcType=DOUBLE},
+      </if>
+      <if test="total7d != null">
+        total7d = #{total7d,jdbcType=DOUBLE},
+      </if>
+      <if test="total30d != null">
+        total30d = #{total30d,jdbcType=DOUBLE},
+      </if>
+      <if test="online != null">
+        `online` = #{online,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="street != null">
+        street = #{street,jdbcType=VARCHAR},
+      </if>
+      <if test="depllist != null">
+        depllist = #{depllist,jdbcType=INTEGER},
+      </if>
+      <if test="scale != null">
+        `scale` = #{scale,jdbcType=DOUBLE},
+      </if>
+      <if test="hex != null">
+        Hex = #{hex,jdbcType=VARCHAR},
+      </if>
+      <if test="hex5 != null">
+        Hex5 = #{hex5,jdbcType=VARCHAR},
+      </if>
+      <if test="activeTime != null">
+        active_time = #{activeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="locationAddress != null">
+        location_address = #{locationAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        `date` = #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="re != null">
+        re = #{re,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="devtype != null">
+        devtype = #{devtype,jdbcType=VARCHAR},
+      </if>
+      <if test="loratm != null">
+        loratm = #{loratm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="witnesstm != null">
+        witnesstm = #{witnesstm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="muxtm != null">
+        muxtm = #{muxtm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="minerver != null">
+        minerver = #{minerver,jdbcType=VARCHAR},
+      </if>
+      <if test="minerstat != null">
+        minerstat = #{minerstat,jdbcType=VARCHAR},
+      </if>
+      <if test="ver != null">
+        ver = #{ver,jdbcType=VARCHAR},
+      </if>
+      <if test="grpcfaild != null">
+        grpcfaild = #{grpcfaild,jdbcType=INTEGER},
+      </if>
+      <if test="beacontm != null">
+        beacontm = #{beacontm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="importDataTime != null">
+        import_data_time = #{importDataTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateStatusTime != null">
+        update_status_time = #{updateStatusTime,jdbcType=INTEGER},
+      </if>
+      <if test="hearttm != null">
+        hearttm = #{hearttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="errStatus != null">
+        err_status = #{errStatus,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.renren.modules.business.entity.BusinessDevice">
+    <!--@mbg.generated-->
+    update business_device
+    set one_level_name = #{oneLevelName,jdbcType=VARCHAR},
+      two_level_name = #{twoLevelName,jdbcType=VARCHAR},
+      en = #{en,jdbcType=VARCHAR},
+      manage_name = #{manageName,jdbcType=VARCHAR},
+      group_name = #{groupName,jdbcType=VARCHAR},
+      pingpai = #{pingpai,jdbcType=VARCHAR},
+      public_ip = #{publicIp,jdbcType=VARCHAR},
+      mac = #{mac,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      `owner` = #{owner,jdbcType=VARCHAR},
+      `disk` = #{disk,jdbcType=DOUBLE},
+      total24h = #{total24h,jdbcType=DOUBLE},
+      total7d = #{total7d,jdbcType=DOUBLE},
+      total30d = #{total30d,jdbcType=DOUBLE},
+      `online` = #{online,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      street = #{street,jdbcType=VARCHAR},
+      depllist = #{depllist,jdbcType=INTEGER},
+      `scale` = #{scale,jdbcType=DOUBLE},
+      Hex = #{hex,jdbcType=VARCHAR},
+      Hex5 = #{hex5,jdbcType=VARCHAR},
+      active_time = #{activeTime,jdbcType=TIMESTAMP},
+      location_address = #{locationAddress,jdbcType=VARCHAR},
+      `date` = #{date,jdbcType=TIMESTAMP},
+      re = #{re,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      devtype = #{devtype,jdbcType=VARCHAR},
+      loratm = #{loratm,jdbcType=TIMESTAMP},
+      witnesstm = #{witnesstm,jdbcType=TIMESTAMP},
+      muxtm = #{muxtm,jdbcType=TIMESTAMP},
+      minerver = #{minerver,jdbcType=VARCHAR},
+      minerstat = #{minerstat,jdbcType=VARCHAR},
+      ver = #{ver,jdbcType=VARCHAR},
+      grpcfaild = #{grpcfaild,jdbcType=INTEGER},
+      beacontm = #{beacontm,jdbcType=TIMESTAMP},
+      import_data_time = #{importDataTime,jdbcType=TIMESTAMP},
+      update_status_time = #{updateStatusTime,jdbcType=INTEGER},
+      hearttm = #{hearttm,jdbcType=TIMESTAMP},
+      `status` = #{status,jdbcType=INTEGER},
+      err_status = #{errStatus,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+
+  <!--auto generated by MybatisCodeHelper on 2022-03-24-->
+  <select id="findAddressByAddress" resultType="java.lang.String">
+    select address
+    from business_device
+    where address = #{address}
+  </select>
+
+  <!--auto generated by MybatisCodeHelper on 2022-03-24-->
+
+  <!--auto generated by MybatisCodeHelper on 2022-03-24-->
+  <select id="findAll" resultType="java.lang.String">
+    select
+        address
+    from business_device where status = 1
+    ORDER BY IF(ISNULL(update_time), 0, 1), IF(ISNULL(ip), 0, 1), update_time DESC
+  </select>
+
+  <sql id="selectCondition">
+    <if test="deviceDTO.name != null and deviceDTO.name != ''">
+      (one_level_name=#{deviceDTO.name} or
+      two_level_name in
+      <foreach close=")" collection="deviceDTO.name.split('@@')" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach>)
+    </if>
+
+    <if test="'未知' == deviceDTO.country">
+      and country IS NULL
+    </if>
+    <if test="'未知' != deviceDTO.country and null != deviceDTO.country  and deviceDTO.country != ''">
+      and country = #{deviceDTO.country}
+    </if>
+
+    <if test="'未知' == deviceDTO.city">
+      and city IS NULL
+    </if>
+    <if test="'未知' != deviceDTO.city and null != deviceDTO.city  and deviceDTO.city != ''">
+      and city = #{deviceDTO.city}
+    </if>
+
+    <if test="'未知' == deviceDTO.oneLevelName">
+      and one_level_name IS NULL
+    </if>
+    <if test="'未知' != deviceDTO.oneLevelName and null != deviceDTO.oneLevelName  and deviceDTO.oneLevelName != ''">
+      and one_level_name = #{deviceDTO.oneLevelName}
+    </if>
+
+    <if test="'未知' == deviceDTO.twoLevelName">
+      and two_level_name IS NULL
+    </if>
+    <if test="'未知' != deviceDTO.twoLevelName and null != deviceDTO.twoLevelName  and deviceDTO.twoLevelName != ''">
+      and two_level_name = #{deviceDTO.twoLevelName}
+    </if>
+
+    <if test="'未知' == deviceDTO.manageName">
+      and manage_name IS NULL
+    </if>
+    <if test="'未知' != deviceDTO.manageName and null != deviceDTO.manageName  and deviceDTO.manageName != ''">
+      and manage_name = #{deviceDTO.manageName}
+    </if>
+
+    <if test="'未知' == deviceDTO.groupName">
+      and group_name IS NULL
+    </if>
+    <if test="'未知' != deviceDTO.groupName and null != deviceDTO.groupName and deviceDTO.groupName != ''">
+      and group_name = #{deviceDTO.groupName}
+    </if>
+
+    <if test="'未知' != deviceDTO.online and null != deviceDTO.online and deviceDTO.online != ''">
+      and online = #{deviceDTO.online}
+    </if>
+    <if test="'未知' == deviceDTO.online">
+      and online IS NULL
+    </if>
+
+    <if test="deviceDTO.depllist != null and deviceDTO.depllist != '' and '未知' != deviceDTO.depllist">
+      and depllist = #{deviceDTO.depllist}
+    </if>
+    <if test="'未知' == deviceDTO.depllist">
+      and depllist IS NULL
+    </if>
+    <if test="deviceDTO.key != null and deviceDTO.key != ''">
+      and (one_level_name like concat('%', #{deviceDTO.key},'%') or two_level_name like concat('%', #{deviceDTO.key},'%'))
+    </if>
+    <if test="deviceDTO.modeType != null and deviceDTO.modeType != 0">
+      and remark IS NOT NULL and remark != ''
+    </if>
+    and status != 0
+  </sql>
+
+  <!--auto generated by MybatisCodeHelper on 2022-03-24-->
+  <select id="selectAllPaging" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from business_device
+    <where>
+      <include refid="selectCondition" />
+    </where>
+    <if test="deviceDTO.modeType == null">
+      limit #{deviceDTO.pageConvertLine} , #{deviceDTO.limit}
+    </if>
+
+  </select>
+
+  <!--    &amp;amp;amp;amp;amp;amp;lt;select id="selectAllCount" resultType="java.lang.Integer"&amp;amp;amp;amp;amp;amp;gt;-->
+  <!--        select count(*)-->
+  <!--        from business_device-->
+  <!--        &amp;amp;amp;amp;amp;amp;lt;where&amp;amp;amp;amp;amp;amp;gt;-->
+  <!--            &amp;amp;amp;amp;amp;amp;lt;include refid="selectCondition"/&amp;amp;amp;amp;amp;amp;gt;-->
+  <!--        &amp;amp;amp;amp;amp;amp;lt;/where&amp;amp;amp;amp;amp;amp;gt;-->
+  <!--    &amp;amp;amp;amp;amp;amp;lt;/select&amp;amp;amp;amp;amp;amp;gt;-->
+
+  <select id="selectFilterable" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from business_device
+    <where>
+      <include refid="selectCondition" />
+    </where>
+  </select>
+
+  <select id="findSelect" resultType="io.renren.modules.business.dao.Select">
+    <!--    状态    -->
+    <if test="typeId == 1">
+      SELECT concat(IF(`online` is not null, `online`, '未知'), ' 【', count(*),
+      '】') as 'label', IF(`online` is not null,`online` , '-1') as 'value'
+      from business_device
+      <where>
+        <include refid="selectCondition" />
+      </where>
+      GROUP BY `online`
+    </if>
+    <!--     黑名单   -->
+    <if test="typeId == 2">
+      SELECT concat(IF(depllist = '1', '存在', ''), IF(depllist = '0', '不存在', ''), IF(depllist is null, '未知', ''),
+      ' 【', count(*), '】') AS 'label', IF(`depllist` is not null,`depllist` , '-1') AS 'value'
+      from business_device
+      <where>
+        <include refid="selectCondition" />
+      </where>
+      GROUP BY `depllist`
+    </if>
+  </select>
+
+  <!--auto generated by MybatisCodeHelper on 2022-04-11-->
+  <select id="findOwnerByAddress" resultType="java.lang.String">
+    select `owner`
+    from business_device
+    where address=#{address} and status = 1 limit 1
+  </select>
+
+  <update id="clear">
+    UPDATE `business_device` SET status = 0
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2022-08-02-->
+  <update id="updateByAddress">
+    update business_device
+    <set>
+      <if test="updated.id != null">
+        id = #{updated.id,jdbcType=BIGINT},
+      </if>
+      <if test="updated.oneLevelName != null">
+        one_level_name = #{updated.oneLevelName,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.twoLevelName != null">
+        two_level_name = #{updated.twoLevelName,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.en != null">
+        en = #{updated.en,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.manageName != null">
+        manage_name = #{updated.manageName,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.groupName != null">
+        group_name = #{updated.groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.pingpai != null">
+        pingpai = #{updated.pingpai,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.publicIp != null">
+        public_ip = #{updated.publicIp,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.mac != null">
+        mac = #{updated.mac,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.name != null">
+        name = #{updated.name,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.address != null">
+        address = #{updated.address,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.owner != null">
+        owner = #{updated.owner,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.disk != null">
+        disk = #{updated.disk,jdbcType=DOUBLE},
+      </if>
+      <if test="updated.total24h != null">
+        total24h = #{updated.total24h,jdbcType=DOUBLE},
+      </if>
+      <if test="updated.total7d != null">
+        total7d = #{updated.total7d,jdbcType=DOUBLE},
+      </if>
+      <if test="updated.total30d != null">
+        total30d = #{updated.total30d,jdbcType=DOUBLE},
+      </if>
+      <if test="updated.online != null">
+        online = #{updated.online,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.country != null">
+        country = #{updated.country,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.city != null">
+        city = #{updated.city,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.street != null">
+        street = #{updated.street,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.depllist != null">
+        depllist = #{updated.depllist,jdbcType=INTEGER},
+      </if>
+      <if test="updated.scale != null">
+        scale = #{updated.scale,jdbcType=DOUBLE},
+      </if>
+      <if test="updated.hex != null">
+        Hex = #{updated.hex,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.hex5 != null">
+        Hex5 = #{updated.hex5,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.activeTime != null">
+        active_time = #{updated.activeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated.locationAddress != null">
+        location_address = #{updated.locationAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.date != null">
+        date = #{updated.date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated.re != null">
+        re = #{updated.re,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.ip != null">
+        ip = #{updated.ip,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.devtype != null">
+        devtype = #{updated.devtype,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.loratm != null">
+        loratm = #{updated.loratm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated.witnesstm != null">
+        witnesstm = #{updated.witnesstm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated.muxtm != null">
+        muxtm = #{updated.muxtm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated.minerver != null">
+        minerver = #{updated.minerver,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.minerstat != null">
+        minerstat = #{updated.minerstat,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.ver != null">
+        ver = #{updated.ver,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.grpcfaild != null">
+        grpcfaild = #{updated.grpcfaild,jdbcType=INTEGER},
+      </if>
+      <if test="updated.beacontm != null">
+        beacontm = #{updated.beacontm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated.importDataTime != null">
+        import_data_time = #{updated.importDataTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated.updateStatusTime != null">
+        update_status_time = #{updated.updateStatusTime,jdbcType=INTEGER},
+      </if>
+      <if test="updated.hearttm != null">
+        hearttm = #{updated.hearttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated.status != null">
+        status = #{updated.status,jdbcType=INTEGER},
+      </if>
+      <if test="updated.errStatus != null">
+        err_status = #{updated.errStatus,jdbcType=INTEGER},
+      </if>
+      <if test="updated.updateTime != null">
+        update_time = #{updated.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated.remark != null">
+        remark = #{updated.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <where>
+      <if test="updated.address != null">
+        and address=#{updated.address,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </update>
+</mapper>

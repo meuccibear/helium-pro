@@ -159,9 +159,4 @@
     limit 1
   </select>
 
-  <select id="truncate">
-    TRUNCATE table schedule_job_log;
-    DELETE from business_log where create_time &lt;= DATE_SUB(now(), INTERVAL 3 DAY)
-    DELETE from data_http where create_time &lt;= DATE_SUB(now(), INTERVAL 2 DAY)
-  </select>
 </mapper>

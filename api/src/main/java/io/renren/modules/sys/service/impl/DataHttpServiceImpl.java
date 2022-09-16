@@ -50,10 +50,6 @@ public class DataHttpServiceImpl implements DataHttpService {
         return dataHttpMapper.findAllByAll(dataHttp);
     }
 
-    @Override
-    public void truncate(){
-        dataHttpMapper.truncate();
-    }
 }
 
 

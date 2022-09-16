@@ -12,7 +12,6 @@ import io.renren.importData.HotspottyData;
 import io.renren.importData.HotspottyDataListener;
 import io.renren.modules.business.dao.BusinessDeviceMapper;
 import io.renren.modules.business.dao.Select;
-import io.renren.modules.business.service.MakersService;
 import io.renren.modules.domain.dto.DeviceDTO;
 import io.renren.modules.helium.HeliumUtils;
 import io.renren.modules.helium.HexUtils;
@@ -137,27 +136,12 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
     }
 
 
-    void putCount(Map<String, JSONObject> data, String oneLevelName, String twoLevelName) {
-        oneLevelName = ObjectUtils.notIsEmpty(oneLevelName) ? oneLevelName : "未知";
-        twoLevelName = ObjectUtils.notIsEmpty(twoLevelName) ? twoLevelName : "未知";
 
-        putCount(data, oneLevelName);
-        JSONObject jsonObject = data.get(oneLevelName);
-        if (jsonObject.containsKey("son")) {
-            Map<String, JSONObject> sonData = (Map<String, JSONObject>) jsonObject.get("son");
-            putCount(sonData, twoLevelName);
-        } else {
-            Map<String, JSONObject> sonData = new HashMap<>();
-            putCount(sonData, twoLevelName);
-            jsonObject.put("son", sonData);
-        }
-    }
 
     /**
      * 添加并计数
      *
      * @param oneLevelName
-     * @param levelName
      */
     void putCount(Map<String, JSONObject> data, String oneLevelName) {
 //        Integer num = data.get(levelName);
@@ -191,26 +175,6 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         }
         return selects;
     }
-
-//    @Override
-//    public PageUtils queryPage(Map<String, Object> params) {
-//        String oneLevelName = (String) params.get("one_level_name");
-//        String twoLevelName = (String) params.get("two_level_name");
-//        String key = (String) params.get("key");
-//        IPage<BusinessDevice> page = this.page(
-//                new Query<BusinessDevice>().getPage(params),
-//                new QueryWrapper<BusinessDevice>()
-//                        .and(wrapper -> wrapper.eq(ObjectUtils.notIsEmpty(oneLevelName), "one_level_name", oneLevelName)
-//                                .or(ObjectUtils.notIsEmpty(twoLevelName), wrapper1 -> wrapper1.eq("two_level_name", twoLevelName))
-//                        )
-//                        .and(ObjectUtils.notIsEmpty(key), wrapper -> wrapper.eq("one_level_name", key)
-//                                .or(wrapper1 -> wrapper1.eq("two_level_name", key))
-//                        )
-//        );
-//
-//        return new PageUtils(page);
-//    }
-
 
     @Override
     public void insertOrUpdate(BusinessDevice device) {
@@ -359,7 +323,8 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
                     // 对应钱包序号
                     FileUtils.writeln(filePath, StringUtils.outStr("\t", address, makersDictionary.get(device.getPayer()), de, clJson, device.getName().replaceAll("-", " "), device.getOwner(), ownerNo.get(device.getOwner()), device.getStatus().getOnline(), device.getStatus().getIp(), device.getGeocode().getLong_country(), device.getGeocode().getLong_city(), hotspotsTotal, device.getLat(), device.getLng(), device.getLocation_hex(), ObjectUtils.notIsEmpty(device.getLocation_hex()) ? HexUtils.h3.h3ToParentAddress(device.getLocation_hex(), 5) : ""), true, true);
                 } else {
-                    System.out.println(device.getPayer());
+//                    System.out.println(device.getPayer());
+                    log.info("device:{}", device);
                     // 基础
                     FileUtils.writeln(filePath, StringUtils.outStr("\t",
                                     address,
@@ -486,57 +451,6 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
     public int updateByPrimaryKey(BusinessDevice record) {
         return businessDeviceMapper.updateByPrimaryKey(record);
     }
-
-//    @Override
-//    public int deleteByPrimaryKey(Long id) {
-//        return businessDeviceMapper.deleteByPrimaryKey(id);
-//    }
-
-//    @Override
-//    public int insert(BusinessDevice record) {
-//        return businessDeviceMapper.insert(record);
-//    }
-//
-//    @Override
-//    public int insertSelective(BusinessDevice record) {
-//        return businessDeviceMapper.insertSelective(record);
-//    }
-//
-//    @Override
-//    public BusinessDevice selectByPrimaryKey(Long id) {
-//        return businessDeviceMapper.selectByPrimaryKey(id);
-//    }
-//
-//    @Override
-//    public int updateByPrimaryKeySelective(BusinessDevice record) {
-//        return businessDeviceMapper.updateByPrimaryKeySelective(record);
-//    }
-//
-//    @Override
-//    public int updateByPrimaryKey(BusinessDevice record) {
-//        return businessDeviceMapper.updateByPrimaryKey(record);
-//    }
-
-//    @SneakyThrows
-//    @Async("taskExecutor")
-//    public void addHotspottyGlobalDevice(List<List<String>> lists, int index, String filePath) throws MsgException {
-////        getCHexsByHex(hex, 5)
-//        List<String> addresss = lists.get(index);
-//        log.info(String.format("开始执行任务：hash值：%s 线程序号：%d任务量：%d", addresss.hashCode(), index, addresss.size()));
-//
-//        LocalDateTime now = LocalDateTime.now();
-//        String cityid = null;
-//
-//        for (int i = 0; i < addresss.size(); i++) {
-//            cityid = addresss.get(i);
-//            log.info(String.format("hash值：%s 线程序号：%d任务量：%d 开始查询第%d条信息 查询参数：%s", addresss.hashCode(), index, addresss.size(), i, addresss.get(i)));
-//
-//            List<LeanData> leanDataL = HeliumUtils.getCHexsByHex(cityid, 5);
-//            globalDeviceService.addHotspottyDevice(heliumApi.getHotspotsByCities(cityid));
-//        }
-//        log.info("任务结束：hash值：{} 线程序号：{} 查询{}条信息 所消耗的时间{}", addresss.hashCode(), index, addresss.size(), DateUtils.calculationTimeConsuming(now));
-//
-//    }
 
 }
 

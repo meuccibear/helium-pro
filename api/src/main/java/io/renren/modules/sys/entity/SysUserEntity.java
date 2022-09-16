@@ -68,6 +68,8 @@ public class SysUserEntity implements Serializable {
 	 */
 	private String mobile;
 
+	private Integer typeId;
+
 	/**
 	 * 状态  0：禁用   1：正常
 	 */

@@ -41,6 +41,8 @@ public class DeviceDTO extends PageRRDTO {
 
     String city;
 
+    int type;
+
     /**
      * @title
      * @description 1.日报

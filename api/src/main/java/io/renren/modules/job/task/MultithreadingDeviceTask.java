@@ -38,16 +38,12 @@ public class MultithreadingDeviceTask implements ITask {
     @Autowired
     MakersService makersService;
 
-//    @Autowired
-//    private HeliumHttpUtils heliumHttpUtils;
-
     @SneakyThrows
     @Override
     public void run(String params) {
         log.info("MultithreadingDeviceTask定时任务正在执行，参数为：{}", params);
         Map<String, String> makersDictionary = makersService.getMakersDictionary();
 
-//        checkNotNull
         Lists.partition(new ArrayList<>(), 200);
         List<List<String>> lists = ObjectUtils.averageAssignPartition(businessDeviceService.findAll(), ObjectUtils.toInt(params, 5));
         for (int i = 0; i < lists.size(); i++) {
@@ -55,8 +51,6 @@ public class MultithreadingDeviceTask implements ITask {
                 businessDeviceService.updateData(makersDictionary, lists, i);
             }
         }
-//        StringUtils.writeList("-", lists.get(0).hashCode());
-//        businessDeviceService.updateData(lists.get(0));
     }
 
 }

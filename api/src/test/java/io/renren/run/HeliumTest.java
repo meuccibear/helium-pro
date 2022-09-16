@@ -158,49 +158,27 @@ public class HeliumTest {
     public void showAvailableHexs() throws MsgException {
 
         String groupStr =
-                "86186a2efffffff\t3\n" +
-                        "86186a2c7ffffff\t3\n" +
-                        "86186a2e7ffffff\t2\n" +
-                        "861fb5447ffffff\t2\n" +
-                        "861fb546fffffff\t3\n" +
-                        "871fb5734ffffff\t2\n" +
-                        "871fb5714ffffff\t1\n" +
-                        "871fb55b1ffffff\t3\n" +
-                        "871fb558cffffff\t3\n" +
-                        "871fb5595ffffff\t2\n" +
-                        "861fb1577ffffff\t3\n" +
-                        "861fb152fffffff\t3\n" +
-                        "861fb1cd7ffffff\t2\n" +
-                        "871fb14f5ffffff\t2\n" +
-                        "871fb1450ffffff\t2\n" +
-                        "861fb141fffffff\t3\n" +
-                        "881fb140a1fffff\t1\n" +
-                        "8618690afffffff\t3\n" +
-                        "86186901fffffff\t3\n" +
-                        "8618690f7ffffff\t2\n" +
-                        "86184d367ffffff\t3\n" +
-                        "86184dacfffffff\t3\n" +
-                        "86184d377ffffff\t1\n" +
-                        "87184d329ffffff\t1\n" +
-                        "881f14d361fffff\t1\n" +
-                        "86196d967ffffff\t3\n" +
-                        "86196d977ffffff\t3\n" +
-                        "88196d9297fffff\t1\n" +
-                        "86394229fffffff\t3\n" +
-                        "86395c92fffffff\t2\n" +
-                        "86395c977ffffff\t3\n" +
-                        "86395cb27ffffff\t3\n" +
-                        "8839434d0dfffff\t1\n" +
-                        "8839434d0bfffff\t1\n" +
-                        "8839434d1dfffff\t1\n" +
-                        "86394348fffffff\t2\n" +
-                        "861f15c27ffffff\t2\n" +
-                        "861f15c2fffffff\t2\n" +
-                        "861f15d47ffffff\t4\n" +
-                        "861f14acfffffff\t2\n" +
-                        "861f14aefffffff\t2\n" +
-                        "861f14a5fffffff\t2\n" +
-                        "861f14a57ffffff\t2";
+                "873154112ffffff\t2\n" +
+                        "873154114ffffff\t2\n" +
+                        "873154036ffffff\t2\n" +
+                        "873154035ffffff\t2\n" +
+                        "873154028ffffff\t2\n" +
+                        "873154005ffffff\t2\n" +
+                        "87315410bffffff\t2\n" +
+                        "87315410effffff\t2\n" +
+                        "8631735b7ffffff\t2\n" +
+                        "863173587ffffff\t2\n" +
+                        "8631735a7ffffff\t2\n" +
+                        "8631735afffffff\t2\n" +
+                        "853109d7fffffff\t8\n" +
+                        "863020627ffffff\t3\n" +
+                        "863020747ffffff\t4\n" +
+                        "873020ab2ffffff\t2\n" +
+                        "88302002d7fffff\t1\n" +
+                        "8830200289fffff\t1\n" +
+                        "88302002c5fffff\t1\n" +
+                        "8830200217fffff\t1\n" +
+                        "873020149ffffff\t1";
         String filePath = "../data/result/坐标_" + System.currentTimeMillis();
 
         List<List<String>> groupTable = StringUtils.toTableList(groupStr);

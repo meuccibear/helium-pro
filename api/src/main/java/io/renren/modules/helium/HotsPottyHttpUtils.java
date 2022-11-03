@@ -37,21 +37,22 @@ public class HotsPottyHttpUtils extends HttpUtils {
 //    @Autowired
     DataHttpService httpService;
 
-    @Override
-    public void sendBefore(Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
-        if (ObjectUtils.isEmpty(httpService)) {
-            return;
-        }
+//    @Override
+//    public Object sendBefore(Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
+////        if (ObjectUtils.isEmpty(httpService)) {
+////            return null;
+////        }
+//
+////        Http byAll = httpService.findByAll(new Http(null, url, JSON.toJSONString(urlParameter), null, null, method.name()));
+////        if (ObjectUtils.notIsEmpty(byAll)) {
+////            httpResultData = BeanUtils.toJavaObject(byAll.getRespone(), new TypeReference<HttpResultData>() {{
+////            }});
+////        }
+//        return null;
+//    }
 
-//        Http byAll = httpService.findByAll(new Http(null, url, JSON.toJSONString(urlParameter), null, null, method.name()));
-//        if (ObjectUtils.notIsEmpty(byAll)) {
-//            httpResultData = BeanUtils.toJavaObject(byAll.getRespone(), new TypeReference<HttpResultData>() {{
-//            }});
-//        }
-    }
-
     @Override
-    public void sendAfter(Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
+    public void sendAfter(Object requestData, Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
         if (ObjectUtils.isEmpty(httpService)) {
             return;
         }

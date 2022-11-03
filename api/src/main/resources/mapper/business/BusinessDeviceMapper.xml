@@ -4,7 +4,8 @@
   <resultMap id="BaseResultMap" type="io.renren.modules.business.entity.BusinessDevice">
     <!--@mbg.generated-->
     <!--@Table business_device-->
-    <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="address" jdbcType="VARCHAR" property="address" />
+    <result column="id" jdbcType="BIGINT" property="id" />
     <result column="one_level_name" jdbcType="VARCHAR" property="oneLevelName" />
     <result column="two_level_name" jdbcType="VARCHAR" property="twoLevelName" />
     <result column="en" jdbcType="VARCHAR" property="en" />
@@ -14,7 +15,6 @@
     <result column="public_ip" jdbcType="VARCHAR" property="publicIp" />
     <result column="mac" jdbcType="VARCHAR" property="mac" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="owner" jdbcType="VARCHAR" property="owner" />
     <result column="disk" jdbcType="DOUBLE" property="disk" />
     <result column="total24h" jdbcType="DOUBLE" property="total24h" />
@@ -52,35 +52,35 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, one_level_name, two_level_name, en, manage_name, group_name, pingpai, public_ip,
-    mac, `name`, address, `owner`, `disk`, total24h, total7d, total30d, `online`, country,
+    address, id, one_level_name, two_level_name, en, manage_name, group_name, pingpai,
+    public_ip, mac, `name`, `owner`, `disk`, total24h, total7d, total30d, `online`, country,
     city, street, depllist, `scale`, Hex, Hex5, active_time, location_address, `date`,
     re, ip, devtype, loratm, witnesstm, muxtm, minerver, minerstat, ver, grpcfaild, beacontm,
     import_data_time, update_status_time, hearttm, `status`, err_status, update_time,
     remark
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     <!--@mbg.generated-->
     select
     <include refid="Base_Column_List" />
     from business_device
-    where id = #{id,jdbcType=BIGINT}
+    where address = #{address,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     <!--@mbg.generated-->
     delete from business_device
-    where id = #{id,jdbcType=BIGINT}
+    where address = #{address,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="io.renren.modules.business.entity.BusinessDevice">
     <!--@mbg.generated-->
-    insert into business_device (id, one_level_name, two_level_name,
-      en, manage_name, group_name,
-      pingpai, public_ip, mac,
-      `name`, address, `owner`,
-      `disk`, total24h, total7d,
-      total30d, `online`, country,
-      city, street, depllist,
-      `scale`, Hex, Hex5, active_time,
+    insert into business_device (address, id, one_level_name,
+      two_level_name, en, manage_name,
+      group_name, pingpai, public_ip,
+      mac, `name`, `owner`, `disk`,
+      total24h, total7d, total30d,
+      `online`, country, city,
+      street, depllist, `scale`,
+      Hex, Hex5, active_time,
       location_address, `date`, re,
       ip, devtype, loratm,
       witnesstm, muxtm, minerver,
@@ -88,14 +88,14 @@
       beacontm, import_data_time, update_status_time,
       hearttm, `status`, err_status,
       update_time, remark)
-    values (#{id,jdbcType=BIGINT}, #{oneLevelName,jdbcType=VARCHAR}, #{twoLevelName,jdbcType=VARCHAR},
-      #{en,jdbcType=VARCHAR}, #{manageName,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR},
-      #{pingpai,jdbcType=VARCHAR}, #{publicIp,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR},
-      #{name,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR},
-      #{disk,jdbcType=DOUBLE}, #{total24h,jdbcType=DOUBLE}, #{total7d,jdbcType=DOUBLE},
-      #{total30d,jdbcType=DOUBLE}, #{online,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR},
-      #{city,jdbcType=VARCHAR}, #{street,jdbcType=VARCHAR}, #{depllist,jdbcType=INTEGER},
-      #{scale,jdbcType=DOUBLE}, #{hex,jdbcType=VARCHAR}, #{hex5,jdbcType=VARCHAR}, #{activeTime,jdbcType=TIMESTAMP},
+    values (#{address,jdbcType=VARCHAR}, #{id,jdbcType=BIGINT}, #{oneLevelName,jdbcType=VARCHAR},
+      #{twoLevelName,jdbcType=VARCHAR}, #{en,jdbcType=VARCHAR}, #{manageName,jdbcType=VARCHAR},
+      #{groupName,jdbcType=VARCHAR}, #{pingpai,jdbcType=VARCHAR}, #{publicIp,jdbcType=VARCHAR},
+      #{mac,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR}, #{disk,jdbcType=DOUBLE},
+      #{total24h,jdbcType=DOUBLE}, #{total7d,jdbcType=DOUBLE}, #{total30d,jdbcType=DOUBLE},
+      #{online,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR},
+      #{street,jdbcType=VARCHAR}, #{depllist,jdbcType=INTEGER}, #{scale,jdbcType=DOUBLE},
+      #{hex,jdbcType=VARCHAR}, #{hex5,jdbcType=VARCHAR}, #{activeTime,jdbcType=TIMESTAMP},
       #{locationAddress,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, #{re,jdbcType=VARCHAR},
       #{ip,jdbcType=VARCHAR}, #{devtype,jdbcType=VARCHAR}, #{loratm,jdbcType=TIMESTAMP},
       #{witnesstm,jdbcType=TIMESTAMP}, #{muxtm,jdbcType=TIMESTAMP}, #{minerver,jdbcType=VARCHAR},
@@ -108,6 +108,9 @@
     <!--@mbg.generated-->
     insert into business_device
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="address != null">
+        address,
+      </if>
       <if test="id != null">
         id,
       </if>
@@ -137,9 +140,6 @@
       </if>
       <if test="name != null">
         `name`,
-      </if>
-      <if test="address != null">
-        address,
       </if>
       <if test="owner != null">
         `owner`,
@@ -245,6 +245,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
@@ -274,9 +277,6 @@
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="address != null">
-        #{address,jdbcType=VARCHAR},
       </if>
       <if test="owner != null">
         #{owner,jdbcType=VARCHAR},
@@ -386,6 +386,9 @@
     <!--@mbg.generated-->
     update business_device
     <set>
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
       <if test="oneLevelName != null">
         one_level_name = #{oneLevelName,jdbcType=VARCHAR},
       </if>
@@ -412,9 +415,6 @@
       </if>
       <if test="name != null">
         `name` = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="address != null">
-        address = #{address,jdbcType=VARCHAR},
       </if>
       <if test="owner != null">
         `owner` = #{owner,jdbcType=VARCHAR},
@@ -519,12 +519,13 @@
         remark = #{remark,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where address = #{address,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="io.renren.modules.business.entity.BusinessDevice">
     <!--@mbg.generated-->
     update business_device
-    set one_level_name = #{oneLevelName,jdbcType=VARCHAR},
+    set id = #{id,jdbcType=BIGINT},
+      one_level_name = #{oneLevelName,jdbcType=VARCHAR},
       two_level_name = #{twoLevelName,jdbcType=VARCHAR},
       en = #{en,jdbcType=VARCHAR},
       manage_name = #{manageName,jdbcType=VARCHAR},
@@ -533,7 +534,6 @@
       public_ip = #{publicIp,jdbcType=VARCHAR},
       mac = #{mac,jdbcType=VARCHAR},
       `name` = #{name,jdbcType=VARCHAR},
-      address = #{address,jdbcType=VARCHAR},
       `owner` = #{owner,jdbcType=VARCHAR},
       `disk` = #{disk,jdbcType=DOUBLE},
       total24h = #{total24h,jdbcType=DOUBLE},
@@ -568,8 +568,1074 @@
       err_status = #{errStatus,jdbcType=INTEGER},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       remark = #{remark,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=BIGINT}
+    where address = #{address,jdbcType=VARCHAR}
   </update>
+  <update id="updateBatch" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    update business_device
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="id = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.id,jdbcType=BIGINT}
+        </foreach>
+      </trim>
+      <trim prefix="one_level_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.oneLevelName,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="two_level_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.twoLevelName,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="en = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.en,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="manage_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.manageName,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="group_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.groupName,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="pingpai = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.pingpai,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="public_ip = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.publicIp,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="mac = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.mac,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="`name` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.name,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="`owner` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.owner,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="`disk` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.disk,jdbcType=DOUBLE}
+        </foreach>
+      </trim>
+      <trim prefix="total24h = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.total24h,jdbcType=DOUBLE}
+        </foreach>
+      </trim>
+      <trim prefix="total7d = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.total7d,jdbcType=DOUBLE}
+        </foreach>
+      </trim>
+      <trim prefix="total30d = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.total30d,jdbcType=DOUBLE}
+        </foreach>
+      </trim>
+      <trim prefix="`online` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.online,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="country = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.country,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="city = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.city,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="street = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.street,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="depllist = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.depllist,jdbcType=INTEGER}
+        </foreach>
+      </trim>
+      <trim prefix="`scale` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.scale,jdbcType=DOUBLE}
+        </foreach>
+      </trim>
+      <trim prefix="Hex = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.hex,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="Hex5 = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.hex5,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="active_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.activeTime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="location_address = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.locationAddress,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="`date` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.date,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="re = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.re,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="ip = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.ip,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="devtype = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.devtype,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="loratm = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.loratm,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="witnesstm = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.witnesstm,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="muxtm = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.muxtm,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="minerver = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.minerver,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="minerstat = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.minerstat,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="ver = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.ver,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="grpcfaild = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.grpcfaild,jdbcType=INTEGER}
+        </foreach>
+      </trim>
+      <trim prefix="beacontm = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.beacontm,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="import_data_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.importDataTime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="update_status_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.updateStatusTime,jdbcType=INTEGER}
+        </foreach>
+      </trim>
+      <trim prefix="hearttm = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.hearttm,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="`status` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.status,jdbcType=INTEGER}
+        </foreach>
+      </trim>
+      <trim prefix="err_status = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.errStatus,jdbcType=INTEGER}
+        </foreach>
+      </trim>
+      <trim prefix="update_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="remark = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when address = #{item.address,jdbcType=VARCHAR} then #{item.remark,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+    </trim>
+    where address in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.address,jdbcType=VARCHAR}
+    </foreach>
+  </update>
+  <update id="updateBatchSelective" parameterType="java.util.List">
+    <!--@mbg.generated-->
+    update business_device
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="id = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.id != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.id,jdbcType=BIGINT}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="one_level_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.oneLevelName != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.oneLevelName,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="two_level_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.twoLevelName != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.twoLevelName,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="en = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.en != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.en,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="manage_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.manageName != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.manageName,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="group_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.groupName != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.groupName,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="pingpai = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.pingpai != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.pingpai,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="public_ip = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.publicIp != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.publicIp,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="mac = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.mac != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.mac,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="`name` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.name != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.name,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="`owner` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.owner != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.owner,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="`disk` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.disk != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.disk,jdbcType=DOUBLE}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="total24h = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.total24h != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.total24h,jdbcType=DOUBLE}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="total7d = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.total7d != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.total7d,jdbcType=DOUBLE}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="total30d = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.total30d != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.total30d,jdbcType=DOUBLE}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="`online` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.online != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.online,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="country = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.country != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.country,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="city = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.city != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.city,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="street = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.street != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.street,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="depllist = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.depllist != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.depllist,jdbcType=INTEGER}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="`scale` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.scale != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.scale,jdbcType=DOUBLE}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="Hex = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.hex != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.hex,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="Hex5 = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.hex5 != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.hex5,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="active_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.activeTime != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.activeTime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="location_address = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.locationAddress != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.locationAddress,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="`date` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.date != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.date,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="re = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.re != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.re,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="ip = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.ip != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.ip,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="devtype = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.devtype != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.devtype,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="loratm = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.loratm != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.loratm,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="witnesstm = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.witnesstm != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.witnesstm,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="muxtm = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.muxtm != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.muxtm,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="minerver = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.minerver != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.minerver,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="minerstat = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.minerstat != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.minerstat,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="ver = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.ver != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.ver,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="grpcfaild = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.grpcfaild != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.grpcfaild,jdbcType=INTEGER}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="beacontm = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.beacontm != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.beacontm,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="import_data_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.importDataTime != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.importDataTime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="update_status_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.updateStatusTime != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.updateStatusTime,jdbcType=INTEGER}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="hearttm = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.hearttm != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.hearttm,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="`status` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.status != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.status,jdbcType=INTEGER}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="err_status = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.errStatus != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.errStatus,jdbcType=INTEGER}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="update_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.updateTime != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.updateTime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="remark = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.remark != null">
+            when address = #{item.address,jdbcType=VARCHAR} then #{item.remark,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    where address in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.address,jdbcType=VARCHAR}
+    </foreach>
+  </update>
+  <insert id="batchInsert" parameterType="map">
+    <!--@mbg.generated-->
+    insert into business_device
+    (address, id, one_level_name, two_level_name, en, manage_name, group_name, pingpai,
+      public_ip, mac, `name`, `owner`, `disk`, total24h, total7d, total30d, `online`,
+      country, city, street, depllist, `scale`, Hex, Hex5, active_time, location_address,
+      `date`, re, ip, devtype, loratm, witnesstm, muxtm, minerver, minerstat, ver, grpcfaild,
+      beacontm, import_data_time, update_status_time, hearttm, `status`, err_status,
+      update_time, remark)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.address,jdbcType=VARCHAR}, #{item.id,jdbcType=BIGINT}, #{item.oneLevelName,jdbcType=VARCHAR},
+        #{item.twoLevelName,jdbcType=VARCHAR}, #{item.en,jdbcType=VARCHAR}, #{item.manageName,jdbcType=VARCHAR},
+        #{item.groupName,jdbcType=VARCHAR}, #{item.pingpai,jdbcType=VARCHAR}, #{item.publicIp,jdbcType=VARCHAR},
+        #{item.mac,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.owner,jdbcType=VARCHAR},
+        #{item.disk,jdbcType=DOUBLE}, #{item.total24h,jdbcType=DOUBLE}, #{item.total7d,jdbcType=DOUBLE},
+        #{item.total30d,jdbcType=DOUBLE}, #{item.online,jdbcType=VARCHAR}, #{item.country,jdbcType=VARCHAR},
+        #{item.city,jdbcType=VARCHAR}, #{item.street,jdbcType=VARCHAR}, #{item.depllist,jdbcType=INTEGER},
+        #{item.scale,jdbcType=DOUBLE}, #{item.hex,jdbcType=VARCHAR}, #{item.hex5,jdbcType=VARCHAR},
+        #{item.activeTime,jdbcType=TIMESTAMP}, #{item.locationAddress,jdbcType=VARCHAR},
+        #{item.date,jdbcType=TIMESTAMP}, #{item.re,jdbcType=VARCHAR}, #{item.ip,jdbcType=VARCHAR},
+        #{item.devtype,jdbcType=VARCHAR}, #{item.loratm,jdbcType=TIMESTAMP}, #{item.witnesstm,jdbcType=TIMESTAMP},
+        #{item.muxtm,jdbcType=TIMESTAMP}, #{item.minerver,jdbcType=VARCHAR}, #{item.minerstat,jdbcType=VARCHAR},
+        #{item.ver,jdbcType=VARCHAR}, #{item.grpcfaild,jdbcType=INTEGER}, #{item.beacontm,jdbcType=TIMESTAMP},
+        #{item.importDataTime,jdbcType=TIMESTAMP}, #{item.updateStatusTime,jdbcType=INTEGER},
+        #{item.hearttm,jdbcType=TIMESTAMP}, #{item.status,jdbcType=INTEGER}, #{item.errStatus,jdbcType=INTEGER},
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="insertOrUpdate" parameterType="io.renren.modules.business.entity.BusinessDevice">
+    <!--@mbg.generated-->
+    insert into business_device
+    (address, id, one_level_name, two_level_name, en, manage_name, group_name, pingpai,
+      public_ip, mac, `name`, `owner`, `disk`, total24h, total7d, total30d, `online`,
+      country, city, street, depllist, `scale`, Hex, Hex5, active_time, location_address,
+      `date`, re, ip, devtype, loratm, witnesstm, muxtm, minerver, minerstat, ver, grpcfaild,
+      beacontm, import_data_time, update_status_time, hearttm, `status`, err_status,
+      update_time, remark)
+    values
+    (#{address,jdbcType=VARCHAR}, #{id,jdbcType=BIGINT}, #{oneLevelName,jdbcType=VARCHAR},
+      #{twoLevelName,jdbcType=VARCHAR}, #{en,jdbcType=VARCHAR}, #{manageName,jdbcType=VARCHAR},
+      #{groupName,jdbcType=VARCHAR}, #{pingpai,jdbcType=VARCHAR}, #{publicIp,jdbcType=VARCHAR},
+      #{mac,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR}, #{disk,jdbcType=DOUBLE},
+      #{total24h,jdbcType=DOUBLE}, #{total7d,jdbcType=DOUBLE}, #{total30d,jdbcType=DOUBLE},
+      #{online,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR},
+      #{street,jdbcType=VARCHAR}, #{depllist,jdbcType=INTEGER}, #{scale,jdbcType=DOUBLE},
+      #{hex,jdbcType=VARCHAR}, #{hex5,jdbcType=VARCHAR}, #{activeTime,jdbcType=TIMESTAMP},
+      #{locationAddress,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, #{re,jdbcType=VARCHAR},
+      #{ip,jdbcType=VARCHAR}, #{devtype,jdbcType=VARCHAR}, #{loratm,jdbcType=TIMESTAMP},
+      #{witnesstm,jdbcType=TIMESTAMP}, #{muxtm,jdbcType=TIMESTAMP}, #{minerver,jdbcType=VARCHAR},
+      #{minerstat,jdbcType=VARCHAR}, #{ver,jdbcType=VARCHAR}, #{grpcfaild,jdbcType=INTEGER},
+      #{beacontm,jdbcType=TIMESTAMP}, #{importDataTime,jdbcType=TIMESTAMP}, #{updateStatusTime,jdbcType=INTEGER},
+      #{hearttm,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{errStatus,jdbcType=INTEGER},
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+    on duplicate key update
+    address = #{address,jdbcType=VARCHAR},
+    id = #{id,jdbcType=BIGINT},
+    one_level_name = #{oneLevelName,jdbcType=VARCHAR},
+    two_level_name = #{twoLevelName,jdbcType=VARCHAR},
+    en = #{en,jdbcType=VARCHAR},
+    manage_name = #{manageName,jdbcType=VARCHAR},
+    group_name = #{groupName,jdbcType=VARCHAR},
+    pingpai = #{pingpai,jdbcType=VARCHAR},
+    public_ip = #{publicIp,jdbcType=VARCHAR},
+    mac = #{mac,jdbcType=VARCHAR},
+    `name` = #{name,jdbcType=VARCHAR},
+    `owner` = #{owner,jdbcType=VARCHAR},
+    `disk` = #{disk,jdbcType=DOUBLE},
+    total24h = #{total24h,jdbcType=DOUBLE},
+    total7d = #{total7d,jdbcType=DOUBLE},
+    total30d = #{total30d,jdbcType=DOUBLE},
+    `online` = #{online,jdbcType=VARCHAR},
+    country = #{country,jdbcType=VARCHAR},
+    city = #{city,jdbcType=VARCHAR},
+    street = #{street,jdbcType=VARCHAR},
+    depllist = #{depllist,jdbcType=INTEGER},
+    `scale` = #{scale,jdbcType=DOUBLE},
+    Hex = #{hex,jdbcType=VARCHAR},
+    Hex5 = #{hex5,jdbcType=VARCHAR},
+    active_time = #{activeTime,jdbcType=TIMESTAMP},
+    location_address = #{locationAddress,jdbcType=VARCHAR},
+    `date` = #{date,jdbcType=TIMESTAMP},
+    re = #{re,jdbcType=VARCHAR},
+    ip = #{ip,jdbcType=VARCHAR},
+    devtype = #{devtype,jdbcType=VARCHAR},
+    loratm = #{loratm,jdbcType=TIMESTAMP},
+    witnesstm = #{witnesstm,jdbcType=TIMESTAMP},
+    muxtm = #{muxtm,jdbcType=TIMESTAMP},
+    minerver = #{minerver,jdbcType=VARCHAR},
+    minerstat = #{minerstat,jdbcType=VARCHAR},
+    ver = #{ver,jdbcType=VARCHAR},
+    grpcfaild = #{grpcfaild,jdbcType=INTEGER},
+    beacontm = #{beacontm,jdbcType=TIMESTAMP},
+    import_data_time = #{importDataTime,jdbcType=TIMESTAMP},
+    update_status_time = #{updateStatusTime,jdbcType=INTEGER},
+    hearttm = #{hearttm,jdbcType=TIMESTAMP},
+    `status` = #{status,jdbcType=INTEGER},
+    err_status = #{errStatus,jdbcType=INTEGER},
+    update_time = #{updateTime,jdbcType=TIMESTAMP},
+    remark = #{remark,jdbcType=VARCHAR}
+  </insert>
+  <insert id="insertOrUpdateSelective" parameterType="io.renren.modules.business.entity.BusinessDevice">
+    <!--@mbg.generated-->
+    insert into business_device
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="address != null">
+        address,
+      </if>
+      <if test="id != null">
+        id,
+      </if>
+      <if test="oneLevelName != null">
+        one_level_name,
+      </if>
+      <if test="twoLevelName != null">
+        two_level_name,
+      </if>
+      <if test="en != null">
+        en,
+      </if>
+      <if test="manageName != null">
+        manage_name,
+      </if>
+      <if test="groupName != null">
+        group_name,
+      </if>
+      <if test="pingpai != null">
+        pingpai,
+      </if>
+      <if test="publicIp != null">
+        public_ip,
+      </if>
+      <if test="mac != null">
+        mac,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="owner != null">
+        `owner`,
+      </if>
+      <if test="disk != null">
+        `disk`,
+      </if>
+      <if test="total24h != null">
+        total24h,
+      </if>
+      <if test="total7d != null">
+        total7d,
+      </if>
+      <if test="total30d != null">
+        total30d,
+      </if>
+      <if test="online != null">
+        `online`,
+      </if>
+      <if test="country != null">
+        country,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+      <if test="street != null">
+        street,
+      </if>
+      <if test="depllist != null">
+        depllist,
+      </if>
+      <if test="scale != null">
+        `scale`,
+      </if>
+      <if test="hex != null">
+        Hex,
+      </if>
+      <if test="hex5 != null">
+        Hex5,
+      </if>
+      <if test="activeTime != null">
+        active_time,
+      </if>
+      <if test="locationAddress != null">
+        location_address,
+      </if>
+      <if test="date != null">
+        `date`,
+      </if>
+      <if test="re != null">
+        re,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="devtype != null">
+        devtype,
+      </if>
+      <if test="loratm != null">
+        loratm,
+      </if>
+      <if test="witnesstm != null">
+        witnesstm,
+      </if>
+      <if test="muxtm != null">
+        muxtm,
+      </if>
+      <if test="minerver != null">
+        minerver,
+      </if>
+      <if test="minerstat != null">
+        minerstat,
+      </if>
+      <if test="ver != null">
+        ver,
+      </if>
+      <if test="grpcfaild != null">
+        grpcfaild,
+      </if>
+      <if test="beacontm != null">
+        beacontm,
+      </if>
+      <if test="importDataTime != null">
+        import_data_time,
+      </if>
+      <if test="updateStatusTime != null">
+        update_status_time,
+      </if>
+      <if test="hearttm != null">
+        hearttm,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="errStatus != null">
+        err_status,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="oneLevelName != null">
+        #{oneLevelName,jdbcType=VARCHAR},
+      </if>
+      <if test="twoLevelName != null">
+        #{twoLevelName,jdbcType=VARCHAR},
+      </if>
+      <if test="en != null">
+        #{en,jdbcType=VARCHAR},
+      </if>
+      <if test="manageName != null">
+        #{manageName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="pingpai != null">
+        #{pingpai,jdbcType=VARCHAR},
+      </if>
+      <if test="publicIp != null">
+        #{publicIp,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null">
+        #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null">
+        #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="disk != null">
+        #{disk,jdbcType=DOUBLE},
+      </if>
+      <if test="total24h != null">
+        #{total24h,jdbcType=DOUBLE},
+      </if>
+      <if test="total7d != null">
+        #{total7d,jdbcType=DOUBLE},
+      </if>
+      <if test="total30d != null">
+        #{total30d,jdbcType=DOUBLE},
+      </if>
+      <if test="online != null">
+        #{online,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="street != null">
+        #{street,jdbcType=VARCHAR},
+      </if>
+      <if test="depllist != null">
+        #{depllist,jdbcType=INTEGER},
+      </if>
+      <if test="scale != null">
+        #{scale,jdbcType=DOUBLE},
+      </if>
+      <if test="hex != null">
+        #{hex,jdbcType=VARCHAR},
+      </if>
+      <if test="hex5 != null">
+        #{hex5,jdbcType=VARCHAR},
+      </if>
+      <if test="activeTime != null">
+        #{activeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="locationAddress != null">
+        #{locationAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="re != null">
+        #{re,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="devtype != null">
+        #{devtype,jdbcType=VARCHAR},
+      </if>
+      <if test="loratm != null">
+        #{loratm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="witnesstm != null">
+        #{witnesstm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="muxtm != null">
+        #{muxtm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="minerver != null">
+        #{minerver,jdbcType=VARCHAR},
+      </if>
+      <if test="minerstat != null">
+        #{minerstat,jdbcType=VARCHAR},
+      </if>
+      <if test="ver != null">
+        #{ver,jdbcType=VARCHAR},
+      </if>
+      <if test="grpcfaild != null">
+        #{grpcfaild,jdbcType=INTEGER},
+      </if>
+      <if test="beacontm != null">
+        #{beacontm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="importDataTime != null">
+        #{importDataTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateStatusTime != null">
+        #{updateStatusTime,jdbcType=INTEGER},
+      </if>
+      <if test="hearttm != null">
+        #{hearttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="errStatus != null">
+        #{errStatus,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    on duplicate key update
+    <trim suffixOverrides=",">
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      <if test="oneLevelName != null">
+        one_level_name = #{oneLevelName,jdbcType=VARCHAR},
+      </if>
+      <if test="twoLevelName != null">
+        two_level_name = #{twoLevelName,jdbcType=VARCHAR},
+      </if>
+      <if test="en != null">
+        en = #{en,jdbcType=VARCHAR},
+      </if>
+      <if test="manageName != null">
+        manage_name = #{manageName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="pingpai != null">
+        pingpai = #{pingpai,jdbcType=VARCHAR},
+      </if>
+      <if test="publicIp != null">
+        public_ip = #{publicIp,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null">
+        mac = #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null">
+        `owner` = #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="disk != null">
+        `disk` = #{disk,jdbcType=DOUBLE},
+      </if>
+      <if test="total24h != null">
+        total24h = #{total24h,jdbcType=DOUBLE},
+      </if>
+      <if test="total7d != null">
+        total7d = #{total7d,jdbcType=DOUBLE},
+      </if>
+      <if test="total30d != null">
+        total30d = #{total30d,jdbcType=DOUBLE},
+      </if>
+      <if test="online != null">
+        `online` = #{online,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="street != null">
+        street = #{street,jdbcType=VARCHAR},
+      </if>
+      <if test="depllist != null">
+        depllist = #{depllist,jdbcType=INTEGER},
+      </if>
+      <if test="scale != null">
+        `scale` = #{scale,jdbcType=DOUBLE},
+      </if>
+      <if test="hex != null">
+        Hex = #{hex,jdbcType=VARCHAR},
+      </if>
+      <if test="hex5 != null">
+        Hex5 = #{hex5,jdbcType=VARCHAR},
+      </if>
+      <if test="activeTime != null">
+        active_time = #{activeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="locationAddress != null">
+        location_address = #{locationAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        `date` = #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="re != null">
+        re = #{re,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="devtype != null">
+        devtype = #{devtype,jdbcType=VARCHAR},
+      </if>
+      <if test="loratm != null">
+        loratm = #{loratm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="witnesstm != null">
+        witnesstm = #{witnesstm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="muxtm != null">
+        muxtm = #{muxtm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="minerver != null">
+        minerver = #{minerver,jdbcType=VARCHAR},
+      </if>
+      <if test="minerstat != null">
+        minerstat = #{minerstat,jdbcType=VARCHAR},
+      </if>
+      <if test="ver != null">
+        ver = #{ver,jdbcType=VARCHAR},
+      </if>
+      <if test="grpcfaild != null">
+        grpcfaild = #{grpcfaild,jdbcType=INTEGER},
+      </if>
+      <if test="beacontm != null">
+        beacontm = #{beacontm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="importDataTime != null">
+        import_data_time = #{importDataTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateStatusTime != null">
+        update_status_time = #{updateStatusTime,jdbcType=INTEGER},
+      </if>
+      <if test="hearttm != null">
+        hearttm = #{hearttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="errStatus != null">
+        err_status = #{errStatus,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
 
 
 
@@ -677,13 +1743,13 @@
 
   </select>
 
-  <!--    &amp;amp;amp;amp;amp;amp;lt;select id="selectAllCount" resultType="java.lang.Integer"&amp;amp;amp;amp;amp;amp;gt;-->
+  <!--    &amp;amp;amp;amp;amp;amp;amp;lt;select id="selectAllCount" resultType="java.lang.Integer"&amp;amp;amp;amp;amp;amp;amp;gt;-->
   <!--        select count(*)-->
   <!--        from business_device-->
-  <!--        &amp;amp;amp;amp;amp;amp;lt;where&amp;amp;amp;amp;amp;amp;gt;-->
-  <!--            &amp;amp;amp;amp;amp;amp;lt;include refid="selectCondition"/&amp;amp;amp;amp;amp;amp;gt;-->
-  <!--        &amp;amp;amp;amp;amp;amp;lt;/where&amp;amp;amp;amp;amp;amp;gt;-->
-  <!--    &amp;amp;amp;amp;amp;amp;lt;/select&amp;amp;amp;amp;amp;amp;gt;-->
+  <!--        &amp;amp;amp;amp;amp;amp;amp;lt;where&amp;amp;amp;amp;amp;amp;amp;gt;-->
+  <!--            &amp;amp;amp;amp;amp;amp;amp;lt;include refid="selectCondition"/&amp;amp;amp;amp;amp;amp;amp;gt;-->
+  <!--        &amp;amp;amp;amp;amp;amp;amp;lt;/where&amp;amp;amp;amp;amp;amp;amp;gt;-->
+  <!--    &amp;amp;amp;amp;amp;amp;amp;lt;/select&amp;amp;amp;amp;amp;amp;amp;gt;-->
 
   <select id="selectFilterable" resultMap="BaseResultMap">
     select
@@ -780,7 +1846,10 @@
       <if test="updated.total30d != null">
         total30d = #{updated.total30d,jdbcType=DOUBLE},
       </if>
-      <if test="updated.online != null">
+      <if test="updated.online == '404'">
+        online = null,
+      </if>
+      <if test="updated.online != null and updated.online != '404'">
         online = #{updated.online,jdbcType=VARCHAR},
       </if>
       <if test="updated.country != null">
@@ -873,5 +1942,67 @@
         and address=#{updated.address,jdbcType=VARCHAR}
       </if>
     </where>
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2022-11-01-->
+  <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from business_device
+    </select>
+
+<!--auto generated by MybatisCodeHelper on 2022-11-01-->
+  <update id="updateHex5ByAddress">
+    update business_device
+    set Hex5=#{updatedHex5,jdbcType=VARCHAR}
+    where address=#{address,jdbcType=VARCHAR}
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2022-11-02-->
+  <select id="selectAllByHex5" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from business_device
+    where Hex5 in
+    <foreach close=")" collection="hex5s" item="hex5" open="(" separator=",">
+      #{hex5,jdbcType=VARCHAR}
+    </foreach>
+  </select>
+
+<!--auto generated by MybatisCodeHelper on 2022-11-02-->
+  <select id="selectAddressByDepllistAndOnlineAndTotal24h" resultType="java.lang.String">
+    select address
+    from business_device
+    <where>
+      <if test="showCol == 'depllist'">
+        and depllist is null
+      </if>
+      <if test="showCol == 'online'">
+        and `online` is null
+      </if>
+      <if test="showCol == 'total24h'">
+        and total24h is null
+      </if>
+    </where>
+  </select>
+
+<!--auto generated by MybatisCodeHelper on 2022-11-03-->
+  <update id="updateDepllistByAddress">
+    update business_device
+    set depllist=#{updatedDepllist,jdbcType=INTEGER}
+    where address in
+    <foreach close=")" collection="addresss" item="address" open="(" separator=",">
+      #{address,jdbcType=VARCHAR}
+    </foreach>
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2022-11-03-->
+  <update id="updateTotal24hByAddress">
+    update business_device
+    set total24h=#{updatedTotal24h,jdbcType=DOUBLE}
+    where address in
+    <foreach close=")" collection="addresss" item="address" open="(" separator=",">
+      #{address,jdbcType=VARCHAR}
+    </foreach>
   </update>
 </mapper>

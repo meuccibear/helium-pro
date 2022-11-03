@@ -3,6 +3,10 @@ package io.renren.common.gitUtils;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
+
 /**
  * @program: helium-pro-new
  * @ClassName Base64Utils
@@ -20,7 +24,7 @@ public class Base64Utils {
      *
      * @throws Exception
      */
-    public static byte[] decryptBASE64(String key) throws Exception {
+    public static byte[] decryptBASE64(String key) throws IOException {
         return (new BASE64Decoder()).decodeBuffer(key);
     }
 
@@ -33,17 +37,49 @@ public class Base64Utils {
 
 
     /**
+     * String转换为Bse64
+     * @param str
+     * @return
+     */
+    public static String strConvertBase(String str) {
+        if(null != str){
+            Base64.Encoder encoder = Base64.getEncoder();
+            return encoder.encodeToString(str.getBytes());
+        }
+        return null;
+    }
+
+    /**
+     * Base64转换成String
+     * @param str
+     * @return
+     */
+    public static String baseConvertStr(String str) {
+        if(null != str){
+            Base64.Decoder decoder = Base64.getDecoder();
+            try {
+                return new String(decoder.decode(str.getBytes()), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    /**
      *
      */
     public static void main(String[] args) throws Exception {
-        String str = "chengdusichuanchina";
+        String str = "{\"height\":1547186,\"filter_modes\":[\"full\",\"light\",\"dataonly\"],\"before_block\":151317,\"before_address\":\"11Drbrzg9pNQZcGAghGWaMkHLcZDMwjdi36rrqiMfuP9En5wrP9\"}";
         //BASE64加密解密
-//        String data = encryptBASE64(str.getBytes());
-        String data = "Y2hlbmdkdXNpY2h1YW5jaGluYQ==";
+        String data = strConvertBase(str);
+//        String data = "Y2hlbmdkdXNpY2h1YW5jaGluYQ==";
         System.out.println("sun.misc.BASE64 加密后：" + data);
 
-        byte[] byteArray = decryptBASE64(data);
-        System.out.println("sun.misc.BASE64 解密后：" + new String(byteArray));
+
+//        data = "eyJoZWlnaHQiOjE1MzM3OTcsImZpbHRlcl9tb2RlcyI6WyJmdWxsIiwibGlnaHQiLCJkYXRhb25seSJdLCJiZWZvcmVfYmxvY2siOjE1MTMxNywiYmVmb3JlX2FkZHJlc3MiOiIxMURyYnJ6ZzlwTlFaY0dBZ2hHV2FNa0hMY1pETXdqZGkzNnJycWlNZnVQOUVuNXdyUDkifQ";
+        data = "eyJoZWlnaHQiOjE1MzM3NjAsImZpbHRlcl9tb2RlcyI6WyJmdWxsIiwibGlnaHQiLCJkYXRhb25seSJdLCJiZWZvcmVfYmxvY2siOjExNTA2NDksImJlZm9yZV9hZGRyZXNzIjoiMTFxS2Z0dlB1dmptck1Xd3UxRVB0cXdQMTJGVzhTZnl4Zmd0eER0VW5OWEh6ZVlRSnlCIn0";
+        System.out.println("sun.misc.BASE64 解密后：" + baseConvertStr(data));
     }
 
 }

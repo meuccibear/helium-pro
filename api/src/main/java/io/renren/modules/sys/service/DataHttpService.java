@@ -19,8 +19,7 @@ public interface DataHttpService {
 
     DataHttp findAllByAll(DataHttp dataHttp);
 
-    void truncate();
-
+    DataHttp updateSelective(DataHttp dataHttp);
 }
 
 

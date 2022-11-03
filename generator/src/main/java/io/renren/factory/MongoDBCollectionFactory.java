@@ -33,6 +33,8 @@ public class MongoDBCollectionFactory {
 
     @Autowired
     private MongoDatabase database;
+
+
     @PostConstruct
     public void initMongoDatabase(){
         mongoDatabase = database;

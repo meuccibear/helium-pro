@@ -3,14 +3,10 @@
  */
 package io.renren.modules.helium.domain.deviceConfig.activity;
 
-import com.alibaba.fastjson.JSON;
 import io.renren.modules.helium.domain.Device;
-import io.renren.modules.helium.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Auto-generated: 2021-11-17 10:40:18

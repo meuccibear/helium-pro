@@ -2,6 +2,7 @@ package io.renren.modules.business.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.Serializable;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BusinessDevice {
+public class BusinessDevice implements Serializable {
+    /**
+     * 设备地址
+     */
+    @ApiModelProperty(value = "设备地址")
+    private String address;
+
     /**
      * 序号
      */
@@ -74,12 +81,6 @@ public class BusinessDevice {
      */
     @ApiModelProperty(value = "设备名称")
     private String name;
-
-    /**
-     * 设备地址
-     */
-    @ApiModelProperty(value = "设备地址")
-    private String address;
 
     /**
      * 设备钱包
@@ -265,9 +266,9 @@ public class BusinessDevice {
     private Integer status;
 
     /**
-     * 1.正常 2.获取设备信息失败 3.获取收益失败
+     * 1.正常 2.getHotspotsByAddress失败 3.setTotal24h失败 4.setDepllist失败
      */
-    @ApiModelProperty(value = "1.正常 2.获取设备信息失败 3.获取收益失败")
+    @ApiModelProperty(value = "1.正常 2.getHotspotsByAddress失败 3.setTotal24h失败 4.setDepllist失败")
     private Integer errStatus;
 
     /**
@@ -281,4 +282,6 @@ public class BusinessDevice {
      */
     @ApiModelProperty(value = "检测结果")
     private String remark;
+
+    private static final long serialVersionUID = 1L;
 }

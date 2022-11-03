@@ -4,13 +4,11 @@ import io.renren.modules.business.entity.BusinessDevice;
 import io.renren.modules.business.service.BusinessDeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
-import java.util.Date;import java.util.List;
-
 import io.renren.modules.business.dao.BusinessLogMapper;
 import io.renren.modules.business.entity.BusinessLog;
 import io.renren.modules.business.service.BusinessLogService;
+import java.util.Date;
 
 @Service
 public class BusinessLogServiceImpl implements BusinessLogService {

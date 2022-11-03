@@ -123,7 +123,7 @@ public class CvsDataTest {
         }});
         log.info("查询到了{}条数据", cityids.size());
 
-        List<List<String>> lists = ObjectUtils.averageAssignPartition(cityids, 200);
+        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(cityids, 200), new TypeReference<List<List<String>>>() {{}});
 
         for (int i = 0; i < lists.size(); i++) {
             updateData1(lists, i, filePath);

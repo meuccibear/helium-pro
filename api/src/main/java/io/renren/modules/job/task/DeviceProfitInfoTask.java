@@ -8,7 +8,9 @@
 
 package io.renren.modules.job.task;
 
+import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
+import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.modules.business.service.BusinessDeviceService;
 import io.renren.modules.business.service.MakersService;
@@ -28,9 +30,9 @@ import java.util.Map;
  *
  * @author Mark sunlightcs@gmail.com
  */
-@Component("MultithreadingDeviceTask")
+@Component("DeviceProfitInfoTask")
 @Slf4j
-public class MultithreadingDeviceTask implements ITask {
+public class DeviceProfitInfoTask implements ITask {
 
     @Autowired
     private BusinessDeviceService businessDeviceService;
@@ -42,13 +44,14 @@ public class MultithreadingDeviceTask implements ITask {
     @Override
     public void run(String params) {
         log.info("MultithreadingDeviceTask定时任务正在执行，参数为：{}", params);
-        Map<String, String> makersDictionary = makersService.getMakersDictionary();
 
-        Lists.partition(new ArrayList<>(), 200);
-        List<List<String>> lists = ObjectUtils.averageAssignPartition(businessDeviceService.findAll(), ObjectUtils.toInt(params, 5));
-        for (int i = 0; i < lists.size(); i++) {
-            if(lists.get(i).size() > 0){
-                businessDeviceService.updateData(makersDictionary, lists, i);
+        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(businessDeviceService.findAll(), ObjectUtils.toInt(params, 5)), new TypeReference<List<List<String>>>() {{
+        }});
+        if (ObjectUtils.notIsEmpty(lists)) {
+            for (int i = 0; i < lists.size(); i++) {
+                if (lists.get(i).size() > 0) {
+                    businessDeviceService.updateDeviceProfitInfoTask(lists, i);
+                }
             }
         }
     }

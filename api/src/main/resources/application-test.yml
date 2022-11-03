@@ -3,34 +3,52 @@ spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         druid:
+            # 数据库连接驱动
             driver-class-name: com.mysql.cj.jdbc.Driver
-#            url: jdbc:mysql://103.149.26.144:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
-            url: jdbc:mysql://103.149.26.144:3356/helium_pro_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false&zeroDateTimeBehavior=convertToNull
+            url: jdbc:mysql://103.149.26.144:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
+#            url: jdbc:mysql://103.149.26.144:3356/helium_pro_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false&zeroDateTimeBehavior=convertToNull
+#            url: jdbc:mysql://152.32.253.209:3316/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false&useSSL=no
 #            url: jdbc:mysql://152.32.253.209:3306/helium_pro?serverTimezone=Asia/Shanghai&useSSL=false&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
             username: root
             password: Zp1949@@
-            initial-size: 10
-            max-active: 100
-            min-idle: 10
+            # 初始化时建立物理连接的个数
+            initial-size: 20
+            # 最大连接池数量
+            max-active: 1000
+            # 最小连接池数量
+            min-idle: 20
+            # 获取连接时最大等待时间
             max-wait: 60000
+            # 是否缓存preparedStatement，也就是PSCache。
             pool-prepared-statements: true
+            # 要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。
             max-pool-prepared-statement-per-connection-size: 20
-            time-between-eviction-runs-millis: 60000
-            min-evictable-idle-time-millis: 300000
+            # 有两个含义：1) Destroy线程会检测连接的间隔时间，如果连接空闲时间大于等于minEvictableIdleTimeMillis则关闭物理连接。2) testWhileIdle的判断依据，详细看testWhileIdle属性的说明
+            time-between-eviction-runs-millis: 6000
+            # 连接保持空闲而不被驱逐的最小时间
+            min-evictable-idle-time-millis: 1800000
             #Oracle需要打开注释
 #            validation-query: SELECT 1 FROM DUAL
 #            test-on-borrow: false
 #            test-on-return: false
+            # 用来检测连接是否有效的sql，要求是一个查询语句，常用select 1。
             validation-query: SELECT 1
-            test-while-idle: true
+            # 单位：秒，检测连接是否有效的超时时间。
+            validation-query-timeout: 1
+            # 建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
+            test-while-idle: false
+            # 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
             test-on-borrow: true
-            test-on-return: true
+            # 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+            test-on-return: false
+            # 监控页面相关配置
             stat-view-servlet:
                 enabled: true
                 url-pattern: /druid/*
                 #login-username: admin
                 #login-password: admin
-                allow: 152.32.253.209,10.7.149.194
+                allow: 127.0.0.1
+            # filter相关配置
             filter:
                 stat:
                     log-slow-sql: true

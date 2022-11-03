@@ -51,24 +51,8 @@ public class BusinessDeviceController extends AbstractController {
         return businessDeviceService.getAll(deviceDTO);
     }
 
-    /**
-     * 日报
-     */
-//    @RequestMapping("/daily")
-//    @RequiresPermissions("business:businessdevice:daily")
-//    public void daily(@ModelAttribute DeviceDTO deviceDTO){
-//        //如果不是超级管理员，则只查询自己创建的角色列表
-//        if(Constant.isNotAdmin(getUserId())){
-//            deviceDTO.setName(getUser().getNikeName());
-//        }
-//        deviceDTO.setModeType(1);
-//        businessDeviceService.daily(deviceDTO);
-//    }
-
-
     @ApiOperation(value = "下载日报", position = 1)
     @RequestMapping(value = "/downloadDaily", produces = "application/octet-stream")
-//    @CrossOrigin
     @RequiresPermissions("business:businessdevice:downloadDaily")
     public void downloadDaily(HttpServletRequest request, HttpServletResponse response) {
         DeviceDTO deviceDTO = new DeviceDTO();

@@ -131,9 +131,11 @@ public class StringUtils<resultMap> {
     public static String outStr(String str, Object... clos) {
         StringBuffer stringBuffer = new StringBuffer();
         for (Object clo : clos) {
-//            if (ObjectUtils.notIsEmpty(clo)) {
+            if (ObjectUtils.notIsEmpty(clo)) {
                 stringBuffer.append(clo);
-//            }
+            }else{
+                stringBuffer.append("");
+            }
             stringBuffer.append(str);
         }
         stringBuffer.deleteCharAt(stringBuffer.length() - 1);
@@ -246,10 +248,12 @@ public class StringUtils<resultMap> {
 //        jsonObject.put("name", "cursora");
 //        System.out.println(formatV("我是${name}", jsonObject));
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("cursor", "cursora");
-        System.out.println(formatKV("{ \"cursor\": \"${cursor}\" }", jsonObject.toJSONString()));
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("cursor", "cursora");
+//        System.out.println(formatKV("{ \"cursor\": \"${cursor}\" }", jsonObject.toJSONString()));
 
+
+        System.out.println(StringUtils.formatV("https://denylist-api.herokuapp.com/api/hotspots/${hotspottyId}", "asd"));
 
 //        System.out.println(substringx("我是${name}", "$", "}"));
 

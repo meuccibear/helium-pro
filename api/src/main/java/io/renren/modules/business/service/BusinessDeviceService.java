@@ -5,6 +5,7 @@ import io.renren.common.utils.R;
 import io.renren.modules.business.entity.BusinessDevice;
 import io.renren.modules.domain.dto.DeviceDTO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -27,17 +28,29 @@ public interface BusinessDeviceService {
 
     List<String> findAll();
 
+    List<String> findErrDevices(String showCol);
+
     Map<String, Object> findSelect(DeviceDTO deviceDTO);
 
     R getAll(DeviceDTO deviceDTO);
 
     String daily(DeviceDTO deviceDTO);
 
+    void updateDepllist(List<BusinessDevice> devices);
+
+    void updateTotal24h(List<BusinessDevice> devices);
+
     void importData(MultipartFile file);
 
-    void updateData(Map<String, String> makersDictionary, List<List<String>> lists, int index);
+    void updateDeviceInfoTask(Map<String, String> makersDictionary, List<List<String>> lists, int index);
 
-    void getDevice(Map<String, String> makersDictionary,Map<String, String> ownerNo, List<List<String>> lists, int index, String filePath) throws MsgException;
+    void updateDeviceProfitInfoTask( List<List<String>> lists, int index);
+
+    void updateDevicedeBlackListInfoTask(List<List<String>> lists, int index);
+
+    void updateDevicedeBlackListInfo(String filePath, List<List<String>> lists, int index);
+
+    void getDevice(Map<String, String> makersDictionary, Map<String, String> ownerNo, List<List<String>> lists, int index, String filePath) throws MsgException;
 
     void addHeliumGlobalDevice(List<List<String>> lists, int index, String filePath) throws MsgException;
 
@@ -45,31 +58,13 @@ public interface BusinessDeviceService {
 
     void dashboard(List<List<String>> lists, int i, String filePath);
 
-    int deleteByPrimaryKey(Long id);
-
     int insert(BusinessDevice record);
 
     int insertSelective(BusinessDevice record);
 
-    BusinessDevice selectByPrimaryKey(Long id);
-
     int updateByPrimaryKeySelective(BusinessDevice record);
 
     int updateByPrimaryKey(BusinessDevice record);
-
-//    int deleteByPrimaryKey(Long id);
-
-//    int insert(BusinessDevice record);
-//
-//    int insertSelective(BusinessDevice record);
-//
-//    BusinessDevice selectByPrimaryKey(Long id);
-//
-//    int updateByPrimaryKeySelective(BusinessDevice record);
-//
-//    int updateByPrimaryKey(BusinessDevice record);
-
-//    void addHotspottyGlobalDevice(List<List<String>> lists, int index, String filePath) throws MsgException;
 
 }
 

@@ -153,10 +153,55 @@
       <if test="createTime != null">
         and create_time=#{createTime,jdbcType=TIMESTAMP}
       </if>
-      and create_time >= ( NOW( ) - INTERVAL 24 HOUR )
+<!--      and create_time >= ( NOW( ) - INTERVAL 24 HOUR )-->
     </where>
     ORDER BY create_time desc
     limit 1
   </select>
+
+  <update id="updateSelective" parameterType="io.renren.modules.sys.entity.DataHttp">
+    <!--@mbg.generated-->
+    update data_http
+    <set>
+      <if test="method != null">
+        `method` = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="entityparameter != null">
+        entityParameter = #{entityparameter,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="headers != null">
+        headers = #{headers,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="respone != null">
+        respone = #{respone,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <where>
+      <if test="id != null">
+        and id=#{id,jdbcType=INTEGER}
+      </if>
+      <if test="method != null">
+        and `method` = #{method,jdbcType=VARCHAR}
+      </if>
+      <if test="url != null">
+        and url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="entityparameter != null">
+        and entityParameter = #{entityparameter,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="headers != null">
+        and headers = #{headers,jdbcType=LONGVARCHAR},
+      </if>
+    </where>
+  </update>
 
 </mapper>

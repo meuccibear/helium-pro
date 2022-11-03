@@ -3,6 +3,7 @@ package io.renren.modules.business.service.impl;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import io.renren.common.HeliumHttpUtils;
 import io.renren.common.gitUtils.*;
 import io.renren.common.gitUtils.exception.MsgException;
@@ -25,14 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
-
 import io.renren.modules.business.entity.BusinessDevice;
 import io.renren.modules.business.service.BusinessDeviceService;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.Resource;
 
 @Slf4j
@@ -42,7 +41,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
     @Resource
     BusinessDeviceMapper businessDeviceMapper;
 
-    @Resource
+    @Autowired
     HeliumApi heliumApi;
 
     @Autowired
@@ -50,8 +49,6 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
 
     @Autowired
     GlobalDeviceService globalDeviceService;
-
-//    HeliumHttpUtils heliumHttpUtils = new HeliumHttpUtils();
 
     @Override
     public Map<String, Object> findSelect(DeviceDTO deviceDTO) {
@@ -136,8 +133,6 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
     }
 
 
-
-
     /**
      * 添加并计数
      *
@@ -197,7 +192,6 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         return businessDeviceMapper.updateByAddress(updated);
     }
 
-
     @Override
     public void insertOrUpdate(List<BusinessDevice> devices) {
         for (BusinessDevice device : devices) {
@@ -210,6 +204,29 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         return businessDeviceMapper.findAll();
     }
 
+    @Override
+    public List<String> findErrDevices(String showCol) {
+        return businessDeviceMapper.selectAddressByDepllistAndOnlineAndTotal24h(showCol);
+    }
+
+    @Override
+    public void updateDepllist(List<BusinessDevice> devices) {
+        Map<Object, List<Object>> obgM = JSONUtils.classify(devices, "depllist", "address");
+
+        for (Object o : obgM.keySet().toArray()) {
+            businessDeviceMapper.updateDepllistByAddress(ObjectUtils.notIsEmpty(o) ? (Integer) o : null, BeanUtils.toJavaObject(obgM.get(o), new TypeReference<List<String>>() {}));
+        }
+    }
+
+    @Override
+    public void updateTotal24h(List<BusinessDevice> devices) {
+        Map<Object, List<Object>> obgM = JSONUtils.classify(devices, "total24h", "address");
+
+        for (Object o : obgM.keySet().toArray()) {
+            businessDeviceMapper.updateTotal24hByAddress((BigDecimal) o, BeanUtils.toJavaObject(obgM.get(o), new TypeReference<List<String>>() {}));
+        }
+    }
+
     @SneakyThrows
     @Override
     public void importData(MultipartFile file) {
@@ -218,8 +235,8 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
     }
 
     @Override
-    @Async("taskExecutor")
-    public void updateData(Map<String, String> makersDictionary, List<List<String>> lists, int index) {
+    @Async("updateDeviceInfoTask")
+    public void updateDeviceInfoTask(Map<String, String> makersDictionary, List<List<String>> lists, int index) {
         List<String> addresss = lists.get(index);
         log.info(String.format("开始执行任务：hash值：%s 线程序号：%d任务量：%d", addresss.hashCode(), index, addresss.size()));
 
@@ -231,62 +248,167 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         for (int i = 0; i < addresss.size(); i++) {
             address = addresss.get(i);
             log.info(String.format("hash值：%s 线程序号：%d任务量：%d 开始查询第%d个设备信息 设备地址：%s", addresss.hashCode(), index, addresss.size(), i, addresss.get(i)));
-//            if (address.substring(0, 2).equals("11") && ObjectUtils.notIsEmpty(address)) {
             if (ObjectUtils.notIsEmpty(address)) {
-                try {
-                    device = heliumApi.getHotspotsByAddress(address);
-                    if (ObjectUtils.notIsEmpty(device)) {
-                        deviceEntity = new BusinessDevice();
-                        deviceEntity.setAddress(device.getAddress());
-                        deviceEntity.setName(device.getName().replaceAll("-", " "));
-                        deviceEntity.setOnline(device.getStatus().getOnline());
-                        deviceEntity.setCountry(device.getGeocode().getLong_country());
 
-                        deviceEntity.setCity(StringUtils.outStr(" ", device.getGeocode().getLong_city(), device.getGeocode().getLong_state()));
-                        deviceEntity.setStreet(device.getGeocode().getLong_street());
-                        deviceEntity.setHex(device.getLocation_hex());
-                        deviceEntity.setTotal24h(device.getTotal());
-                        deviceEntity.setOwner(device.getOwner());
-                        deviceEntity.setUpdateTime(new Date());
-                        deviceEntity.setDepllist(device.getDepllist());
-                        deviceEntity.setScale(device.getReward_scale());
-                        deviceEntity.setPingpai(makersDictionary.get(device.getPayer()));
-                        deviceEntity.setErrStatus(1);
+                device = (Device) new CounterUtil() {
+                    @Override
+                    public boolean check(Object execute) {
+                        return execute == null;
                     }
-                } catch (Exception e) {
-                    log.error("【getHotspotsByAddress失败~】" + address, e);
-                }
 
-                try {
-                    if (ObjectUtils.isEmpty(deviceEntity)) {
-                        deviceEntity = new BusinessDevice();
-                        deviceEntity.setAddress(address);
-                        deviceEntity.setErrStatus(2);
-                        deviceEntity.setUpdateTime(new Date());
+                    @Override
+                    public Object execute(Object data) throws Exception {
+                        return heliumApi.getHotspotsByAddress((String) data);
                     }
-                    deviceEntity.setTotal24h(heliumApi.getHotspotsTotal(2, address));
-                } catch (Exception e) {
-                    deviceEntity.setErrStatus(3);
-                    log.error("【setTotal24h失败~】" + address, e);
-                }
-                try {
-                    Boolean denylistB = heliumApi.denylist(address);
-                    if (ObjectUtils.notIsEmpty(denylistB)) {
-                        deviceEntity.setDepllist(denylistB ? 1 : 0);
-                    }
-                } catch (Exception e) {
-                    log.error("【setDepllist失败~】" + address, e);
-                    deviceEntity.setErrStatus(4);
+                }.run(address);
+                deviceEntity = new BusinessDevice();
+                deviceEntity.setAddress(address);
+                if (ObjectUtils.notIsEmpty(device)) {
+                    deviceEntity.setName(device.getName().replaceAll("-", " "));
+                    deviceEntity.setOnline(device.getStatus().getOnline());
+                    deviceEntity.setCountry(device.getGeocode().getLong_country());
+                    deviceEntity.setCity(StringUtils.outStr(" ", device.getGeocode().getLong_city(), device.getGeocode().getLong_state()));
+                    deviceEntity.setStreet(device.getGeocode().getLong_street());
+                    deviceEntity.setHex(device.getLocation_hex());
+                    deviceEntity.setOwner(device.getOwner());
+                    deviceEntity.setScale(device.getReward_scale());
+                    deviceEntity.setPingpai(makersDictionary.get(device.getPayer()));
+                } else {
+                    deviceEntity.setOnline("404");
                 }
 
                 log.info("【updateByAddress】{}", JSON.toJSONString(deviceEntity));
                 businessDeviceMapper.updateByAddress(deviceEntity);
-                device = null;
             }
         }
         log.info("任务结束：hash值：{} 线程序号：{} 查询{}台设备 所消耗的时间{}", addresss.hashCode(), index, addresss.size(), DateUtils.calculationTimeConsuming(now));
 
     }
+
+    @Override
+    @Async("updateDeviceProfitInfoTask")
+    public void updateDeviceProfitInfoTask(List<List<String>> lists, int index) {
+        List<String> addresss = lists.get(index);
+        log.info(String.format("开始执行任务：hash值：%s 线程序号：%d任务量：%d", addresss.hashCode(), index, addresss.size()));
+
+        LocalDateTime now = LocalDateTime.now();
+        List<BusinessDevice> devices = new ArrayList<>();
+
+        BusinessDevice deviceEntity;
+        String address;
+        Double hotspotsTotal;
+        for (int i = 0; i < addresss.size(); i++) {
+            address = addresss.get(i);
+            log.info(String.format("hash值：%s 线程序号：%d任务量：%d 开始查询第%d个设备信息 设备地址：%s", addresss.hashCode(), index, addresss.size(), i, addresss.get(i)));
+            if (ObjectUtils.notIsEmpty(address)) {
+                hotspotsTotal = (Double) new CounterUtil() {
+                    @Override
+                    public boolean check(Object execute) {
+                        return execute == null;
+                    }
+
+                    @Override
+                    public Object execute(Object data) throws Exception {
+                        return heliumApi.getHotspotsTotal(2, (String) data);
+                    }
+                }.run(address);
+
+                deviceEntity = new BusinessDevice();
+                deviceEntity.setAddress(address);
+
+                if (ObjectUtils.notIsEmpty(hotspotsTotal)) {
+                    deviceEntity.setTotal24h(hotspotsTotal);
+                } else {
+                    deviceEntity.setTotal24h(null);
+                }
+
+                devices.add(deviceEntity);
+            }
+        }
+
+        log.info("任务结束：hash值：{} 线程序号：{} 查询{}台设备 所消耗的时间{}", addresss.hashCode(), index, addresss.size(), DateUtils.calculationTimeConsuming(now));
+        updateTotal24h(devices);
+
+    }
+
+    @Override
+    @Async("updateDevicedeBlackListInfoTask")
+    public void updateDevicedeBlackListInfoTask(List<List<String>> lists, int index) {
+        List<String> addresss = lists.get(index);
+        log.info(String.format("开始执行任务：hash值：%s 线程序号：%d任务量：%d", addresss.hashCode(), index, addresss.size()));
+
+        LocalDateTime now = LocalDateTime.now();
+        BusinessDevice device;
+        String address = null;
+
+        List<BusinessDevice> devices = new ArrayList<>();
+
+        for (int i = 0; i < addresss.size(); i++) {
+            address = addresss.get(i);
+            log.info(String.format("hash值：%s 线程序号：%d任务量：%d 开始查询第%d个设备信息 设备地址：%s", addresss.hashCode(), index, addresss.size(), i, addresss.get(i)));
+            if (ObjectUtils.notIsEmpty(address)) {
+                device = new BusinessDevice();
+                device.setAddress(address);
+                Boolean denylistB = (Boolean) new CounterUtil() {
+                    @Override
+                    public boolean check(Object execute) {
+                        return execute == null;
+                    }
+
+                    @Override
+                    public Object execute(Object data) throws Exception {
+                        return heliumApi.denylist((String) data);
+                    }
+                }.run(address);
+                device.setDepllist(ObjectUtils.notIsEmpty(denylistB) ? (denylistB ? 1 : 0) : null);
+                devices.add(device);
+            }
+        }
+        updateDepllist(devices);
+        log.info("任务结束：hash值：{} 线程序号：{} 查询{}台设备 所消耗的时间{} {}", addresss.hashCode(), index, addresss.size(), DateUtils.calculationTimeConsuming(now), JSON.toJSONString(devices));
+
+    }
+
+    @Override
+    @Async("taskExecutor")
+    public void updateDevicedeBlackListInfo(String filePath, List<List<String>> lists, int index) {
+        List<String> addresss = lists.get(index);
+        log.info(String.format("开始执行任务：hash值：%s 线程序号：%d任务量：%d", addresss.hashCode(), index, addresss.size()));
+
+        LocalDateTime now = LocalDateTime.now();
+        String address = null;
+
+        for (int i = 0; i < addresss.size(); i++) {
+            address = addresss.get(i);
+            log.info(String.format("hash值：%s 线程序号：%d任务量：%d 开始查询第%d个设备信息 设备地址：%s", addresss.hashCode(), index, addresss.size(), i, addresss.get(i)));
+            if (ObjectUtils.notIsEmpty(address)) {
+                Boolean denylistB = (Boolean) new CounterUtil() {
+                    @Override
+                    public boolean check(Object execute) {
+                        return execute == null;
+                    }
+
+                    @Override
+                    public Object execute(Object data) throws MsgException {
+                        return heliumApi.denylist((String) data);
+                    }
+                }.run(address);
+                try {
+
+                    if (ObjectUtils.notIsEmpty(denylistB)) {
+                        FileUtils.writeln(filePath + "denylist.csv", StringUtils.outStr(",", address, denylistB), true, true);
+                    } else {
+                        FileUtils.writeln(filePath + "err", StringUtils.outStr(",", address, denylistB), true, true);
+                    }
+                } catch (MsgException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        log.info("任务结束：hash值：{} 线程序号：{} 查询{}台设备 所消耗的时间{}", addresss.hashCode(), index, addresss.size(), DateUtils.calculationTimeConsuming(now));
+    }
+
 
     @Override
     @Async("taskExecutor")
@@ -324,7 +446,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
                     FileUtils.writeln(filePath, StringUtils.outStr("\t", address, makersDictionary.get(device.getPayer()), de, clJson, device.getName().replaceAll("-", " "), device.getOwner(), ownerNo.get(device.getOwner()), device.getStatus().getOnline(), device.getStatus().getIp(), device.getGeocode().getLong_country(), device.getGeocode().getLong_city(), hotspotsTotal, device.getLat(), device.getLng(), device.getLocation_hex(), ObjectUtils.notIsEmpty(device.getLocation_hex()) ? HexUtils.h3.h3ToParentAddress(device.getLocation_hex(), 5) : ""), true, true);
                 } else {
 //                    System.out.println(device.getPayer());
-                    log.info("device:{}", device);
+//                    log.info("device:{}", device);
                     // 基础
                     FileUtils.writeln(filePath, StringUtils.outStr("\t",
                                     address,
@@ -343,7 +465,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
                 //  FileUtils.writeln(filePath, StringUtils.outStr("\t", address, de, device.getName().replaceAll("-", " "), device.getOwner(), device.getStatus().getOnline(), device.getStatus().getIp(), device.getGeocode().getLong_country(), device.getGeocode().getLong_city(), hotspotsTotal, device.getLat(), device.getLng(), device.getLocation_hex(), ObjectUtils.notIsEmpty(device.getLocation_hex()) ? HexUtils.h3.h3ToParentAddress(device.getLocation_hex(), 5) : ""), true, true);
 
 //                FileUtils.writeln(filePath, StringUtils.outStr(",", address, device.getLat(), device.getLng()), true, true);
-            } catch (MsgException e) {
+            } catch (Exception e) {
                 log.error("没有找到设备 " + address, e);
                 FileUtils.writeln(filePath, address + "\t找不到设备", true, true);
             }
@@ -422,10 +544,10 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
 
     }
 
-    @Override
-    public int deleteByPrimaryKey(Long id) {
-        return businessDeviceMapper.deleteByPrimaryKey(id);
-    }
+//    @Override
+//    public int deleteByPrimaryKey(Long id) {
+//        return businessDeviceMapper.deleteByPrimaryKey(id);
+//    }
 
     @Override
     public int insert(BusinessDevice record) {
@@ -437,10 +559,10 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         return businessDeviceMapper.insertSelective(record);
     }
 
-    @Override
-    public BusinessDevice selectByPrimaryKey(Long id) {
-        return businessDeviceMapper.selectByPrimaryKey(id);
-    }
+//    @Override
+//    public BusinessDevice selectByPrimaryKey(Long id) {
+//        return businessDeviceMapper.selectByPrimaryKey(id);
+//    }
 
     @Override
     public int updateByPrimaryKeySelective(BusinessDevice record) {

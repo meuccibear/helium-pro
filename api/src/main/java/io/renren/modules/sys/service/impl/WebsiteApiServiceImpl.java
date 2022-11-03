@@ -12,6 +12,7 @@ import io.renren.common.gitUtils.kdl.AuthFactory;
 import io.renren.modules.sys.entity.DataHttp;
 import io.renren.modules.sys.service.DataHttpService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tools.ant.taskdefs.condition.Http;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,6 +21,7 @@ import io.renren.modules.sys.dao.WebsiteApiMapper;
 import io.renren.modules.sys.entity.WebsiteApi;
 import io.renren.modules.sys.service.WebsiteApiService;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,23 +63,24 @@ public class WebsiteApiServiceImpl extends HttpUtils implements WebsiteApiServic
         return websiteApiMapper.updateByPrimaryKey(record);
     }
 
-//    @Resource
-//    private WebsiteApiMapper websiteApiMapper;
-
     @Resource
     private DataHttpService dataHttpService;
 
-    Map<String, WebsiteApi> websiteApiMap = new HashMap<>();
+    Map<String, WebsiteApi> websiteApiMap;
 
     void init() {
         setWebsiteApiMapper();
     }
 
     public void setWebsiteApiMapper() {
-        List<WebsiteApi> websiteApis = websiteApiMapper.findAllByType(3);
-        for (WebsiteApi websiteApi : websiteApis) {
-            websiteApiMap.put(websiteApi.getKey(), websiteApi);
+        if (null == websiteApiMap || websiteApiMap.size() == 0) {
+            websiteApiMap = new HashMap<>();
+            List<WebsiteApi> websiteApis = websiteApiMapper.findAllByType(3);
+            for (WebsiteApi websiteApi : websiteApis) {
+                websiteApiMap.put(websiteApi.getKey(), websiteApi);
+            }
         }
+
 //        log.info("websiteApiMap{}", JSON.toJSONString(websiteApiMap));
     }
 
@@ -109,14 +112,16 @@ public class WebsiteApiServiceImpl extends HttpUtils implements WebsiteApiServic
 
         WebsiteApi websiteApi = websiteApiMap.get(key);
         return send(getMethod(websiteApi.getMethod()), StringUtils.formatV(websiteApi.getFullLink(), data),
-                BeanUtils.toJavaObject(StringUtils.formatKV(websiteApi.getParameter(), data), new TypeReference<HashMap>() {{}})
+                BeanUtils.toJavaObject(StringUtils.formatKV(websiteApi.getParameter(), data), new TypeReference<HashMap>() {{
+                }})
                 , BeanUtils.toJavaObject(websiteApi.getHeaders(), new TypeReference<HashMap>() {{
-        }}));
+                }}));
     }
 
-    public HttpResultData send(HttpUtils.Method method,String url, Object data, Object headers) throws MsgException {
+    public HttpResultData send(HttpUtils.Method method, String url, Object data, Object headers) throws MsgException {
         return send(method, url,
-                BeanUtils.toJavaObject(data, new TypeReference<HashMap>() {{}})
+                BeanUtils.toJavaObject(data, new TypeReference<HashMap>() {{
+                }})
                 , BeanUtils.toJavaObject(headers, new TypeReference<HashMap>() {{
                 }}));
     }
@@ -124,6 +129,7 @@ public class WebsiteApiServiceImpl extends HttpUtils implements WebsiteApiServic
     public HttpResultData sendV(String key, Object... data) throws MsgException {
         init();
 
+        log.info("websiteApiMap:{}", websiteApiMap);
         if (!websiteApiMap.containsKey(key)) {
             throw new IllegalArgumentException(String.format("没有该接口信息~", key, data));
         }
@@ -132,23 +138,15 @@ public class WebsiteApiServiceImpl extends HttpUtils implements WebsiteApiServic
         }}));
     }
 
-//    @Override
-//    public HttpResultData sendV(String key, Object... data) throws MsgException {
-//        return sendV(key, new Object[][]{data, null, null});
-//    }
 
     @Override
-    public void sendBefore(Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
-//        Http byAll = httpService.findByAll(new Http(null, url, JSON.toJSONString(urlParameter), null, null, method.name()));
-//        if (ObjectUtils.notIsEmpty(byAll)) {
-//            httpResultData = BeanUtils.toJavaObject(byAll.getRespone(), new TypeReference<HttpResultData>() {{
-//            }});
-//        }
+    public Object sendBefore(Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
+
+        return null;
     }
 
     @Override
-    public void sendAfter(Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
-        dataHttpService.insert(new DataHttp(method.name(), url, entityParameter, headers, httpResultData.getStatus(), 200 != httpResultData.getStatus() ? JSON.toJSONString(httpResultData) : ""));
+    public void sendAfter(Object requestData, Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
 
         if (200 != httpResultData.getStatus()) {
             if (407 == httpResultData.getStatus()) {
@@ -157,11 +155,6 @@ public class WebsiteApiServiceImpl extends HttpUtils implements WebsiteApiServic
                 } catch (Exception e) {
                     log.error("【快代理】获取白名单失败~", e);
                 }
-            }
-            DataHttp allByAll = dataHttpService.findAllByAll(new DataHttp(method.name(), url, entityParameter, headers, 200));
-            if (ObjectUtils.notIsEmpty(allByAll)) {
-                httpResultData = BeanUtils.toJavaObject(allByAll.getRespone(), new TypeReference<HttpResultData>() {{
-                }});
             }
         }
     }

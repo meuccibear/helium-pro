@@ -50,6 +50,11 @@ public class DataHttpServiceImpl implements DataHttpService {
         return dataHttpMapper.findAllByAll(dataHttp);
     }
 
+    @Override
+    public DataHttp updateSelective(DataHttp dataHttp){
+        return dataHttpMapper.updateSelective(dataHttp);
+    }
+
 }
 
 

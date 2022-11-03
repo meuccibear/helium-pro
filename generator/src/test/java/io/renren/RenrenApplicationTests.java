@@ -11,6 +11,10 @@ public class RenrenApplicationTests {
 
 	@Test
 	public void contextLoads() {
+
+
+
+
 	}
 
 }

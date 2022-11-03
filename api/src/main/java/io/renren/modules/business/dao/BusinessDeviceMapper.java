@@ -1,20 +1,23 @@
 package io.renren.modules.business.dao;
 
 import io.renren.modules.business.entity.BusinessDevice;
+
+import java.math.BigDecimal;
+import java.util.List;
+
 import io.renren.modules.domain.dto.DeviceDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import java.util.List;
 
 @Mapper
 public interface BusinessDeviceMapper {
     /**
      * delete by primary key
      *
-     * @param id primaryKey
+     * @param address primaryKey
      * @return deleteCount
      */
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(String address);
 
     /**
      * insert record to table
@@ -23,6 +26,10 @@ public interface BusinessDeviceMapper {
      * @return insert count
      */
     int insert(BusinessDevice record);
+
+    int insertOrUpdate(BusinessDevice record);
+
+    int insertOrUpdateSelective(BusinessDevice record);
 
     /**
      * insert record to table selective
@@ -35,10 +42,10 @@ public interface BusinessDeviceMapper {
     /**
      * select by primary key
      *
-     * @param id primary key
+     * @param address primary key
      * @return object by primary key
      */
-    BusinessDevice selectByPrimaryKey(Long id);
+    BusinessDevice selectByPrimaryKey(String address);
 
     /**
      * update record selective
@@ -56,13 +63,19 @@ public interface BusinessDeviceMapper {
      */
     int updateByPrimaryKey(BusinessDevice record);
 
+    int updateBatch(List<BusinessDevice> list);
+
+    int updateBatchSelective(@Param("list") List<BusinessDevice> list);
+
+    int batchInsert(@Param("list") List<BusinessDevice> list);
+
     List<BusinessDevice> selectAllPaging(@Param("deviceDTO") DeviceDTO deviceDTO);
 
     List<BusinessDevice> selectFilterable(@Param("deviceDTO") DeviceDTO deviceDTO);
 
     String findAddressByAddress(@Param("address") String address);
 
-    int updateByAddress(@Param("updated")BusinessDevice updated);
+    int updateByAddress(@Param("updated") BusinessDevice updated);
 
     List<String> findAll();
 
@@ -71,4 +84,17 @@ public interface BusinessDeviceMapper {
     String findOwnerByAddress(@Param("address") String address);
 
     void clear();
+
+    List<BusinessDevice> selectAll();
+
+    int updateHex5ByAddress(@Param("updatedHex5") String updatedHex5, @Param("address") String address);
+
+    List<BusinessDevice> selectAllByHex5(@Param("hex5s") List<String> hex5s);
+
+    List<String> selectAddressByDepllistAndOnlineAndTotal24h(@Param("showCol") String showCol);
+
+    int updateDepllistByAddress(@Param("updatedDepllist") Integer updatedDepllist, @Param("addresss") List<String> addresss);
+
+    int updateTotal24hByAddress(@Param("updatedTotal24h") BigDecimal updatedTotal24h, @Param("addresss") List<String> addresss);
+
 }

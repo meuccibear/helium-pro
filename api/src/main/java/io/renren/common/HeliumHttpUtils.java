@@ -128,57 +128,8 @@ public class HeliumHttpUtils extends HttpUtils {
         this.httpSetting = httpSetting;
     }
 
-    public double getHotspotsTotal(int typeId, String hotspots) throws MsgException {
-        String url = "v1/hotspots/%s/rewards/sum";
-        url = String.format(url, hotspots);
-        Map<String, String> parameter = new HashMap<>();
-        switch (typeId) {
-            case 1:
-                parameter.put("min_time", "-30 day");
-                parameter.put("max_time", DateUtils.asStr(LocalDateTime.now(ZoneOffset.UTC), "UTC"));
-                parameter.put("bucket", "day");
-                break;
-            case 2:
-                parameter.put("min_time", "-48 hour");
-                parameter.put("max_time", DateUtils.asStr(LocalDateTime.now(ZoneOffset.UTC), "UTC"));
-                parameter.put("bucket", "hour");
-                break;
-        }
-
-        JSONObject jsonObject = JSON.parseObject(get(Website.Blockjoy, url, parameter));
-        JSONArray jsonArray = (JSONArray) JSONUtils.jsGetData(jsonObject, "data");
-
-        List<HotspotsProfit> hotspotsProfits = BeanUtils.toJavaObject(jsonArray, new TypeReference<List<HotspotsProfit>>() {
-        });
-//        System.out.println("------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ");
-        double total = 0.0;
-        LocalDateTime date = hotspotsProfits.get(0).getTimestamp();
-        date = date.minusDays(1);
-//        System.out.println(DateUtils.asStr(4, date));
-        for (HotspotsProfit hotspotsProfit : hotspotsProfits) {
-            if (date.compareTo(hotspotsProfit.getTimestamp()) < 0) {
-                total += hotspotsProfit.getTotal();
-//                System.out.println(DateUtils.asStr(4, hotspotsProfit.getTimestamp()) + " " + hotspotsProfit.getSum() + " " + hotspotsProfit.getTotal());
-            }
-        }
-//        System.out.println(total);
-        return total;
-    }
-
     @Override
-    public void sendBefore(Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
-        if (ObjectUtils.isEmpty(httpService)) {
-            return;
-        }
-//        Http byAll = httpService.findByAll(new Http(null, url, JSON.toJSONString(urlParameter), null, null, method.name()));
-//        if (ObjectUtils.notIsEmpty(byAll)) {
-//            httpResultData = BeanUtils.toJavaObject(byAll.getRespone(), new TypeReference<HttpResultData>() {{
-//            }});
-//        }
-    }
-
-    @Override
-    public void sendAfter(Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
+    public void sendAfter(Object requestData, Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
         if (ObjectUtils.isEmpty(httpService)) {
             return;
         }
@@ -212,151 +163,6 @@ public class HeliumHttpUtils extends HttpUtils {
     }
 
     /**
-     * 获取所有的坐标并且去掉重复的坐标
-     *
-     * @param parentHex
-     * @param res
-     * @return
-     * @throws MsgException
-     */
-    public List<LeanData> getDuplicateRemovalCHexsByHex(String parentHex, int res) throws MsgException {
-        List<LeanData> cHexsByHex = getCHexsByHex(parentHex, res);
-        NumMap hexNumMap = new NumMap();
-        List<LeanData> result = new ArrayList<>();
-        for (LeanData hexsByHex : cHexsByHex) {
-            if (!hexNumMap.add(HexUtils.h3.h3ToParentAddress(hexsByHex.getL(), 8))) {
-                result.add(hexsByHex);
-            }
-        }
-        return result;
-    }
-
-
-    /**
-     * @return
-     * @throws
-     * @title 指定数量获取位置
-     * @description
-     * @author Mr.Lv lvzhuozhuang@foxmail.com
-     * @updateTime 2022/3/15 7:42
-     */
-    public Map<String, List<GeoCoord>> getLocations(String address, int num, String group) throws MsgException {
-        StringUtils.writeList("\t", "【getLocations】 ", address, num);
-        int res = h3.h3GetResolution(address);
-        if (res < 0 || res > 8) {
-            throw new IllegalArgumentException(String.format("resolution %d is out of range (must be 0 < res < 8)", res));
-        }
-        List<LeanData> cHexs = getDuplicateRemovalCHexsByHex(address, res);
-
-        Map<String, List<GeoCoord>> geoMap = new HashMap<>();
-        String hex3 = HexUtils.h3.h3ToParentAddress(cHexs.get(0).getL(), res);
-        StringUtils.writeList("\t", "【getLocations】 ", cHexs.size());
-        StringUtils.writeList("\t", "【cHexs】 ", JSON.toJSONString(cHexs));
-
-        if (ObjectUtils.notIsEmpty(cHexs)) {
-            List<GeoCoord> geoCoords = new ArrayList<>();
-            GeoCoord randomDevice;
-            Map<String, String> geoCoordMap = new HashMap<>();
-            for (int i = 0; i < num; i++) {
-                randomDevice = getRandomDevice(cHexs);
-                randomDevice.setSouHex(h3.h3ToParentAddress(randomDevice.getCHex(), res));
-                randomDevice.setGroup(group);
-                if (!geoCoordMap.containsKey(randomDevice.getCHex()) && address.equals(randomDevice.getSouHex())) {
-                    geoCoordMap.put(randomDevice.getCHex(), randomDevice.getCHex());
-                    geoCoords.add(randomDevice);
-                } else {
-                    i -= 1;
-                }
-            }
-            StringUtils.writeList("\t", "【getLocations】 ", JSON.toJSONString(geoCoords));
-            geoMap.put(hex3, geoCoords);
-        }
-        return geoMap;
-    }
-
-    /**
-     * @throws
-     * @title 极速随机Hex
-     * @description
-     * @author Mr.Lv lvzhuozhuang@foxmail.com
-     * @updateTime 2022/3/15 7:10
-     */
-    public GeoCoord getRandomDevice(List<LeanData> cHexs) throws MsgException {
-        StringUtils.writeList("\t", "getRandomDevice", cHexs.size(), JSON.toJSONString(cHexs));
-        if (ObjectUtils.notIsEmpty(cHexs)) {
-            String cHex = cHexs.get(NumUtils.intervalRandom(cHexs.size())).getL();
-            GeoCoord geoCoord = lookAround(cHex);
-            if (ObjectUtils.isEmpty(geoCoord)) {
-                return getRandomDevice(cHexs);
-            }
-            System.out.println("[geoCoord.hex] " + JSON.toJSONString(geoCoord));
-            return geoCoord;
-        }
-
-        throw new MsgException("没有可以使用的位置设备了 ");
-    }
-
-    /**
-     * @throws
-     * @title 极速随机Hex
-     * @description
-     * @author Mr.Lv lvzhuozhuang@foxmail.com
-     * @updateTime 2022/3/15 7:10
-     */
-    public void getRandomDevice(Map<String, GeoCoord> geoCoordMap, List<LeanData> cHexs) throws MsgException {
-        StringUtils.writeList("\t", "getRandomDevice", cHexs.size(), JSON.toJSONString(cHexs));
-
-        if (ObjectUtils.notIsEmpty(cHexs)) {
-            String cHex = cHexs.get(NumUtils.intervalRandom(cHexs.size())).getL();
-            GeoCoord geoCoord = lookAround(cHex);
-            if (ObjectUtils.isEmpty(geoCoord) || geoCoordMap.containsKey(geoCoord.getCHex())) {
-                getRandomDevice(geoCoordMap, cHexs);
-            }
-        }
-        throw new MsgException("没有可以使用的位置设备了 ");
-    }
-
-    /**
-     * @param hex
-     * @return
-     */
-    public GeoCoord lookAround(String hex) {
-        String resultHex = "";
-        boolean sw;
-        for (Object o : HexUtils.hex8Offset.keySet().toArray()) {
-            try {
-                resultHex = HexUtils.offset(hex, (String) o, 8);
-                sw = notIsDevice(resultHex);
-                StringUtils.writeList("\t", "【hex】 ", hex, o, resultHex, HexUtils.h3.h3ToParentAddress(resultHex, 5), sw);
-                if (sw) {
-                    continue;
-                } else {
-                    return GeoCoord.build(resultHex, H3Core.newInstance().h3ToGeo(resultHex));
-                }
-            } catch (MsgException | IOException | URISyntaxException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-
-    /**
-     * 查看该区域是否有设备
-     *
-     * @param hex
-     * @return
-     * @throws MsgException
-     */
-    public boolean notIsDevice(String hex) throws MsgException, URISyntaxException {
-        Result result = getResult(Website.Blockjoy, String.format("v1/hotspots/hex/%s", hex));
-        if (ObjectUtils.isEmpty(result)) {
-            return false;
-        }
-        return ObjectUtils.notIsEmpty(result.getData());
-    }
-
-    /**
      * @return
      * @throws
      * @title 根据设备地址获取设备信息
@@ -371,14 +177,6 @@ public class HeliumHttpUtils extends HttpUtils {
         }
         return BeanUtils.toJavaObject(result.getData(), new TypeReference<Device>() {
         });
-    }
-
-    public Boolean denylist(String address) throws MsgException, URISyntaxException {
-        JSONObject jsonO = JSON.parseObject(get(Website.Herokuapp, "api/hotspots/" + address));
-        if (!jsonO.containsKey("denylists")) {
-            return null;
-        }
-        return jsonO.getJSONArray("denylists").size() > 0;
     }
 
     public Result getResult(Website website, String url) {

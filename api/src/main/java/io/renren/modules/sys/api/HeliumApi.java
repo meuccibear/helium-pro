@@ -84,8 +84,7 @@ public class HeliumApi {
 
         Result result = getResultKV("getEarningsByAddress", parameter);
 //        JSONArray jsonArray = (JSONArray) JSONUtils.jsGetData(jsonObject, "data");
-        JSONArray jsonArray = BeanUtils.toJavaObject(result.getData(), new TypeReference<JSONArray>() {{
-        }});
+        JSONArray jsonArray = BeanUtils.toJavaObject(result.getData(), new TypeReference<JSONArray>() {{}});
 
         List<HotspotsProfit> hotspotsProfits = BeanUtils.toJavaObject(jsonArray, new TypeReference<List<HotspotsProfit>>() {
         });

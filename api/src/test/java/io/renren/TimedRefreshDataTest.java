@@ -12,10 +12,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import io.renren.common.gitUtils.*;
 import io.renren.common.gitUtils.http.FileUtils;
+import io.renren.modules.business.dao.BusinessDeviceMapper;
+import io.renren.modules.business.entity.BusinessDevice;
 import io.renren.modules.business.service.BusinessDeviceService;
+import io.renren.modules.sys.api.HeliumApi;
 import io.renren.modules.sys.dao.LocationsMapper;
 import io.renren.modules.sys.entity.SourceCorpse;
 import io.renren.modules.sys.service.GlobalDeviceService;
+import io.renren.run.device.Device;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -24,6 +28,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,10 +49,16 @@ public class TimedRefreshDataTest {
     private GlobalDeviceService globalDeviceService;
 
     @Autowired
+    HeliumApi heliumApi;
+
+    @Autowired
     private LocationsMapper locationsMapper;
 
     @Autowired
     BusinessDeviceService businessDeviceService;
+
+    @Autowired
+    BusinessDeviceMapper businessDeviceMapper;
 
     @SneakyThrows
     @Test
@@ -105,7 +118,8 @@ public class TimedRefreshDataTest {
 //        log.info(JSON.toJSONString(sourceCorpses));
         List<String> lines = FileUtils.readLines("./data/hotspotty.txt");
 //
-        List<List<String>> lists = ObjectUtils.averageAssignPartition(lines, 200);
+        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(lines, 200), new TypeReference<List<List<String>>>() {{
+        }});
 //        设备地址	黑名单（true:黑机 false:白机器）	名称	钱包	状态	网络地址	国家	城市	24H收益	经纬度
         for (int i = 0; i < lists.size(); i++) {
             log.info("num{}\t{}\t{}", i, lists.get(i).size(), JSON.toJSONString(lists.get(i)));
@@ -127,7 +141,10 @@ public class TimedRefreshDataTest {
 //        List<String> sourceCorpses = globalDeviceService.selectHex5ByLongCountry("China");
         List<String> sourceCorpses = FileUtils.readLines("./data/hex5s");
 
-        List<List<String>> lists = ObjectUtils.averageAssignPartition(sourceCorpses, 200);
+        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(sourceCorpses, 200), new TypeReference<List<List<String>>>() {{
+        }});
+
+//        List<List<String>> lists = ObjectUtils.averageAssignPartition(sourceCorpses, 200);
         for (int i = 0; i < lists.size(); i++) {
             log.info("num{}\t{}\t{}", i, lists.get(i).size(), JSON.toJSONString(lists.get(i)));
             businessDeviceService.dashboard(lists, i, filePath);
@@ -196,7 +213,8 @@ public class TimedRefreshDataTest {
         }});
         log.info("查询到了{}条数据", cityids.size());
 
-        List<List<String>> lists = ObjectUtils.averageAssignPartition(cityids, 200);
+        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(cityids, 200), new TypeReference<List<List<String>>>() {{
+        }});
 
         for (int i = 0; i < lists.size(); i++) {
             businessDeviceService.addHeliumGlobalDevice(lists, i, filePath);
@@ -206,17 +224,34 @@ public class TimedRefreshDataTest {
     @SneakyThrows
     @Test
     public void addHeliumGlobalDevicev2() {
-        String filePath = String.format("%s\\%d", "../data/result", System.currentTimeMillis());
-        List<String> cursors = FileUtils.readLines("./data/cursors");
-        log.info("查询到了{}条数据", cursors.size());
-//        @Autowired
-//        GlobalDeviceService globalDeviceService;
-        List<List<String>> lists = ObjectUtils.averageAssignPartition(cursors, 400);
-        for (int i = 0; i < lists.size(); i++) {
-            if(ObjectUtils.notIsEmpty(lists.get(i))){
-                businessDeviceService.addHeliumGlobalDevicev2(lists, i, filePath);
+//        String filePath = String.format("%s\\%d", "../data/result", System.currentTimeMillis());
+//        List<String> cursors = FileUtils.readLines("./data/cursors");
+//        log.info("查询到了{}条数据", cursors.size());
+////        @Autowired
+////        GlobalDeviceService globalDeviceService;
+//        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(cursors, 200), new TypeReference<List<List<String>>>(){{}});
+//
+////        List<List<String>> lists = ObjectUtils.averageAssignPartition(cursors, 400);
+//        for (int i = 0; i < lists.size(); i++) {
+//            if(ObjectUtils.notIsEmpty(lists.get(i))){
+//                businessDeviceService.addHeliumGlobalDevicev2(lists, i, filePath);
+//            }
+//        }
+
+        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(businessDeviceService.findErrDevices("depllist"), ObjectUtils.toInt("200", 5)), new TypeReference<List<List<String>>>() {{
+        }});
+
+        if(ObjectUtils.notIsEmpty(lists)){
+            for (int i = 0; i < lists.size(); i++) {
+                if (lists.get(i).size() > 0) {
+                    businessDeviceService.updateDevicedeBlackListInfoTask(lists, i);
+                }
             }
         }
+
     }
+
+
+
 
 }

@@ -7,10 +7,10 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     #MySQL配置
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/helium_pro?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
-#    url: jdbc:mysql://183.6.57.245:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://152.32.253.209:3316/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false&useSSL=no
+    #            url: jdbc:mysql://152.32.253.209:3306/helium_pro?serverTimezone=Asia/Shanghai&useSSL=false&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
     username: root
-    password: root
+    password: Zp1949@@
     #oracle配置
     #    driverClassName: oracle.jdbc.OracleDriver
     #    url: jdbc:oracle:thin:@47.100.206.162:1521:xe
@@ -35,14 +35,14 @@ spring:
   resources:
     static-locations: classpath:/static/,classpath:/views/
 
-#mongodb:
-#  host: localhost
-#  port: 27017
-#  auth: false #是否使用密码验证
-#  username: tincery
-#  password: renren
-#  source: 123456
-#  database: test
+mongodb:
+  host: localhost
+  port: 27017
+  auth: true #是否使用密码验证
+  username: admin
+  password: 123.com
+  source: 123456
+  database: test
 
 mybatis-plus:
   mapperLocations: classpath:mapper/**/*.xml
@@ -56,5 +56,5 @@ pagehelper:
 
 #指定数据库，可选值有【mysql、oracle、sqlserver、postgresql、mongodb】
 renren:
-  database: mysql
+  database: mongodb
 

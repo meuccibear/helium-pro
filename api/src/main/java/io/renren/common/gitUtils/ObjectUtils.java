@@ -1,5 +1,6 @@
 package io.renren.common.gitUtils;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.renren.common.gitUtils.exception.MsgException;
 
@@ -268,9 +269,9 @@ public class ObjectUtils {
      * @param n
      * @return
      */
-    public static List<List<String>> averageAssignPartition(List<String> data, int n) {
-        List<List<String>> datas = new ArrayList<>();
-
+    public static List averageAssignPartition(List<?> data, int n) {
+//        List<List<?>> datas = new ArrayList<>();
+        List<Object> datas = new ArrayList<>();
         if (ObjectUtils.notIsEmpty(data)) {
             int average = data.size() / n;
             int surplus = data.size() % n;

@@ -85,7 +85,8 @@ public class HttpUtils {
         return send(method, url, entityParameter, null);
     }
 
-    public void sendBefore(Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
+    public Object sendBefore(Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
+        return null;
     }
 
     public HttpResultData send(Method method, String url, Object entityParameter, Map<String, String> headers) throws MsgException {
@@ -95,18 +96,18 @@ public class HttpUtils {
 
         log.info("\n{}\n============================>\ntime:{}\nheaders:{}\nparameter:{}\nentityParameter:{}", url, DateUtils.asDate(now).getTime(), JSON.toJSON(headers), JSON.toJSON(entityParameter));
         HttpResultData httpResultData = null;
-        sendBefore(method, url, entityParameter, headers, httpResultData, time);
+        Object requestData = sendBefore(method, url, entityParameter, headers, httpResultData, time);
         if (ObjectUtils.isEmpty(httpResultData)) {
             httpResultData = getSetting().initHttp(method, url, entityParameter, headers, getSetting().numberOfRetries);
-            sendAfter(method, url, entityParameter, headers, httpResultData, time);
+            sendAfter(requestData, method, url, entityParameter, headers, httpResultData, time);
         }
+
         log.info("\n<============================\ntime:{}\n所消耗的时间{}\n{}", DateUtils.asDate(now).getTime(), DateUtils.calculationTimeConsuming(now), JSON.toJSON(httpResultData));
 
         return httpResultData;
     }
 
-    public void sendAfter(Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
-    }
+    public void sendAfter(Object requestData, Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {}
 
     /**
      * 获取文件
@@ -317,7 +318,6 @@ public class HttpUtils {
             switch (method) {
                 case GET:
                     HttpGet httpGet = new HttpGet(generateURIBuilder(url, entityParameter));
-
                     //代理
                     if (isProxy) {
                         httpGet.setConfig(setingRequestConfig());
@@ -360,7 +360,6 @@ public class HttpUtils {
                     if (ObjectUtils.notIsEmpty(stringEntity)) {
                         httpPost.setEntity(stringEntity);
                     }
-
 
                     request = httpPost;
 
@@ -441,229 +440,10 @@ public class HttpUtils {
             return new HttpResultData(statusCode, result, Option.getCookie(store));
         }
 
-        /**
-         * @return
-         * @throws
-         * @title 初始化请求
-         * @description
-         * @author Mr.Lv lvzhuozhuang@foxmail.com
-         * @updateTime 2022/4/12 3:35
-         */
-//        public HttpResultData initHttp(Method method, String url, Object parameter, Map<String, String> headers, Integer errFrequency) throws MsgException {
-//            HttpUriRequest request;
-//            switch (method) {
-//                case GET:
-//                    HttpGet httpGet = new HttpGet(generateURIBuilder(url, parameter));
-//
-//                    //代理
-//                    if (isProxy) {
-//                        httpGet.setConfig(setingRequestConfig());
-//                    }
-//                    request = httpGet;
-//                    break;
-//                case POST:
-//                    HttpPost httpPost = new HttpPost(generateURIBuilder(url, parameter));
-//
-//                    //代理
-//                    if (isProxy) {
-//                        httpPost.setConfig(setingRequestConfig());
-//                    }
-//
-//                    //body请求
-//                    if (parameter instanceof String) {
-//                        //包装成一个Entity对象
-//                        httpPost.setEntity(new StringEntity((String) parameter, "UTF-8"));
-//                    }
-//
-//                    request = httpPost;
-//
-//                    break;
-//                default:
-//                    throw new IllegalStateException("Unexpected value: " + method);
-//            }
-//
-//            if (ObjectUtils.isEmpty(headers)) {
-//                headers = new HashMap<>();
-//            }
-//            headers.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36");
-//
-////            return request;
-//
-//
-//            /*
-//             * ps：
-//             * Content-Type 请求头部编码
-//             * Accept 返回编码
-//             */
-//            //设置请求头信息
-//            if (null != headers) {
-//                for (String key : headers.keySet()) {
-//                    if (!headerKeys.contains(key)) {
-//                        request.setHeader(new BasicHeader(key, headers.get(key)));
-//                    }
-//                }
-//            }
-//
-//            // HttpClient 三种 Http Basic 验证方式 0、标准模式 1、抢先模式 2、原生 Http Basic 模式
-//            //请求用户登录
-//            if (ObjectUtils.notIsEmpty(getAccountInfo())) {
-//                //String a = Base64.getUrlEncoder().encodeToString((username + ":" + password).getBytes());
-//                //添加http头信息
-//                request.addHeader("Authorization", "Basic " + Base64.getUrlEncoder().encodeToString(getAccountInfo().getBytes()));
-//                request.addHeader("Content-Type", "application/json");
-//                //httpPost.addHeader("Authorization","Basic "+a);
-//            }
-//
-//            //创建一个httpclient对象
-//            CookieStore store = new BasicCookieStore();
-//            HttpClient client = SSLClient.sslClient(store);
-//
-//            //执行请求
-//            HttpResponse response = null;
-//            try {
-//                response = client.execute(request);
-//            } catch (Exception e) {
-////                e.printStackTrace();
-//                if (getSetting().isProxy) {
-////                    if (getSetting().automaticExceptionHandling) {
-//                    if (--errFrequency >= 0) {
-//                        log.info("\nExecute问题!{}\n{}\n<><><><><><><><>\n正在重试【{}】", e.getMessage(), url, (getSetting().numberOfRetries - errFrequency));
-//                        refresh();
-//                        return initHttp(method, url, parameter, headers, errFrequency);
-//                    }
-//                    throw new MsgException("连接失败！", e);
-////                    } else {
-////                        throw new MsgException("IO异常！", MsgException.ErrEnum.IOException, e);
-////                    }
-//                } else {
-//                    throw new MsgException("Execute异常！", e);
-//                }
-//            }
-//
-//
-//            //获取返回对象
-//            HttpEntity entity = response.getEntity();
-//
-//            //通过EntityUitls获取返回内容
-//            String result = null;
-//            try {
-//                result = EntityUtils.toString(entity, "UTF-8");
-//            } catch (IOException e) {
-//                throw new MsgException("IO异常");
-//            }
-//
-//            //获取响应码
-//            int statusCode = response.getStatusLine().getStatusCode();
-//
-//            if (statusCode != 200) {
-//                if (--errFrequency > 0) {
-//                    if (getSetting().isProxy) {
-//                        log.info("状态码问题!");
-//                        log.info("\n{}\n<><><><><><><><>\n正在重试{}", url, (getSetting().numberOfRetries - errFrequency));
-//                        refresh();
-//                    }
-//                    return initHttp(method, url, parameter, headers, errFrequency);
-//                }
-//                throw new MsgException(String.format("\n【请求出错】\n状态码：%d\nresult:%s", statusCode, result));
-//            }
-//
-//            HttpResultData httpResultData = new HttpResultData(statusCode, result, Option.getCookie(store));
-//            if (ObjectUtils.isEmpty(httpResultData)) {
-//                throw new MsgException("loginInfo 接口网络问题~");
-//            }
-//
-//            return httpResultData;
-//        }
 
-        /**
-         * 发送请求
-         *
-         * @param request 请求
-         * @return 返回 HttpResultData 对象
-         * @throws IOException 异常信息
-         */
-//        HttpResultData send(HttpUriRequest request, Map<String, String> headers, Integer errFrequency) throws MsgException {
-//            /*
-//             * ps：
-//             * Content-Type 请求头部编码
-//             * Accept 返回编码
-//             */
-//            //设置请求头信息
-//            if (null != headers) {
-//                for (String key : headers.keySet()) {
-//                    if (!headerKeys.contains(key)) {
-//                        request.setHeader(new BasicHeader(key, headers.get(key)));
-//                    }
-//                }
-//            }
-//
-//            // HttpClient 三种 Http Basic 验证方式 0、标准模式 1、抢先模式 2、原生 Http Basic 模式
-//            //请求用户登录
-//            if (ObjectUtils.notIsEmpty(getAccountInfo())) {
-//                //String a = Base64.getUrlEncoder().encodeToString((username + ":" + password).getBytes());
-//                //添加http头信息
-//                request.addHeader("Authorization", "Basic " + Base64.getUrlEncoder().encodeToString(getAccountInfo().getBytes()));
-//                request.addHeader("Content-Type", "application/json");
-//                //httpPost.addHeader("Authorization","Basic "+a);
-//            }
-//
-//            //创建一个httpclient对象
-//            CookieStore store = new BasicCookieStore();
-//            HttpClient client = SSLClient.sslClient(store);
-//
-//            //执行请求
-//            HttpResponse response = null;
-//            try {
-//                response = client.execute(request);
-//            } catch (IOException e) {
-////                e.printStackTrace();
-//                if (getSetting().isProxy) {
-//                    if (getSetting().automaticExceptionHandling) {
-//                        if (--errFrequency > 0) {
-//                            log.info("正在重试{}", errFrequency);
-//                            refresh();
-//                            return send(request, headers, errFrequency);
-//                        }
-//                        throw new MsgException("连接失败！", e);
-//                    } else {
-//                        throw new MsgException("IO异常！", MsgException.ErrEnum.IOException, e);
-//                    }
-//                } else {
-//                    throw new MsgException("IO异常！", e);
-//                }
-//            }
-//
-//            //获取响应码
-//            int statusCode = response.getStatusLine().getStatusCode();
-//
-//            if (statusCode == 400) {
-//                if (--errFrequency > 0) {
-//                    if (getSetting().isProxy) {
-//                        refresh();
-//                    }
-//                    return send(request, headers, errFrequency);
-//                }
-//                throw new MsgException("400 Bad Request!");
-//            }
-//
-//            //获取返回对象
-//            HttpEntity entity = response.getEntity();
-//
-//            //通过EntityUitls获取返回内容
-//            String result = null;
-//            try {
-//                result = EntityUtils.toString(entity, "UTF-8");
-//            } catch (IOException e) {
-//                throw new MsgException("IO异常");
-//            }
-//
-//            HttpResultData httpResultData = new HttpResultData(statusCode, result, Option.getCookie(store));
-//            if (ObjectUtils.isEmpty(httpResultData)) {
-//                throw new MsgException("loginInfo 接口网络问题~");
-//            }
-//
-//            return httpResultData;
-//        }
+        public void err(){
+
+        }
     }
 
     public static class Option {

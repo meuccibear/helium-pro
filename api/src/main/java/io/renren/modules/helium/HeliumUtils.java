@@ -127,30 +127,6 @@ public class HeliumUtils {
         return ObjectUtils.notIsEmpty(result.getData());
     }
 
-    /**
-     * @param hex
-     * @return
-     */
-    public static GeoCoord lookAround(String hex) {
-        String resultHex = "";
-        boolean sw;
-        for (Object o : HexUtils.hex8Offset.keySet().toArray()) {
-            try {
-                resultHex = HexUtils.offset(hex, (String) o, 8);
-                sw = notIsDevice(resultHex);
-                StringUtils.writeList("\t", "【hex】 ", hex, o, resultHex, HexUtils.h3.h3ToParentAddress(resultHex, 5), sw);
-                if (sw) {
-                    continue;
-                } else {
-                    return GeoCoord.build(resultHex, H3Core.newInstance().h3ToGeo(resultHex));
-                }
-            } catch (MsgException | IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
     public static List<Device> getHotspotsByWalletId(String wallId) throws MsgException {
         Result result = BeanUtils.toJavaObject(get(String.format("v1/accounts/%s/hotspots", wallId)), new TypeReference<Result>() {
         });
@@ -199,61 +175,6 @@ public class HeliumUtils {
             return JSON.parseObject(httpResultData.getResult());
 //        }
 //        return null;
-    }
-
-
-    /**
-     * 随机设备【递归|单用】
-     *
-     * @param completedRewardsBean
-     * @return
-     * @throws MsgException
-     */
-    public static GeoCoord getRandomDevice(CompletedRewardsBean completedRewardsBean) throws MsgException {
-        if (ObjectUtils.notIsEmpty(completedRewardsBean) && ObjectUtils.notIsEmpty(completedRewardsBean.getHotspotIds())) {
-            String id = completedRewardsBean.getHotspotIds().get(NumUtils.intervalRandom(completedRewardsBean.getHotspotIds().size()));
-            completedRewardsBean.getHotspotIds().remove(id);
-            Device device = getHotspotsByAddress(id);
-//            if (ObjectUtils.isEmpty(device) && ObjectUtils.isEmpty(device.getReward_scale())) {
-            GeoCoord geoCoord = lookAround(device.getLocation_hex());
-//            if (ObjectUtils.isEmpty(device) || ObjectUtils.isEmpty(geoCoord) || device.getStatus().getOnline().equals("")) {
-            StringUtils.writeList("\t", "【reward_scale】 ", device.getReward_scale());
-            if (ObjectUtils.isEmpty(device) || ObjectUtils.isEmpty(geoCoord) || device.getStatus().getOnline().equals("")) {
-//                if (ObjectUtils.isEmpty(device.getReward_scale())) {
-//                    StringUtils.writeList("\t", device.getStatus().getOnline(), device.getAddress());
-//                }
-                return getRandomDevice(completedRewardsBean);
-            }
-            return geoCoord;
-        }
-
-        throw new MsgException("没有可以使用的位置设备了 " + completedRewardsBean.getHex());
-    }
-
-    /**
-     * @throws
-     * @title 极速随机Hex
-     * @description
-     * @author Mr.Lv lvzhuozhuang@foxmail.com
-     * @updateTime 2022/3/15 7:10
-     */
-    public static GeoCoord getRandomDevice(List<LeanData> cHexs) throws MsgException {
-
-        StringUtils.writeList("\t", "getRandomDevice", cHexs.size(), JSON.toJSONString(cHexs));
-        if (ObjectUtils.notIsEmpty(cHexs)) {
-            String cHex = cHexs.get(NumUtils.intervalRandom(cHexs.size())).getL();
-            cHexs.remove(cHex);
-            HEXS.containsKey(cHex);
-            GeoCoord geoCoord = lookAround(cHex);
-            if (ObjectUtils.isEmpty(geoCoord)) {
-                return getRandomDevice(cHexs);
-            }
-            HEXS.put(cHex, cHex);
-            System.out.println("[geoCoord.hex] " + JSON.toJSONString(geoCoord));
-            return geoCoord;
-        }
-
-        throw new MsgException("没有可以使用的位置设备了 ");
     }
 
 //
@@ -310,47 +231,6 @@ public class HeliumUtils {
 //    }
 
     static Map<String, String> HEXS = new HashMap<>();
-
-    /**
-     * @return
-     * @throws
-     * @title 指定数量获取位置
-     * @description
-     * @author Mr.Lv lvzhuozhuang@foxmail.com
-     * @updateTime 2022/3/15 7:42
-     */
-    public static Map<String, List<GeoCoord>> getLocations(String address, int num) throws MsgException {
-        StringUtils.writeList("\t", "【getLocations】 ", address, num);
-
-        List<LeanData> cHexs = getCHexsByHex(address, 5);
-
-        Map<String, List<GeoCoord>> geoMap = new HashMap<>();
-        String hex3 = HexUtils.h3.h3ToParentAddress(cHexs.get(0).getL(), 5);
-        StringUtils.writeList("\t", "【getLocations】 ", cHexs.size());
-
-        if (ObjectUtils.notIsEmpty(cHexs)) {
-//            if (num < cHexs.size()) {
-//                throw new MsgException(String.formatKV("该地区不够%d个位置~", num));
-//            }
-            List<GeoCoord> geoCoords = new ArrayList<>();
-            GeoCoord randomDevice;
-            for (int i = 0; i < num; i++) {
-                randomDevice = getRandomDevice(cHexs);
-//                if(ObjectUtils.isEmpty(randomDevice)){
-//                    i--;
-//                    continue;
-//                }
-                geoCoords.add(randomDevice);
-//            System.out.println(String.formatKV("hex\treward_scale: %s address: %s", device.getReward_scale(), device.getAddress()));
-//            System.out.println(String.formatKV("%s\t%s address: %s", hex, device.getReward_scale(), device.getAddress()));
-            }
-            StringUtils.writeList("\t", "【getLocations】 ", JSON.toJSONString(geoCoords));
-
-            geoMap.put(hex3, geoCoords);
-//            location.json = new Location(hex3, address, geoCoords);
-        }
-        return geoMap;
-    }
 
 
     /**

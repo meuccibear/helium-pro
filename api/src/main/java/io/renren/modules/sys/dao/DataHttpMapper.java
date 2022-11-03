@@ -19,6 +19,6 @@ public interface DataHttpMapper {
 
     DataHttp findAllByAll(DataHttp dataHttp);
 
-    void truncate();
+    DataHttp updateSelective(DataHttp dataHttp);
 
 }

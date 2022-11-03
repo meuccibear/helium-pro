@@ -1,21 +1,23 @@
-package io.renren.modules.helium.domain;
+package io.renren.run.device;
 
 import com.alibaba.fastjson.JSONObject;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.DateUtils;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.StringUtils;
-import io.renren.modules.business.entity.BusinessDevice;
 import io.renren.modules.helium.HexUtils;
+import io.renren.modules.helium.domain.BasicBean;
+import io.renren.modules.helium.domain.Geocode;
+import io.renren.modules.helium.domain.Status;
 import io.renren.modules.sys.entity.GlobalDevice;
-import io.renren.modules.sys.entity.WholeNetworkDevice;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +32,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Document(collection = "device") //通过collection参数指定当前实体类对应的文档
 public class Device extends BasicBean {
 
     private String hex;
@@ -52,12 +55,12 @@ public class Device extends BasicBean {
     private int elevation;
     private long block_added;
     private long block;
+    @Id
     private String address;
     private double total;
     private int dbStatus;
     private String nextCursor;
     private String requestCursor;
-//    private Date updateTime;
 
     /**
      * 是否进入黑名单 0.正常 1.黑鸡
@@ -118,18 +121,6 @@ public class Device extends BasicBean {
         return globalDevice;
     }
 
-
-    public WholeNetworkDevice toWholeNetworkDevice(String cursor) {
-        getTimestamp();
-        getStatus().getTimestamp();
-        getStatus().getIp();
-        WholeNetworkDevice globalDevice = BeanUtils.mergeObjects(WholeNetworkDevice.class, this, getGeocode(), getStatus());
-        if (ObjectUtils.notIsEmpty(getLocation())) {
-            globalDevice.setHex5(HexUtils.h3.h3ToParentAddress(getLocation(), 5));
-        }
-        globalDevice.setCursor(cursor);
-        return globalDevice;
-    }
 
     public String toGlobalDeviceSql(String cursor) {
 //         insert into global_device (address, hex5, lng, lat, timestamp_added, `timestamp`, `online`, listen_addrs, height, reward_scale, payer, `owner`, nonce, `name`, `mode`,

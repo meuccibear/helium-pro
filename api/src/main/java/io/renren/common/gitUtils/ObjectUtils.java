@@ -29,6 +29,8 @@ public class ObjectUtils {
             return ((String) value).length() > 0;
         } else if (value instanceof String[]) {
             return ((String[]) value).length > 0;
+        } else if (value instanceof Object[]) {
+            return ((Object[]) value).length > 0;
 //        } else if (value instanceof Long) {
 //            return (Long) value > 0;
 //        } else if (value instanceof Integer) {

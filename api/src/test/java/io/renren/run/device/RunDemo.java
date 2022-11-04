@@ -69,54 +69,50 @@ public class RunDemo {
         String address;
         JSONObject jsonObject;
         for (int i = 1; i <= 47; i++) {
-            try {
-                lines = FileUtils.readLines(String.format(path, i));
-                for (int i1 = 0; i1 < lines.size(); i1++) {
-                    line = lines.get(i1);
+            lines = FileUtils.readLines(String.format(path, i));
+            for (int i1 = 0; i1 < lines.size(); i1++) {
+                line = lines.get(i1);
 
-                    if (StringUtils.notIsEmpty(line)) {
-                        device = BeanUtils.toJavaObject(line, new TypeReference<Device>() {{
-                        }});
+                if (StringUtils.notIsEmpty(line)) {
+                    device = BeanUtils.toJavaObject(line, new TypeReference<Device>() {{
+                    }});
 
-                        if (StringUtils.notIsEmpty(device.getLocation_hex())) {
-                            h5 = HexUtils.h3.h3ToParentAddress(device.getLocation_hex(), 5);
-                            if (h5Map.containsKey(h5)) {
-                                jsonObject = h5Map.get(h5);
+                    if (StringUtils.notIsEmpty(device.getLocation_hex())) {
+                        h5 = HexUtils.h3.h3ToParentAddress(device.getLocation_hex(), 5);
+                        if (h5Map.containsKey(h5)) {
+                            jsonObject = h5Map.get(h5);
 
-                                if (jsonObject.containsKey(device.getStatus().getOnline())) {
-                                    jsonObject.put(device.getStatus().getOnline(), jsonObject.getInteger(device.getStatus().getOnline()) + 1);
-                                } else {
-                                    jsonObject.put(device.getStatus().getOnline(), 1);
-                                }
-
-                                h5Map.put(h5, jsonObject);
+                            if (jsonObject.containsKey(device.getStatus().getOnline())) {
+                                jsonObject.put(device.getStatus().getOnline(), jsonObject.getInteger(device.getStatus().getOnline()) + 1);
                             } else {
-                                jsonObject = new JSONObject();
-                                jsonObject.put("device", device);
-                                if (jsonObject.containsKey(device.getStatus().getOnline())) {
-                                    jsonObject.put(device.getStatus().getOnline(), jsonObject.getInteger(device.getStatus().getOnline()) + 1);
-                                } else {
-                                    jsonObject.put(device.getStatus().getOnline(), 1);
-                                }
-                                h5Map.put(h5, jsonObject);
+                                jsonObject.put(device.getStatus().getOnline(), 1);
                             }
 
-                            if (ObjectUtils.notIsEmpty(device.getGeocode())) {
-                                address = StringUtils.outStr("\t", device.getGeocode().getLong_country(), device.getGeocode().getLong_state(), device.getGeocode().getLong_city());
-                            } else {
-                                address = "\t\t";
-                            }
-
-                            FileUtils.writeln(String.format(outPath, "hex.csv"), StringUtils.outStr(",", device.getAddress(), device.getPayer(), device.getOwner(), address, device.getStatus().getOnline(), h5), true, true);
-                            FileUtils.writeln(String.format(outPath, "address.txt"), device.getAddress(), true, true);
-
+                            h5Map.put(h5, jsonObject);
                         } else {
-                            FileUtils.writeln(String.format(outPath, "notHex.txt"), JSON.toJSONString(device), true, true);
+                            jsonObject = new JSONObject();
+                            jsonObject.put("device", device);
+                            if (jsonObject.containsKey(device.getStatus().getOnline())) {
+                                jsonObject.put(device.getStatus().getOnline(), jsonObject.getInteger(device.getStatus().getOnline()) + 1);
+                            } else {
+                                jsonObject.put(device.getStatus().getOnline(), 1);
+                            }
+                            h5Map.put(h5, jsonObject);
                         }
+
+                        if (ObjectUtils.notIsEmpty(device.getGeocode())) {
+                            address = StringUtils.outStr("\t", device.getGeocode().getLong_country(), device.getGeocode().getLong_state(), device.getGeocode().getLong_city());
+                        } else {
+                            address = "\t\t";
+                        }
+
+                        FileUtils.writeln(String.format(outPath, "hex.csv"), StringUtils.outStr(",", device.getAddress(), device.getPayer(), device.getOwner(), address, device.getStatus().getOnline(), h5), true, true);
+                        FileUtils.writeln(String.format(outPath, "address.txt"), device.getAddress(), true, true);
+
+                    } else {
+                        FileUtils.writeln(String.format(outPath, "notHex.txt"), JSON.toJSONString(device), true, true);
                     }
                 }
-            } catch (MsgException e) {
-                log.error(String.format("%d 读取文件错误~~"), e);
             }
         }
 
@@ -131,19 +127,17 @@ public class RunDemo {
             device = BeanUtils.toJavaObject(keyJson.getJSONObject("device"), new TypeReference<Device>() {{
             }});
 
-            try {
-                FileUtils.writeln(String.format(outPath, "h5.txt"), StringUtils.outStr("\t", s, device.getAddress(), device.getGeocode().getLong_country(), device.getGeocode().getLong_state(), device.getGeocode().getLong_city(), online, offline), true, true);
-            } catch (MsgException e) {
-                log.error("写入数据失败~", e);
-            }
+            FileUtils.writeln(String.format(outPath, "h5.txt"), StringUtils.outStr("\t", s, device.getAddress(), device.getGeocode().getLong_country(), device.getGeocode().getLong_state(), device.getGeocode().getLong_city(), online, offline), true, true);
+
         }
 
     }
 
 
     @Test
-    public void asd() throws MsgException {
-        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(FileUtils.readLines(PATH + "\\1663634602567\\address.txt"), 200), new TypeReference<List<List<String>>>() {{}});
+    public void asd() {
+        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(FileUtils.readLines(PATH + "\\1663634602567\\address.txt"), 200), new TypeReference<List<List<String>>>() {{
+        }});
 
         for (int i = 0; i < lists.size(); i++) {
             if (lists.get(i).size() > 0) {
@@ -164,22 +158,19 @@ public class RunDemo {
         String line;
 
         for (int i = 1; i <= 47; i++) {
-            try {
-                lines = FileUtils.readLines(String.format(path, i));
-                for (int i1 = 0; i1 < lines.size(); i1++) {
-                    line = lines.get(i1);
+            lines = FileUtils.readLines(String.format(path, i));
+            for (int i1 = 0; i1 < lines.size(); i1++) {
+                line = lines.get(i1);
 
-                    if (StringUtils.notIsEmpty(line)) {
-                        device = BeanUtils.toJavaObject(line, new TypeReference<io.renren.run.device.Device>() {{
-                        }});
+                if (StringUtils.notIsEmpty(line)) {
+                    device = BeanUtils.toJavaObject(line, new TypeReference<io.renren.run.device.Device>() {{
+                    }});
 
-                        mongoTemplate.insert(device);
+                    mongoTemplate.insert(device);
 
-                    }
                 }
-            } catch (MsgException e) {
-                log.error(String.format("%d 读取文件错误~~"), e);
             }
+
         }
     }
 
@@ -204,16 +195,10 @@ public class RunDemo {
 
         mongoTemplate.query(Cursor.class);
 
-//        catch (MsgException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
 
-
-    public void mongodb(){
+    public void mongodb() {
         List<Cursor> data = mongoTemplate.findAll(Cursor.class);
 
         MultithreadingUtil<Cursor> multithreadingUtil = new MultithreadingUtil<Cursor>(200) {
@@ -248,11 +233,6 @@ public class RunDemo {
 
         multithreadingUtil.run(data);
     }
-
-
-
-
-
 
 
 }

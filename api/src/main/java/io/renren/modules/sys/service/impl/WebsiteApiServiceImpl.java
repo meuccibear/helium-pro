@@ -93,12 +93,12 @@ public class WebsiteApiServiceImpl extends HttpUtils implements WebsiteApiServic
 //            setAutomaticExceptionHandling(false);
         }
 
-        public String generateProxyAddr() throws MsgException {
+        public String generateProxyAddr(){
             try {
                 return "tps432.kdlapi.com:15818";
             } catch (Exception e) {
                 log.error("获取快代理IP失败！", e);
-                throw new MsgException("获取快代理IP失败！");
+                throw new IllegalArgumentException("获取快代理IP失败！");
             }
         }
     };
@@ -126,7 +126,7 @@ public class WebsiteApiServiceImpl extends HttpUtils implements WebsiteApiServic
                 }}));
     }
 
-    public HttpResultData sendV(String key, Object... data) throws MsgException {
+    public HttpResultData sendV(String key, Object... data) {
         init();
 
         log.info("websiteApiMap:{}", websiteApiMap);

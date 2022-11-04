@@ -149,8 +149,8 @@ public class JSONUtils {
         return value;
     }
 
-    public static void toCsv(String filePath, Object... datas) throws MsgException {
-        if (datas.length > 0) {
+    public static void toCsv(String filePath, Object... datas) {
+        if (ObjectUtils.notIsEmpty(datas)) {
             List<String> keys = toCsvTitle(filePath, datas[0]);
             for (Object data : datas) {
                 toCsv(filePath, data, keys);
@@ -158,15 +158,16 @@ public class JSONUtils {
         }
     }
 
-    public static List<String> toCsvTitle(String filePath, Object data) throws MsgException {
+    public static List<String> toCsvTitle(String filePath, Object data) {
         JSONObject jsonObject = BeanUtils.toJSONObject(data);
         List<String> keys = BeanUtils.toJavaObject(jsonObject.keySet().toArray(), new TypeReference<List<String>>() {{
         }});
+        log.info("keys:{}", JSONObject.toJSONString(keys));
         FileUtils.writeln(filePath + ".csv", StringUtils.outStr(",", keys.toArray()), true, false);
         return keys;
     }
 
-    public static void toCsv(String filePath, Object data, List<String> keys) throws MsgException {
+    public static void toCsv(String filePath, Object data, List<String> keys) {
         List<Object> values = new ArrayList<>();
         JSONObject jsonObject = BeanUtils.toJSONObject(data);
         for (String key : keys) {
@@ -182,7 +183,7 @@ public class JSONUtils {
         toCsv("./asd", BeanUtils.toJSONObject(json));
     }
 
-    public static Map<Object, List<Object>> classify(List list, String keyColName, String valueColName){
+    public static Map<Object, List<Object>> classify(List list, String keyColName, String valueColName) {
         JSONArray jsonArray = BeanUtils.toJSONArray(list);
 
 

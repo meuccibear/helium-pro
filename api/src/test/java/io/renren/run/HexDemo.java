@@ -1,10 +1,16 @@
 package io.renren.run;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.uber.h3core.H3Core;
+import io.renren.common.gitUtils.BeanUtils;
+import io.renren.common.gitUtils.JSONUtils;
+import io.renren.common.gitUtils.ObjectUtils;
+import io.renren.common.gitUtils.http.FileUtils;
 import io.renren.modules.business.dao.BusinessDeviceMapper;
 import io.renren.modules.business.entity.BusinessDevice;
-import io.renren.modules.helium.HexUtils;
 import io.renren.modules.helium.domain.Device;
 import io.renren.modules.sys.api.HeliumApi;
 import lombok.SneakyThrows;
@@ -17,8 +23,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -32,44 +40,74 @@ public class HexDemo {
     HeliumApi heliumApi;
 
     @SneakyThrows
-    @Test
-    public void run() {
-        int res = 6;
-        // 每天一次
-//        updateDBHex5(res);
-
-        depley(heliumApi.getHotspotsByAddress("11pFCP3GhMpXqUFwMnjCs14BLqp39fio68NLhgLXhvPrQeebgu4"), res, 2);
-    }
-
-    H3Core h3Core;
-
-    @SneakyThrows
     @Before
     public void before() {
         h3Core = H3Core.newInstance();
     }
 
-    public void depley(Device device, int res, int k) throws IOException {
+    H3Core h3Core;
 
-        updateDBHex5(res);
+    String filePath = "../data/csv/";
 
-        String hexR = h3Core.h3ToParentAddress(device.getLocation_hex(), res);
+    int res = 6;
 
-        log.info("中心点:{}", hexR);
-        List<String> strings = h3Core.kRing(hexR, k);
-        log.info("周围方块:{}", JSON.toJSONString(strings));
-        List<BusinessDevice> devices = businessDeviceMapper.selectAllByHex5(strings);
-        for (BusinessDevice businessDevice : devices) {
-            log.info("{} {}", businessDevice.getOneLevelName(), businessDevice.getTwoLevelName());
-        }
-    }
-
-    public void updateDBHex5(int res) {
+    /**
+     * 更新数据库位置信息
+     * eg :
+     * 更改方块等级 第一次运行 需要执行该操作
+     */
+    @Test
+    public void updateDBHex5() {
         // 刷新hex5
         List<BusinessDevice> devices = businessDeviceMapper.selectAll();
 
         for (BusinessDevice businessDevice : devices) {
-            businessDeviceMapper.updateHex5ByAddress(HexUtils.h3.h3ToParentAddress(businessDevice.getHex(), res), businessDevice.getAddress());
+            if (ObjectUtils.notIsEmpty(businessDevice.getHex())) {
+                businessDevice.setHex5(h3Core.h3ToParentAddress(businessDevice.getHex(), res));
+            }
         }
+
+        Map<Object, List<Object>> classify = JSONUtils.classify(devices, "hex5", "address");
+        for (Object o : classify.keySet().toArray()) {
+            businessDeviceMapper.updateHex5ByAddress((String) o, BeanUtils.toJavaObject(classify.get(o), new TypeReference<List<String>>() {
+            }));
+        }
+
     }
+
+    /**
+     * 查找周围设备
+     */
+    @Test
+    public void getAroundDevice() {
+        List<String> lines = FileUtils.readLines("./data/aroundDevice.txt");
+        int k = 2;
+        String path = filePath + System.currentTimeMillis();
+        List<JSONObject> jsons = new ArrayList<>();
+        for (String line : lines) {
+            jsons.addAll(depley(line, res, k));
+        }
+        JSONUtils.toCsv(path, jsons.toArray());
+
+    }
+
+    public List<JSONObject> depley(String address, int res, int k) {
+        Device device = heliumApi.getHotspotsByAddress(address);
+        String hexR = h3Core.h3ToParentAddress(device.getLocation_hex(), res);
+        log.info("中心点:{}", hexR);
+        List<String> strings = h3Core.kRing(hexR, k);
+        log.info("周围方块:{}", JSON.toJSONString(strings));
+        List<BusinessDevice> devices = businessDeviceMapper.selectAllByHex5(strings);
+        JSONObject jsonObject;
+
+        List<JSONObject> jsons = new ArrayList<>();
+        for (BusinessDevice businessDevice : devices) {
+            jsonObject = BeanUtils.toJSONObject(businessDevice);
+            jsonObject.put("corePoint", address);
+            jsons.add(jsonObject);
+        }
+
+        return jsons;
+    }
+
 }

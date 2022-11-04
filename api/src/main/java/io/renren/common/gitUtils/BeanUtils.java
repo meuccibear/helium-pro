@@ -157,6 +157,8 @@ public class BeanUtils {
         String json;
         if (data instanceof String) {
             json = (String) data;
+//        } else if (data instanceof JSONObject) {
+//            return (JSONObject) data;
         } else {
             json = JSONObject.toJSONString(data);
         }

@@ -23,7 +23,7 @@ public interface WebsiteApiService  {
 
     HttpResultData send(HttpUtils.Method method, String url, Object data, Object headers) throws MsgException;
 
-    HttpResultData sendV(String apiKey, Object... data) throws MsgException;
+    HttpResultData sendV(String apiKey, Object... data) ;
 
     HttpResultData sendKV(String apiKey, Map<String, Object> data) throws MsgException;
 

@@ -2,15 +2,12 @@ package io.renren.common.gitUtils.kdl;
 
 import com.alibaba.fastjson.JSON;
 import io.renren.common.gitUtils.ObjectUtils;
-import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-
-import java.net.URISyntaxException;
 
 /**
  * 用于保存用户orderid, apiKey, 以及计算签名的对象。
@@ -29,11 +26,11 @@ public class AuthFactory {
         return new Client(auth);
     }
 
-    public static String useKDL() throws MsgException {
+    public static String useKDL() {
         return useKDL(null);
     }
 
-    public static String useKDL(String id) throws MsgException {
+    public static String useKDL(String id) {
         return useKDL(3, id);
     }
 
@@ -45,7 +42,7 @@ public class AuthFactory {
      * @author Mr.Lv lvzhuozhuang@foxmail.com
      * @updateTime 2022/4/14 11:48
      */
-    public static String useKDL(int num, String id) throws MsgException {
+    public static String useKDL(int num, String id) {
         String filePath = "./proxyAddr";
         if (ObjectUtils.notIsEmpty(id)) {
             filePath += "_" + id;
@@ -62,7 +59,7 @@ public class AuthFactory {
                 return proxyAddr;
             }
         }
-        throw new MsgException("尝试三次均不成功呢！");
+        throw new IllegalArgumentException("尝试三次均不成功呢！");
     }
 
     public static String useKDLIP(String filePath) throws Exception {
@@ -87,7 +84,7 @@ public class AuthFactory {
                     }
 
                     @Override
-                    public String generateProxyAddr() throws MsgException {
+                    public String generateProxyAddr() {
                         log.info("[proxyAddrConfig]{}", proxyAddrConfig);
                         return proxyAddrConfig;
                     }
@@ -96,12 +93,8 @@ public class AuthFactory {
 
 
         };
-        try {
             HttpResultData send = httpUtils.send(HttpUtils.Method.GET, "https://explorer.helium.com/hotspots/hex/883098b303fffff");
             System.out.println(JSON.toJSONString(send));
-        } catch (MsgException e) {
-            e.printStackTrace();
-        }
     }
 
     @SneakyThrows

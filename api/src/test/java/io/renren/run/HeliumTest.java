@@ -160,15 +160,18 @@ public class HeliumTest {
     public void showAvailableHexs() throws MsgException {
 
         String groupStr =
-                "85408ab3fffffff\t8\n" +
-                        "8640b2427ffffff\t2\n" +
-                        "8640b2437ffffff\t2\n" +
-                        "8640b258fffffff\t2\n" +
-                        "8640b25afffffff\t2\n" +
-                        "864033077ffffff\t2\n" +
-                        "86403302fffffff\t2\n" +
-                        "86403300fffffff\t2\n" +
-                        "864033057ffffff\t2" +
+                "873f45929ffffff\t2\n" +
+                        "873f45928ffffff\t2\n" +
+                        "863f45977ffffff\t4\n" +
+                        "861f12ac7ffffff\t4\n" +
+                        "861f12aefffffff\t4\n" +
+                        "852db1b7fffffff\t8\n" +
+                        "851f991bfffffff\t8\n" +
+                        "86395608fffffff\t4\n" +
+                        "86395609fffffff\t4\n" +
+                        "862d12db7ffffff\t4\n" +
+                        "862da5acfffffff\t2\n" +
+                        "862da5aefffffff\t2" +
                         "";
         String filePath = "../data/result/坐标_" + System.currentTimeMillis();
 

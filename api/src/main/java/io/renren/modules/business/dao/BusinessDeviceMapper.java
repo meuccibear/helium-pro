@@ -87,7 +87,7 @@ public interface BusinessDeviceMapper {
 
     List<BusinessDevice> selectAll();
 
-    int updateHex5ByAddress(@Param("updatedHex5") String updatedHex5, @Param("address") String address);
+    int updateHex5ByAddress(@Param("updatedHex5") String updatedHex5, @Param("addresss") List<String> addresss);
 
     List<BusinessDevice> selectAllByHex5(@Param("hex5s") List<String> hex5s);
 

@@ -8,6 +8,7 @@ import io.renren.modules.helium.domain.deviceConfig.activity.RestBean;
 import io.renren.modules.sys.api.HeliumApi;
 import lombok.extern.slf4j.Slf4j;
 import io.renren.modules.helium.domain.Device;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,11 +45,7 @@ public class NetworkDevice {
 
 
     public String request(String cursor) {
-        try {
-            FileUtils.writeln(getFilePath("cursor"), index + " " + cursor, true, true);
-        } catch (MsgException e) {
-            log.error("cursor~~", e);
-        }
+        FileUtils.writeln(getFilePath("cursor"), index + " " + cursor, true, true);
 
         RestBean restBean = (RestBean) new CounterUtil() {
             @Override
@@ -63,18 +60,15 @@ public class NetworkDevice {
         }.run(cursor);
 
         if (null == restBean || null == restBean.getData() || restBean.getData().size() == 0) {
+            FileUtils.writeln(getFilePath("请求失败"), index + " " + cursor, true, true);
             try {
-                FileUtils.writeln(getFilePath("请求失败"), index + " " + cursor, true, true);
-                try {
-                    Thread.sleep(1000 * 60 * 60);
-                    log.info("休息了 1000 * 60 * 60 毫秒~~");
-                } catch (InterruptedException e) {
-                    log.error("休息错误~~", e);
-                }
-                return cursor;
-            } catch (MsgException e) {
-                log.error("请求失败~~", e);
+                Thread.sleep(1000 * 60 * 60);
+                log.info("休息了 1000 * 60 * 60 毫秒~~");
+            } catch (InterruptedException e) {
+                log.error("休息错误~~", e);
             }
+            return cursor;
+
         }
         cache(restBean, cursor);
         return restBean.getCursor();
@@ -92,12 +86,7 @@ public class NetworkDevice {
                 FileUtils.writeln(getFilePath(String.valueOf(index)), JSON.toJSONString(device), true, true);
             } catch (Exception e) {
                 log.error("数据写入错误~~", e);
-                try {
-                    FileUtils.writeln(getFilePath("error"), index + " " + device.getRequestCursor(), true, true);
-                } catch (MsgException ex) {
-                    log.error("错误信息写入错误~~", ex);
-                    return false;
-                }
+                FileUtils.writeln(getFilePath("error"), index + " " + device.getRequestCursor(), true, true);
                 return false;
             }
         }

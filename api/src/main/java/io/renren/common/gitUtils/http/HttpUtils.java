@@ -6,7 +6,6 @@ import com.alibaba.fastjson.TypeReference;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.DateUtils;
 import io.renren.common.gitUtils.ObjectUtils;
-import io.renren.common.gitUtils.exception.MsgException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -77,11 +76,11 @@ public class HttpUtils {
      * @author Mr.Lv lvzhuozhuang@foxmail.com
      * @updateTime 2022/4/12 3:37
      */
-    public HttpResultData send(Method method, String url) throws MsgException {
+    public HttpResultData send(Method method, String url) {
         return send(method, url, null);
     }
 
-    public HttpResultData send(Method method, String url, Object entityParameter) throws MsgException {
+    public HttpResultData send(Method method, String url, Object entityParameter) {
         return send(method, url, entityParameter, null);
     }
 
@@ -89,7 +88,7 @@ public class HttpUtils {
         return null;
     }
 
-    public HttpResultData send(Method method, String url, Object entityParameter, Map<String, String> headers) throws MsgException {
+    public HttpResultData send(Method method, String url, Object entityParameter, Map<String, String> headers) {
         LocalDateTime now = LocalDateTime.now();
 
         Long time = DateUtils.localDateTimeToTimestamp(now);
@@ -114,25 +113,25 @@ public class HttpUtils {
      *
      * @param url 链接
      * @return 字节流
-     * @throws MsgException 异常信息
+     * @throws IllegalArgumentException 异常信息
      */
-    public byte[] getFile(String url) throws MsgException {
+    public byte[] getFile(String url) {
         //通过输入流获取图片数据
         InputStream inStream = url(url);
         //得到图片的二进制数据，以二进制封装得到数据，具有通用性
         return Option.readInputStream(inStream);
     }
 
-    public BufferedImage getImg(String url) throws MsgException {
+    public BufferedImage getImg(String url) {
         //得到图片的二进制数据，以二进制封装得到数据，具有通用性
         try {
             return ImageIO.read(url(url));
         } catch (IOException e) {
-            throw new MsgException("数据流异常~");
+            throw new IllegalArgumentException("数据流异常~");
         }
     }
 
-    public InputStream url(String url) throws MsgException {
+    public InputStream url(String url) {
 
         try {
             // 将string转成url对象
@@ -147,14 +146,14 @@ public class HttpUtils {
             return connection.getInputStream();
 
         } catch (SocketException e) {
-            throw new MsgException("链接不能访问~");
+            throw new IllegalArgumentException("链接不能访问~");
         } catch (FileNotFoundException e) {
-            throw new MsgException("链接文件不存在~");
+            throw new IllegalArgumentException("链接文件不存在~");
         } catch (UnknownHostException e) {
             if (getSetting().isProxy()) {
-                throw new MsgException(String.format("代理：%s 不能访问~", getSetting().generateProxyAddr()));
+                throw new IllegalArgumentException(String.format("代理：%s 不能访问~", getSetting().generateProxyAddr()));
             } else {
-                throw new MsgException("链接不能访问~");
+                throw new IllegalArgumentException("链接不能访问~");
             }
         } catch (Exception e) {
             LOGGER.error("发送GET请求出现异常！" + e);
@@ -170,7 +169,7 @@ public class HttpUtils {
      * @param url 链接
      * @return 返回的字符串
      */
-    public String getStr(String url) throws MsgException {
+    public String getStr(String url) {
 
         InputStream inStream = url(url);
 
@@ -246,7 +245,7 @@ public class HttpUtils {
             return ObjectUtils.notIsEmpty(proxyID) ? "./proxyAddr_" + proxyID : "";
         }
 
-        public String getProxyAddr() throws MsgException {
+        public String getProxyAddr() {
             String filePath = getFilePath();
             if (ObjectUtils.isEmpty(filePath)) {
                 return generateProxyAddr();
@@ -254,11 +253,11 @@ public class HttpUtils {
             return FileUtils.readLine(filePath);
         }
 
-        public String generateProxyAddr() throws MsgException {
+        public String generateProxyAddr() {
             return "127.0.0.1:8866";
         }
 
-        public String refresh() throws MsgException {
+        public String refresh() {
             String proxyAddrConfig = generateProxyAddr();
             log.info("代理地址{}", proxyAddrConfig);
             if (ObjectUtils.notIsEmpty(getFilePath())) {
@@ -268,7 +267,7 @@ public class HttpUtils {
             return proxyAddrConfig;
         }
 
-        RequestConfig setingRequestConfig() throws MsgException {
+        RequestConfig setingRequestConfig() {
             String proxyAddrConfig = getProxyAddr();
             log.info("【proxyAddrConfig】{}", proxyAddrConfig);
             if (ObjectUtils.isEmpty(proxyAddrConfig)) {
@@ -313,7 +312,7 @@ public class HttpUtils {
          * @author Mr.Lv lvzhuozhuang@foxmail.com
          * @updateTime 2022/4/12 3:35
          */
-        public HttpResultData initHttp(Method method, String url, Object entityParameter, Map<String, String> headers, Integer errFrequency) throws MsgException {
+        public HttpResultData initHttp(Method method, String url, Object entityParameter, Map<String, String> headers, Integer errFrequency) {
             HttpUriRequest request;
             switch (method) {
                 case GET:
@@ -353,7 +352,7 @@ public class HttpUtils {
                             UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(ps, "UTF-8");
                             stringEntity = urlEncodedFormEntity;
                         } catch (UnsupportedEncodingException e) {
-                            throw new MsgException("不支持的编码异常");
+                            throw new IllegalArgumentException("不支持的编码异常");
                         }
                     }
 
@@ -405,9 +404,9 @@ public class HttpUtils {
                         refresh();
                         return initHttp(method, url, entityParameter, headers, errFrequency);
                     }
-                    throw new MsgException("连接失败！", e);
+                    throw new IllegalArgumentException("连接失败！", e);
                 } else {
-                    throw new MsgException("Execute异常！", e);
+                    throw new IllegalArgumentException("Execute异常！", e);
                 }
             }
 
@@ -419,7 +418,7 @@ public class HttpUtils {
             try {
                 result = EntityUtils.toString(entity, "UTF-8");
             } catch (IOException e) {
-                throw new MsgException("IO异常");
+                throw new IllegalArgumentException("IO异常");
             }
 
             //获取响应码
@@ -434,7 +433,7 @@ public class HttpUtils {
                     }
                     return initHttp(method, url, entityParameter, headers, errFrequency);
                 }
-                throw new MsgException(String.format("\n【请求出错】\n状态码：%d\nresult:%s", statusCode, result));
+                throw new IllegalArgumentException(String.format("\n【请求出错】\n状态码：%d\nresult:%s", statusCode, result));
             }
 
             return new HttpResultData(statusCode, result, Option.getCookie(store));

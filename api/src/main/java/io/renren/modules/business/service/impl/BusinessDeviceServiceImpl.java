@@ -26,12 +26,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
+
 import io.renren.modules.business.entity.BusinessDevice;
 import io.renren.modules.business.service.BusinessDeviceService;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
 
 @Slf4j
@@ -214,7 +217,8 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         Map<Object, List<Object>> obgM = JSONUtils.classify(devices, "depllist", "address");
 
         for (Object o : obgM.keySet().toArray()) {
-            businessDeviceMapper.updateDepllistByAddress(ObjectUtils.notIsEmpty(o) ? (Integer) o : null, BeanUtils.toJavaObject(obgM.get(o), new TypeReference<List<String>>() {}));
+            businessDeviceMapper.updateDepllistByAddress(ObjectUtils.notIsEmpty(o) ? (Integer) o : null, BeanUtils.toJavaObject(obgM.get(o), new TypeReference<List<String>>() {
+            }));
         }
     }
 
@@ -223,7 +227,8 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         Map<Object, List<Object>> obgM = JSONUtils.classify(devices, "total24h", "address");
 
         for (Object o : obgM.keySet().toArray()) {
-            businessDeviceMapper.updateTotal24hByAddress((BigDecimal) o, BeanUtils.toJavaObject(obgM.get(o), new TypeReference<List<String>>() {}));
+            businessDeviceMapper.updateTotal24hByAddress((BigDecimal) o, BeanUtils.toJavaObject(obgM.get(o), new TypeReference<List<String>>() {
+            }));
         }
     }
 
@@ -393,15 +398,11 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
                         return heliumApi.denylist((String) data);
                     }
                 }.run(address);
-                try {
 
-                    if (ObjectUtils.notIsEmpty(denylistB)) {
-                        FileUtils.writeln(filePath + "denylist.csv", StringUtils.outStr(",", address, denylistB), true, true);
-                    } else {
-                        FileUtils.writeln(filePath + "err", StringUtils.outStr(",", address, denylistB), true, true);
-                    }
-                } catch (MsgException e) {
-                    e.printStackTrace();
+                if (ObjectUtils.notIsEmpty(denylistB)) {
+                    FileUtils.writeln(filePath + "denylist.csv", StringUtils.outStr(",", address, denylistB), true, true);
+                } else {
+                    FileUtils.writeln(filePath + "err", StringUtils.outStr(",", address, denylistB), true, true);
                 }
             }
         }

@@ -1,32 +1,22 @@
 package io.renren.common;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.uber.h3core.H3Core;
 import io.renren.common.gitUtils.*;
-import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
-import io.renren.common.gitUtils.map.NumMap;
-import io.renren.modules.helium.GeoCoord;
 import io.renren.modules.helium.HexUtils;
 import io.renren.modules.helium.HotsPottyHttpUtils;
-import io.renren.modules.helium.NumUtils;
 import io.renren.modules.helium.domain.Device;
-import io.renren.modules.helium.domain.HotspotsProfit;
 import io.renren.modules.helium.domain.LeanData;
 import io.renren.modules.helium.domain.Result;
 import io.renren.modules.sys.entity.DataHttp;
 import io.renren.modules.sys.service.DataHttpService;
 import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,7 +86,7 @@ public class HeliumHttpUtils extends HttpUtils {
 //            setAutomaticExceptionHandling(false);
         }
 
-        public String generateProxyAddr() throws MsgException {
+        public String generateProxyAddr() {
             try {
 //                String dp = AuthFactory.build().get_dp();
 //                HttpResultData httpResultData = new HttpUtils().send(Method.GET, "http://tps.kdlapi.com/api/gettps/?orderid=934995251093492&num=1&signature=9yuleppjwfa8do8nsmwoirlfjco89d1a&pt=1&format=json&sep=1");
@@ -111,7 +101,7 @@ public class HeliumHttpUtils extends HttpUtils {
                 return dp;
             } catch (Exception e) {
                 log.error("获取快代理IP失败！", e);
-                throw new MsgException("获取快代理IP失败！");
+                throw new IllegalArgumentException("获取快代理IP失败！");
             }
         }
     };
@@ -145,7 +135,7 @@ public class HeliumHttpUtils extends HttpUtils {
      * @author Mr.Lv lvzhuozhuang@foxmail.com
      * @updateTime 2022/4/12 12:09
      */
-    public List<LeanData> getCHexsByHex(String parentHex, int res) throws MsgException {
+    public List<LeanData> getCHexsByHex(String parentHex, int res) {
         //获取该CHex的父级分辨率
 
         String sonHex = HexUtils.h3.h3ToCenterChild(HexUtils.h3.h3ToParentAddress(parentHex, 4), 12);
@@ -180,13 +170,7 @@ public class HeliumHttpUtils extends HttpUtils {
     }
 
     public Result getResult(Website website, String url) {
-        String result = null;
-        try {
-            result = get(website, url);
-        } catch (MsgException e) {
-            log.error("【请求接口错误】 ", e);
-            return null;
-        }
+        String result = get(website, url);
         return BeanUtils.toJavaObject(result, new TypeReference<Result>() {
         });
     }
@@ -194,11 +178,11 @@ public class HeliumHttpUtils extends HttpUtils {
 //    http=tps432.kdlapi.com:15818;https=tps432.kdlapi.com:15818
 
 
-    public String get(Website website, String url) throws MsgException {
+    public String get(Website website, String url) {
         return get(website, url, null);
     }
 
-    public String get(Website website, String url, Map<String, String> parameter) throws MsgException {
+    public String get(Website website, String url, Map<String, String> parameter) {
         HttpResultData httpResultData;
         httpResultData = send(Method.GET, website.getValue() + url, parameter);
 //        if (httpResultData.getStatus() == 407) {
@@ -214,10 +198,10 @@ public class HeliumHttpUtils extends HttpUtils {
 
     }
 
-    public JSONObject client(String address) throws MsgException {
+    public JSONObject client(String address) {
         HttpResultData httpResultData;
         httpResultData = send(Method.GET, String.format("http://23.248.162.239:8797/client/%s", address), null);
-        if(httpResultData.getStatus() != 200){
+        if (httpResultData.getStatus() != 200) {
 //            return "err_" + httpResultData.getStatus();
             return null;
         }
@@ -235,18 +219,15 @@ public class HeliumHttpUtils extends HttpUtils {
 //        return String.valueOf(JSONUtils.getJSONObject(jsonObject, "client.usesig"));
     }
 
-    public HttpResultData post() throws MsgException {
+    public HttpResultData post() {
         return send(HttpUtils.Method.POST, "http://165.154.41.169:4949", "{\"jsonrpc\":\"2.0\",\"id\":\"id\",\"method\":\"peer_ping\",\"params\": {\"addr\":\"/p2p/112FSx6xeGeA2mGaQgp8aocX8fYv2uBSmsdKdNJFGfTYQwbnshd9\"}}");
     }
 
     public void test() {
         for (int i = 0; i < 100; i++) {
             // 普通 Get 请求
-            try {
-                send(Method.GET, "http://118.193.33.251:8080/test.json");
-            } catch (MsgException e) {
-                e.printStackTrace();
-            }
+            send(Method.GET, "http://118.193.33.251:8080/test.json");
+
         }
         // 普通 Get 请求
 //        send(Method.GET, "https://explorer-api.helium.com/api/makers");

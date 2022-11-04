@@ -25,16 +25,16 @@ public class FileUtils {
         }
     }
 
-    public static void writeln(String filePath, String context, boolean notExistCreateFile, boolean append) throws MsgException {
+    public static void writeln(String filePath, String context, boolean notExistCreateFile, boolean append) {
         createTxt(filePath);
         write(filePath, context + "\n", notExistCreateFile, append);
     }
 
-    public static void write(String filePath, String context, boolean notExistCreateFile, boolean append) throws MsgException {
+    public static void write(String filePath, String context, boolean notExistCreateFile, boolean append) {
         try {
             org.apache.commons.io.FileUtils.write(getFile(filePath), context, "UTF-8", append);
         } catch (IOException e) {
-            throw new MsgException(e.getMessage());
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
@@ -42,7 +42,7 @@ public class FileUtils {
         return BeanUtils.toJSONObject(readLine(filePath));
     }
 
-    public static String readLine(String filePath) throws MsgException {
+    public static String readLine(String filePath) {
         List<String> strings = readLines(filePath);
         StringBuffer sb = new StringBuffer();
         for (String string : strings) {
@@ -54,12 +54,12 @@ public class FileUtils {
         return "";
     }
 
-    public static List<String> readLines(String filePath) throws MsgException {
+    public static List<String> readLines(String filePath) {
         List<String> strings = null;
         try {
             strings = org.apache.commons.io.FileUtils.readLines(getFile(filePath), "UTF-8");
         } catch (IOException e) {
-            throw new MsgException(e.getMessage());
+            throw new IllegalArgumentException(e.getMessage());
         }
 //        logger.info("strings:\t" + JSON.toJSONString(strings));
 //        logger.info("strings:\t" + strings.size());
@@ -90,7 +90,7 @@ public class FileUtils {
      * @return
      * @throws MsgException
      */
-    public static File getFile(String filePath) throws MsgException {
+    public static File getFile(String filePath) {
         File file = new File(filePath);
 //        System.out.println(file.getPath());
 //        System.out.println(file.getParentFile().getParentFile().getParentFile());
@@ -104,7 +104,7 @@ public class FileUtils {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                throw new MsgException("IO异常~ " + e.getMessage());
+                throw new IllegalArgumentException("IO异常~ " + e.getMessage());
             }
         } else {
             file.mkdir();
@@ -114,9 +114,9 @@ public class FileUtils {
     }
 
 
-    public static void exceptionPromptThrown(String msg) throws MsgException {
+    public static void exceptionPromptThrown(String msg) {
         if (exceptionThrow) {
-            throw new MsgException(msg);
+            throw new IllegalArgumentException(msg);
         } else {
             logger.info(msg);
         }

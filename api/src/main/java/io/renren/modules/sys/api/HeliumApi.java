@@ -53,7 +53,7 @@ public class HeliumApi {
      * @author Mr.Lv lvzhuozhuang@foxmail.com
      * @updateTime 2022/3/15 7:18
      */
-    public Device getHotspotsByAddress(String address) throws MsgException {
+    public Device getHotspotsByAddress(String address) {
         JSONObject result = (JSONObject) getResultV("getHotspotsByAddress", address);
         return BeanUtils.toJavaObject(JSONUtils.jsGetData(result, "data"), new TypeReference<Device>() {
         });
@@ -286,7 +286,7 @@ public class HeliumApi {
         return new JSONObject();
     }
 
-    public Object getResultV(String apiKey, Object... data) throws MsgException {
+    public Object getResultV(String apiKey, Object... data) {
         HttpResultData httpResultData = websiteApiService.sendV(apiKey, data);
         if (httpResultData.getStatus() != 200) {
             try {

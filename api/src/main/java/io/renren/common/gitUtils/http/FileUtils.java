@@ -1,12 +1,11 @@
 package io.renren.common.gitUtils.http;
 
 import com.alibaba.fastjson.JSONObject;
-import io.renren.common.gitUtils.BeanUtils;
+import io.renren.common.gitUtils.JSONUtils;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;

@@ -8,16 +8,13 @@
 
 package io.renren;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import io.renren.business.domin.BusinessLogDTO;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.DateUtils;
+import io.renren.common.gitUtils.JSONUtils;
 import io.renren.common.gitUtils.exception.MsgException;
-import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.modules.business.dao.BusinessDeviceDao;
-import io.renren.modules.business.entity.BusinessDevice;
-//import io.renren.common.HeliumHttpUtils;
 import io.renren.modules.business.entity.BusinessLog;
 import io.renren.modules.sys.api.HeliumApi;
 import io.renren.modules.sys.service.GlobalDeviceService;

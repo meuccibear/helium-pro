@@ -49,7 +49,7 @@ public class BeanUtils {
         if (values != null) {
             for (Object o : values) {
                 if (null != o) {
-                    jsonObject.putAll(toJSONObject(o));
+                    jsonObject.putAll(JSONUtils.toJSONObject(o));
                 }
             }
         }
@@ -66,7 +66,7 @@ public class BeanUtils {
         if (values != null) {
             for (Object o : values) {
                 if (null != o) {
-                    jsonObject.putAll(toJSONObject(o));
+                    jsonObject.putAll(JSONUtils.toJSONObject(o));
                 }
             }
         }
@@ -78,8 +78,8 @@ public class BeanUtils {
         if (null == parameter) {
             return toJavaObject("{}", type);
         }
-        JSONObject parameterJson = BeanUtils.toJSONObject(parameter);
-        JSONObject dataJson = BeanUtils.toJSONObject(data);
+        JSONObject parameterJson = JSONUtils.toJSONObject(parameter);
+        JSONObject dataJson = JSONUtils.toJSONObject(data);
         for (String s : parameterJson.keySet()) {
             parameterJson.put(s, dataJson.get(s));
         }
@@ -152,84 +152,5 @@ public class BeanUtils {
         }
         return JSONArray.parseArray(json);
     }
-
-    public static JSONObject toJSONObject(Object data) {
-        String json;
-        if (data instanceof String) {
-            json = (String) data;
-//        } else if (data instanceof JSONObject) {
-//            return (JSONObject) data;
-        } else {
-            json = JSONObject.toJSONString(data);
-        }
-
-        return JSONObject.parseObject(json);
-    }
-
-    public static JSONArray toJSONArray(Object data) {
-        String json;
-        if (data instanceof String) {
-            json = (String) data;
-        } else {
-            json = JSONObject.toJSONString(data);
-        }
-
-        return JSONArray.parseArray(json);
-    }
-
-    public static Object getData(JSONObject jsonObject, String str) {
-        String[] colNames = str.split("\\.");
-
-        JSONObject resultData = null;
-        for (int i = 0; i < colNames.length; i++) {
-            if (i + 1 == colNames.length) {
-                if (ObjectUtils.notIsEmpty(resultData)) {
-                    return resultData.get(colNames[i]);
-                } else {
-                    return jsonObject.get(colNames[i]);
-                }
-            } else {
-                resultData = jsonObject.getJSONObject(colNames[i]);
-            }
-        }
-        return null;
-    }
-
-    public static Integer getInt(JSONObject jsonObject, String str) {
-        String[] colNames = str.split("\\.");
-
-        JSONObject resultData = null;
-        for (int i = 0; i < colNames.length; i++) {
-            if (i + 1 == colNames.length) {
-                if (ObjectUtils.notIsEmpty(resultData)) {
-                    return resultData.getInteger(colNames[i]);
-                } else {
-                    return jsonObject.getInteger(colNames[i]);
-                }
-            } else {
-                resultData = jsonObject.getJSONObject(colNames[i]);
-            }
-        }
-        return 0;
-    }
-
-    public static Double getDouble(JSONObject jsonObject, String str) {
-        String[] colNames = str.split("\\.");
-
-        JSONObject resultData = null;
-        for (int i = 0; i < colNames.length; i++) {
-            if (i + 1 == colNames.length) {
-                if (ObjectUtils.notIsEmpty(resultData)) {
-                    return resultData.getDouble(colNames[i]);
-                } else {
-                    return jsonObject.getDouble(colNames[i]);
-                }
-            } else {
-                resultData = jsonObject.getJSONObject(colNames[i]);
-            }
-        }
-        return 0.00;
-    }
-
 
 }

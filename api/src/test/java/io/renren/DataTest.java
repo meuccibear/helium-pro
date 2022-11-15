@@ -89,7 +89,7 @@ public class DataTest {
         BusinessLogDTO businessLogDTO = BeanUtils.toJavaObject("{\"loratm\":1659435301.8079479}", new TypeReference<BusinessLogDTO>() {{
         }});
 
-        System.out.println(BeanUtils.toJSONObject(businessLogDTO));
+        System.out.println(JSONUtils.toJSONObject(businessLogDTO));
 //        Map<String, String> parameter = new HashMap<>();
 //        parameter.put("address", "${address}");
 //        parameter.put("min_time", "-30 day");

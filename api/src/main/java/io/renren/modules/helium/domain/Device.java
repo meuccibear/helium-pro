@@ -76,7 +76,7 @@ public class Device extends BasicBean {
     @Override
     public String toString() {
 
-        JSONObject jsonObject = BeanUtils.toJSONObject(this);
+        JSONObject jsonObject = JSONUtils.toJSONObject(this);
         List<String> WLV = new ArrayList<>();
         String[] clos = "index,blacklistedBatch,mac,privateIp,publicIp,network,name,total,lng,lat,nonce,owner,address,location_hex".split(",");
         for (String clo : clos) {

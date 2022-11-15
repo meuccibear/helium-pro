@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
 import lombok.extern.slf4j.Slf4j;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,64 +34,7 @@ public class JSONUtils {
             default:
                 return new JsonObject();
         }
-
     }
-
-    /**
-     * 获取 集合
-     *
-     * @param jsonObject
-     * @param str
-     * @return
-     */
-//    public static JSONArray jsGetData(JSONObject jsonObject, String str) {
-//        String[] colNames = str.split("\\.");
-//        JSONObject resultData = null;
-//        for (int i = 0; i < colNames.length; i++) {
-//            if (i + 1 == colNames.length) {
-//                if (ObjectUtils.notIsEmpty(resultData)) {
-//                    return resultData.getJSONArray(colNames[i]);
-//                } else {
-//                    return jsonObject.getJSONArray(colNames[i]);
-//                }
-//            } else {
-//                resultData = jsonObject.getJSONObject(colNames[i]);
-//            }
-//        }
-//        return new JSONArray();
-//    }
-
-    /**
-     * 数组方式获取参数
-     * @param data
-     * @param keys
-     * @return
-     */
-//    public static Object jsGetData(Object data, String... keys) {
-//        return jsGetData(BeanUtils.toJSONObject(data), keys);
-//    }
-//
-//    /**
-//     * 数组方式获取参数
-//     * @param jsonObject
-//     * @param keys
-//     * @return
-//     */
-//    public static Object jsGetData(JSONObject jsonObject, String... keys) {
-//        if (null != keys) {
-//            String key = "";
-//            for (int i = 0; i < keys.length; i++) {
-//                key = keys[i];
-//                if (i < keys.length) {
-//                    return jsonObject.get(key);
-//                } else {
-//                    jsonObject = jsonObject.getJSONObject(key);
-//                }
-//            }
-//        }
-//        return jsonObject;
-//    }
-
 
     /**
      * js方式获取参数
@@ -104,7 +46,7 @@ public class JSONUtils {
      */
     public static Object jsGetData(Object jsonObject, String str) {
         if (!(jsonObject instanceof Map) && ObjectUtils.notIsEmpty(jsonObject)) {
-            jsonObject = BeanUtils.toJSONObject(jsonObject);
+            jsonObject = JSONUtils.toJSONObject(jsonObject);
         }
 
         String[] colNames = str.split("\\.");
@@ -138,15 +80,23 @@ public class JSONUtils {
         }
         Object value = jsonObject.get(key);
         if (value instanceof JSONObject) {
-            return (JSONObject) value;
+            return value;
         } else if (value instanceof Map) {
             return new JSONObject((Map) value);
         } else if (value instanceof JSONArray) {
-            return (JSONArray) value;
+            return value;
         } else if (value instanceof List) {
             return new JSONArray((List) value);
         }
         return value;
+    }
+
+    public static void toCsv(String filePath,List<String> keys, Object... datas) {
+        if (ObjectUtils.notIsEmpty(datas)) {
+            for (Object data : datas) {
+                toCsv(filePath, data, keys);
+            }
+        }
     }
 
     public static void toCsv(String filePath, Object... datas) {
@@ -159,7 +109,7 @@ public class JSONUtils {
     }
 
     public static List<String> toCsvTitle(String filePath, Object data) {
-        JSONObject jsonObject = BeanUtils.toJSONObject(data);
+        JSONObject jsonObject = JSONUtils.toJSONObject(data);
         List<String> keys = BeanUtils.toJavaObject(jsonObject.keySet().toArray(), new TypeReference<List<String>>() {{
         }});
         log.info("keys:{}", JSONObject.toJSONString(keys));
@@ -167,9 +117,15 @@ public class JSONUtils {
         return keys;
     }
 
+    public static List<String> toCsvTitle(String filePath, List<String> keys) {
+        log.info("keys:{}", JSONObject.toJSONString(keys));
+        FileUtils.writeln(filePath + ".csv", StringUtils.outStr(",", keys.toArray()), true, false);
+        return keys;
+    }
+
     public static void toCsv(String filePath, Object data, List<String> keys) {
         List<Object> values = new ArrayList<>();
-        JSONObject jsonObject = BeanUtils.toJSONObject(data);
+        JSONObject jsonObject = JSONUtils.toJSONObject(data);
         for (String key : keys) {
             values.add(jsonObject.get(key));
         }
@@ -180,12 +136,19 @@ public class JSONUtils {
 
     public static void main(String[] args) throws MsgException {
         String json = "{\"end_epoch\":1287370,\"start_epoch\":1287340,\"time\":1648533868,\"type\":\"rewards_v2\",\"rewards\":[{\"amount\":337194,\"type\":\"poc_challengers\",\"gateway\":\"112NiSFKmeSoWwoxu7PQQkXwYJQZVqbQkBshMuBbekfWagp4rgGh\",\"account\":\"1353qQSW2iacyi5yULP3nqGSsZdRoi82Po8ioJer2RAGnM3ufRp\"}],\"hash\":\"2ghJ843e17xfuURveN96RvTytMFUUAxOdsKihkym04U\",\"height\":1287371}";
-        toCsv("./asd", BeanUtils.toJSONObject(json));
+        toCsv("./asd", JSONUtils.toJSONObject(json));
     }
 
+    /**
+     * 根据指定列（keyColName）分类 ?(valueColName)
+     *
+     * @param list
+     * @param keyColName
+     * @param valueColName
+     * @return 分类
+     */
     public static Map<Object, List<Object>> classify(List list, String keyColName, String valueColName) {
-        JSONArray jsonArray = BeanUtils.toJSONArray(list);
-
+        JSONArray jsonArray = JSONUtils.toJSONArray(list);
 
         JSONObject jsonObject;
         Object key;
@@ -208,4 +171,90 @@ public class JSONUtils {
         }
         return obgM;
     }
+
+    public static Integer getInt(JSONObject jsonObject, String str) {
+        String[] colNames = str.split("\\.");
+
+        JSONObject resultData = null;
+        for (int i = 0; i < colNames.length; i++) {
+            if (i + 1 == colNames.length) {
+                if (ObjectUtils.notIsEmpty(resultData)) {
+                    return resultData.getInteger(colNames[i]);
+                } else {
+                    return jsonObject.getInteger(colNames[i]);
+                }
+            } else {
+                resultData = jsonObject.getJSONObject(colNames[i]);
+            }
+        }
+        return 0;
+    }
+
+    public static Double getDouble(JSONObject jsonObject, String str) {
+        String[] colNames = str.split("\\.");
+
+        JSONObject resultData = null;
+        for (int i = 0; i < colNames.length; i++) {
+            if (i + 1 == colNames.length) {
+                if (ObjectUtils.notIsEmpty(resultData)) {
+                    return resultData.getDouble(colNames[i]);
+                } else {
+                    return jsonObject.getDouble(colNames[i]);
+                }
+            } else {
+                resultData = jsonObject.getJSONObject(colNames[i]);
+            }
+        }
+        return 0.00;
+    }
+
+    public static JSONObject toJSONObject(Object data) {
+        String json;
+        if (data instanceof String) {
+            json = (String) data;
+//        } else if (data instanceof JSONObject) {
+//            return (JSONObject) data;
+        } else {
+            json = JSONObject.toJSONString(data);
+        }
+
+        return JSONObject.parseObject(json);
+    }
+
+    public static JSONArray toJSONArray(Object data) {
+        String json;
+        if (data instanceof String) {
+            json = (String) data;
+        } else {
+            json = JSONObject.toJSONString(data);
+        }
+
+        return JSONArray.parseArray(json);
+    }
+
+    /**
+     *
+     * 废弃
+     * @param jsonObject
+     * @param str
+     * @return
+     */
+    public static Object getData(JSONObject jsonObject, String str) {
+        String[] colNames = str.split("\\.");
+
+        JSONObject resultData = null;
+        for (int i = 0; i < colNames.length; i++) {
+            if (i + 1 == colNames.length) {
+                if (ObjectUtils.notIsEmpty(resultData)) {
+                    return resultData.get(colNames[i]);
+                } else {
+                    return jsonObject.get(colNames[i]);
+                }
+            } else {
+                resultData = jsonObject.getJSONObject(colNames[i]);
+            }
+        }
+        return null;
+    }
+
 }

@@ -39,7 +39,7 @@ public class FileUtils {
     }
 
     public static JSONObject readJSONO(String filePath) throws MsgException {
-        return BeanUtils.toJSONObject(readLine(filePath));
+        return JSONUtils.toJSONObject(readLine(filePath));
     }
 
     public static String readLine(String filePath) {
@@ -145,7 +145,7 @@ public class FileUtils {
     }
 
 //    public static void main(String[] args) {
-//        createTxt("./data\\asdasd/asd");
+//        createTxt("../data\\asdasd/asd");
 //    }
 
 }

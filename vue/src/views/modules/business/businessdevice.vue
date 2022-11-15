@@ -236,7 +236,7 @@
           label="内网IP">
         </el-table-column>
         <el-table-column
-          prop="真实ip"
+          prop="ip"
           v-if="isAuth('business:businessdevice:ip')"
           header-align="center"
           align="center"
@@ -244,7 +244,7 @@
           width="120"
           :sort-method="sortByIP"
           :show-overflow-tooltip="true"
-          label="ip">
+          label="真实ip">
         </el-table-column>
         <el-table-column
           prop="total24h"

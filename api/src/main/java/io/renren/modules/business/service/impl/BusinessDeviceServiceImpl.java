@@ -413,7 +413,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
 
     @Override
     @Async("taskExecutor")
-    public void getDevice(Map<String, String> makersDictionary, Map<String, String> ownerNo, List<List<String>> lists, int index, String filePath) throws MsgException {
+    public void getDevice(Map<String, String> makersDictionary, Map<String, String> ownerNo, List<List<String>> lists, int index, String filePath) {
         List<String> addresss = lists.get(index);
         log.info(String.format("开始执行任务：hash值：%s 线程序号：%d任务量：%d", addresss.hashCode(), index, addresss.size()));
 
@@ -446,8 +446,6 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
                     // 对应钱包序号
                     FileUtils.writeln(filePath, StringUtils.outStr("\t", address, makersDictionary.get(device.getPayer()), de, clJson, device.getName().replaceAll("-", " "), device.getOwner(), ownerNo.get(device.getOwner()), device.getStatus().getOnline(), device.getStatus().getIp(), device.getGeocode().getLong_country(), device.getGeocode().getLong_city(), hotspotsTotal, device.getLat(), device.getLng(), device.getLocation_hex(), ObjectUtils.notIsEmpty(device.getLocation_hex()) ? HexUtils.h3.h3ToParentAddress(device.getLocation_hex(), 5) : ""), true, true);
                 } else {
-//                    System.out.println(device.getPayer());
-//                    log.info("device:{}", device);
                     // 基础
                     FileUtils.writeln(filePath, StringUtils.outStr("\t",
                                     address,

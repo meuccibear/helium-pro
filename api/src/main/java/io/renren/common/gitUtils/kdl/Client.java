@@ -89,7 +89,7 @@ public class Client {
         String[] res = this._get_base_res("GET", endpoint, params);
         if (res[1].equals("json")) {
             JSONObject data = new JSONObject(res[0]).getJSONObject("data");
-            com.alibaba.fastjson.JSONArray ipwhitelist = (com.alibaba.fastjson.JSONArray) JSONUtils.jsGetData(BeanUtils.toJSONObject(res[0]), "data.ipwhitelist");
+            com.alibaba.fastjson.JSONArray ipwhitelist = (com.alibaba.fastjson.JSONArray) JSONUtils.jsGetData(JSONUtils.toJSONObject(res[0]), "data.ipwhitelist");
             return ObjectUtils.isEmpty(ipwhitelist) ? new ArrayList() : BeanUtils.toJavaObject(ipwhitelist, new TypeReference<List<String>>(){{}});
         }
         return new ArrayList();

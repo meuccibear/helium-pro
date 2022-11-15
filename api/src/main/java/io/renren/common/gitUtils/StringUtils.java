@@ -213,7 +213,7 @@ public class StringUtils<resultMap> {
         if (ObjectUtils.isEmpty(str) || ObjectUtils.isEmpty(data)) {
             return null;
         }
-        JSONObject jsonObject = BeanUtils.toJSONObject(data);
+        JSONObject jsonObject = JSONUtils.toJSONObject(data);
         for (Object o : jsonObject.keySet().toArray()) {
             str = str.replaceAll(String.format("\\$\\{%s}", o), String.valueOf(jsonObject.get(o)));
         }

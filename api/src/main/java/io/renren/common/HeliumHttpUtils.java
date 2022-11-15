@@ -91,7 +91,7 @@ public class HeliumHttpUtils extends HttpUtils {
 //                String dp = AuthFactory.build().get_dp();
 //                HttpResultData httpResultData = new HttpUtils().send(Method.GET, "http://tps.kdlapi.com/api/gettps/?orderid=934995251093492&num=1&signature=9yuleppjwfa8do8nsmwoirlfjco89d1a&pt=1&format=json&sep=1");
 ////                log.info("获取代理信息~", JSON.toJSONString(httpResultData));
-//                JSONObject jsonObject = BeanUtils.toJSONObject(httpResultData.getResultV());
+//                JSONObject jsonObject = JSONUtils.toJSONObject(httpResultData.getResultV());
 //                Integer code = (Integer) JSONUtils.getJSONObject(jsonObject, "code");
 //                String dp = (String) JSONUtils.getJSONObject(jsonObject, "data.proxy_list.0");
 //                setAccount("767140550@qq.com", "Zp19491225");
@@ -208,9 +208,9 @@ public class HeliumHttpUtils extends HttpUtils {
         String[] split = httpResultData.getResult().split("\n");
 //        log.info("【split】", JSON.toJSONString(split));
 //        log.info("【split】",split[0]);
-        JSONObject jsonObject = BeanUtils.toJSONObject(BeanUtils.toJSONObject(split[0]));
+        JSONObject jsonObject = JSONUtils.toJSONObject(JSONUtils.toJSONObject(split[0]));
 //        log.info("【client】" + JSONUtils.getJSONObject(jsonObject, "client.usesig") + "\t" + JSONUtils.getJSONObject(jsonObject, "client.hid"));
-//        log.info(BeanUtils.toJSONObject(split[0]).getString("result"));
+//        log.info(JSONUtils.toJSONObject(split[0]).getString("result"));
 
 
 //        return StringUtils.outStr("\t", address, JSONUtils.getJSONObject(jsonObject, "client.usesig"), JSONUtils.getJSONObject(jsonObject, "client.hid"));

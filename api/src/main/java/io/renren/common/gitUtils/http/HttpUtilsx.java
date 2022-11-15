@@ -86,7 +86,7 @@ public class HttpUtilsx {
         return useKDL(3);
     }
 
-    public static String filePath = "./data/proxyAddr";
+    public static String filePath = "../data/proxyAddr";
 
     /**
      * @throws

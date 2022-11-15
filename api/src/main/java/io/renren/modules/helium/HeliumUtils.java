@@ -296,7 +296,7 @@ public class HeliumUtils {
 //            }
 //        }
 //
-////        FileUtils.write("./data/locations", JSON.toJSONString(locations));
+////        FileUtils.write("../data/locations", JSON.toJSONString(locations));
 //    }
 
     public static List<Role> roles(String hotspotsId, String cursorNo, int index) throws MsgException {
@@ -433,7 +433,7 @@ public class HeliumUtils {
     }
 
     //筛选 空的位置
-    //        HexUtils hexUtils = new HexUtils("./data/Hexs_shcz.txt");
+    //        HexUtils hexUtils = new HexUtils("../data/Hexs_shcz.txt");
     //        CompletedRewardsBean completedRewardsBean = hexUtils.getHex("85180cdbfffffff");
     //        GeoCoord geoCoord = getRandomDevice(completedRewardsBean);
     //        System.out.println(geoCoord.toString());

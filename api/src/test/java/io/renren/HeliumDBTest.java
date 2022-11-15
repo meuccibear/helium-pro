@@ -99,7 +99,7 @@ public class HeliumDBTest {
 //    @Test
 //    public void getHotspotsByAddress() throws MsgException {
 ////        heliumHttpUtils.getHotspotsByAddress("11KdepEV6ePzbCvBnoLD9fauw5j6wb44w4ckHFmNMGkGFYLVMtP");
-//        List<String> lines = FileUtils.readLines("./data/hotspotty.txt");
+//        List<String> lines = FileUtils.readLines("../data/hotspotty.txt");
 //
 //        Map<String,String> h = new HashMap<>();
 //        for (String line : lines) {

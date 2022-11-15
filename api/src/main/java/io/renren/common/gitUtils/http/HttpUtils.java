@@ -297,7 +297,7 @@ public class HttpUtils {
                 return uriBuilder.build();
             }
 
-            JSONObject parameterJson = BeanUtils.toJSONObject(parameter);
+            JSONObject parameterJson = JSONUtils.toJSONObject(parameter);
             for (String s : parameterJson.keySet()) {
                 uriBuilder.addParameter(s, String.valueOf(parameterJson.get(s)));
             }
@@ -343,7 +343,7 @@ public class HttpUtils {
                     //url请求
                     if (entityParameter instanceof Map && ObjectUtils.notIsEmpty(entityParameter)) {
                         try {
-                            JSONObject parameterJson = BeanUtils.toJSONObject(entityParameter);
+                            JSONObject parameterJson = JSONUtils.toJSONObject(entityParameter);
                             List<NameValuePair> ps = new ArrayList<>();
                             for (Object key : parameterJson.keySet().toArray()) {
                                 ps.add(new BasicNameValuePair((String) key, parameterJson.getString((String) key)));

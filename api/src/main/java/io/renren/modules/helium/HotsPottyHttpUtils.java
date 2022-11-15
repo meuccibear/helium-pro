@@ -74,7 +74,7 @@ public class HotsPottyHttpUtils extends HttpUtils {
         Result result = null;
         result = BeanUtils.toJavaObject(get(String.format("api/v1/hotspots/search-lean/?proximity_hex=%s", hex)), new TypeReference<Result>() {
         });
-        JSONArray datas = (JSONArray) JSONUtils.jsGetData(BeanUtils.toJSONObject(result), "data");
+        JSONArray datas = (JSONArray) JSONUtils.jsGetData(JSONUtils.toJSONObject(result), "data");
         JSONObject data;
         List<LeanData> leanDatas = new ArrayList<>();
         for (int i = 0; i < datas.size(); i++) {
@@ -98,7 +98,7 @@ public class HotsPottyHttpUtils extends HttpUtils {
         result = BeanUtils.toJavaObject(get(String.format("api/v1/hotspots/search-lean/?proximity_hex=%s", hex)), new TypeReference<Result>() {
         });
         StringUtils.writeList("\t", "【data】", JSON.toJSONString(result.getData()));
-        JSONArray datas = (JSONArray) JSONUtils.jsGetData(BeanUtils.toJSONObject(result), "data");
+        JSONArray datas = (JSONArray) JSONUtils.jsGetData(JSONUtils.toJSONObject(result), "data");
         JSONObject data;
         List<String> hotsPottyIds = new ArrayList<>();
         for (int i = 0; i < datas.size(); i++) {
@@ -119,7 +119,7 @@ public class HotsPottyHttpUtils extends HttpUtils {
         Result result = BeanUtils.toJavaObject(get(String.format("api/v1/hotspots/history/summary-v2/%s", hex)), new TypeReference<Result>() {
         });
         System.out.println(JSON.toJSONString(result.getData()));
-        JSONArray datas = (JSONArray) JSONUtils.jsGetData(BeanUtils.toJSONObject(result), "data");
+        JSONArray datas = (JSONArray) JSONUtils.jsGetData(JSONUtils.toJSONObject(result), "data");
         JSONObject data;
         List<String> hotsPottyIds = new ArrayList<>();
         for (int i = 0; i < datas.size(); i++) {

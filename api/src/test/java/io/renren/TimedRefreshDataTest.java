@@ -116,7 +116,7 @@ public class TimedRefreshDataTest {
 //                    true, true);
 //        }
 //        log.info(JSON.toJSONString(sourceCorpses));
-        List<String> lines = FileUtils.readLines("./data/hotspotty.txt");
+        List<String> lines = FileUtils.readLines("../data/hotspotty.txt");
 //
         List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(lines, 200), new TypeReference<List<List<String>>>() {{
         }});
@@ -139,7 +139,7 @@ public class TimedRefreshDataTest {
     public void dashboard() {
         String filePath = String.format("%s\\%d", "../data/result/", System.currentTimeMillis());
 //        List<String> sourceCorpses = globalDeviceService.selectHex5ByLongCountry("China");
-        List<String> sourceCorpses = FileUtils.readLines("./data/hex5s");
+        List<String> sourceCorpses = FileUtils.readLines("../data/hex5s");
 
         List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(sourceCorpses, 200), new TypeReference<List<List<String>>>() {{
         }});
@@ -225,7 +225,7 @@ public class TimedRefreshDataTest {
     @Test
     public void addHeliumGlobalDevicev2() {
 //        String filePath = String.format("%s\\%d", "../data/result", System.currentTimeMillis());
-//        List<String> cursors = FileUtils.readLines("./data/cursors");
+//        List<String> cursors = FileUtils.readLines("../data/cursors");
 //        log.info("查询到了{}条数据", cursors.size());
 ////        @Autowired
 ////        GlobalDeviceService globalDeviceService;

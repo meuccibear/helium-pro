@@ -1,16 +1,18 @@
 package io.renren.run;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.uber.h3core.H3Core;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.JSONUtils;
 import io.renren.common.gitUtils.ObjectUtils;
+import io.renren.common.gitUtils.StringUtils;
 import io.renren.common.gitUtils.http.FileUtils;
 import io.renren.modules.business.dao.BusinessDeviceMapper;
 import io.renren.modules.business.entity.BusinessDevice;
+import io.renren.modules.business.service.BusinessDeviceService;
+import io.renren.modules.business.service.MakersService;
 import io.renren.modules.helium.domain.Device;
 import io.renren.modules.sys.api.HeliumApi;
 import lombok.SneakyThrows;
@@ -21,7 +23,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,10 +35,18 @@ import java.util.Map;
 public class HexDemo {
 
     @Resource
+    Helium helium;
+
+    @Resource
     BusinessDeviceMapper businessDeviceMapper;
 
     @Autowired
     HeliumApi heliumApi;
+
+    @Autowired
+    MakersService makersService;
+    @Autowired
+    BusinessDeviceService businessDeviceService;
 
     @SneakyThrows
     @Before
@@ -47,9 +56,10 @@ public class HexDemo {
 
     H3Core h3Core;
 
-    String filePath = "../data/csv/";
+    String filePath = "../data";
+    String resultPath = filePath + "/result";
 
-    int res = 6;
+    int res = 5;
 
     /**
      * 更新数据库位置信息
@@ -80,18 +90,60 @@ public class HexDemo {
      */
     @Test
     public void getAroundDevice() {
-        List<String> lines = FileUtils.readLines("./data/aroundDevice.txt");
+        List<String> lines = FileUtils.readLines("../data/aroundDevice.txt");
         int k = 2;
-        String path = filePath + System.currentTimeMillis();
+        String path = String.format("%s/%d【周围设备】", resultPath, System.currentTimeMillis()) ;
         List<JSONObject> jsons = new ArrayList<>();
         for (String line : lines) {
             jsons.addAll(depley(line, res, k));
         }
-        JSONUtils.toCsv(path, jsons.toArray());
+
+        String[] keys = new String[]{"status", "corePoint", "hex5", "depllist", "twoLevelName", "ip",  "address", "total24h"};
+        List<String> strings = BeanUtils.toJavaObject(keys, new TypeReference<List<String>>() {{
+        }});
+        JSONUtils.toCsvTitle(path, strings);
+//        log.info("{}",JSON.toJSONString(strings));
+        JSONUtils.toCsv(path, strings, jsons.toArray());
+    }
+
+    @Test
+    public void getDevice() {
+        String filePath = String.format("%s/%d【设备信息】", resultPath, System.currentTimeMillis());
+
+        List<String> lines = FileUtils.readLines("../data/hotspotty.txt");
+        Map<String, String> makersDictionary = makersService.getMakersDictionary();
+        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(lines, 200), new TypeReference<List<List<String>>>(){{}});
+        List<String> tmp;
+        for (int i = 0; i < lists.size(); i++) {
+            tmp= lists.get(i);
+            if (tmp.size() > 0) {
+                log.info("num{}\t{}\t{}", i, tmp.size(), JSON.toJSONString(lists.get(i)));
+                businessDeviceService.getDevice(makersDictionary, new HashMap<>(), lists, i, filePath);
+            }
+        }
+    }
+
+    /**
+     * @throws
+     * @title 显示可用hex
+     * @description
+     * @author Mr.Lv lvzhuozhuang@foxmail.com
+     * @updateTime 2022/4/12 15:22
+     */
+    @Test
+    public void showAvailableHexs() {
+
+        String groupStr =
+                "852d12cbfffffff\t9\n" +
+                        "";
+        String filePath = String.format("%s/%d【坐标】", resultPath, System.currentTimeMillis());
+        List<List<String>> groupTable = StringUtils.toTableList(groupStr);
+
+        helium.getLocations(filePath, groupTable);
 
     }
 
-    public List<JSONObject> depley(String address, int res, int k) {
+    List<JSONObject> depley(String address, int res, int k) {
         Device device = heliumApi.getHotspotsByAddress(address);
         String hexR = h3Core.h3ToParentAddress(device.getLocation_hex(), res);
         log.info("中心点:{}", hexR);
@@ -102,7 +154,7 @@ public class HexDemo {
 
         List<JSONObject> jsons = new ArrayList<>();
         for (BusinessDevice businessDevice : devices) {
-            jsonObject = BeanUtils.toJSONObject(businessDevice);
+            jsonObject = JSONUtils.toJSONObject(businessDevice);
             jsonObject.put("corePoint", address);
             jsons.add(jsonObject);
         }

@@ -1,6 +1,5 @@
 package io.renren.modules.sys.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.StringUtils;
 import io.renren.common.gitUtils.exception.MsgException;
@@ -100,9 +99,6 @@ public class GlobalDeviceServiceImpl implements GlobalDeviceService {
                                 sourceCorps.getCountry(), sourceCorps.getCityId(), sourceCorps.getAddress(),
                                 sourceCorps.getBottomScanle(), sourceCorps.getCity(), (sourceCorps.getOfflinecount() / (sourceCorps.getCount() + 8))),
                         true, true);
-//                log.info(StringUtils.outStr("\t", sourceCorps.getHex(), sourceCorps.getCityId(), sourceCorps.getAddress(),
-//                        sourceCorps.getBottomScanle(), sourceCorps.getCount(), sourceCorps.getOfflinecount(), sourceCorps.getOnlinecount(),
-//                        sourceCorps.getCountry(), sourceCorps.getCity(), sourceCorps.getOfflinecount() / (sourceCorps.getCount() + 8)));
             }
         }
 

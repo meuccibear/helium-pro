@@ -1,0 +1,1 @@
+SELECT * FROM data_http where `status` != 200;

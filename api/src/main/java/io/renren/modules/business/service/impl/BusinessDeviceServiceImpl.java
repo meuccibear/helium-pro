@@ -198,6 +198,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
     @Override
     public void insertOrUpdate(List<BusinessDevice> devices) {
         for (BusinessDevice device : devices) {
+            device.setPingpai(null);
             insertOrUpdate(device);
         }
     }
@@ -262,10 +263,11 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
                     }
 
                     @Override
-                    public Object execute(Object data) throws Exception {
+                    public Object execute(Object data) {
                         return heliumApi.getHotspotsByAddress((String) data);
                     }
                 }.run(address);
+
                 deviceEntity = new BusinessDevice();
                 deviceEntity.setAddress(address);
                 if (ObjectUtils.notIsEmpty(device)) {

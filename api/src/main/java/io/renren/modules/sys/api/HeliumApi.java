@@ -84,7 +84,8 @@ public class HeliumApi {
 
         Result result = getResultKV("getEarningsByAddress", parameter);
 //        JSONArray jsonArray = (JSONArray) JSONUtils.jsGetData(jsonObject, "data");
-        JSONArray jsonArray = BeanUtils.toJavaObject(result.getData(), new TypeReference<JSONArray>() {{}});
+        JSONArray jsonArray = BeanUtils.toJavaObject(result.getData(), new TypeReference<JSONArray>() {{
+        }});
 
         List<HotspotsProfit> hotspotsProfits = BeanUtils.toJavaObject(jsonArray, new TypeReference<List<HotspotsProfit>>() {
         });
@@ -195,7 +196,7 @@ public class HeliumApi {
         for (LeanData byProximityHex : hotspotsByProximityHex) {
             List<String> nearbyHex = HexUtils.getNearbyHex(byProximityHex.getL(), 8);
             for (String hex : nearbyHex) {
-                log.info("parentHex:{}   res {}  {}" , parentHex, res, HexUtils.h3.h3ToParentAddress(hex, res));
+                log.info("parentHex:{}   res {}  {}", parentHex, res, HexUtils.h3.h3ToParentAddress(hex, res));
                 if (!nearbyHexs.contains(hex) && parentHex.equals(HexUtils.h3.h3ToParentAddress(hex, res))) {
                     nearbyHexs.add(hex);
                 }
@@ -288,14 +289,16 @@ public class HeliumApi {
 
     public Object getResultV(String apiKey, Object... data) {
         HttpResultData httpResultData = websiteApiService.sendV(apiKey, data);
-        if (httpResultData.getStatus() != 200) {
-            try {
-                Thread.sleep(60);
-            } catch (InterruptedException e) {
-            }
-            httpResultData = websiteApiService.sendV(apiKey, data);
-        }
-
+//        if (httpResultData.getStatus() != 200) {
+//            try {
+//                Thread.sleep(60);
+//            } catch (InterruptedException e) {
+//            }
+//            httpResultData = websiteApiService.sendV(apiKey, data);
+//        }
+//        if (httpResultData.getStatus() != 200) {
+//            throw new IllegalArgumentException(String.format("状态：%d result: %s", httpResultData.getStatus(), JSONObject.toJSONString(httpResultData)));
+//        }
         if (ObjectUtils.notIsEmpty(httpResultData.getResult())) {
             return BeanUtils.toJSON(httpResultData.getResult());
         }

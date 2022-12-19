@@ -134,8 +134,36 @@ public class HexDemo {
     public void showAvailableHexs() {
 
         String groupStr =
-                "852d12cbfffffff\t9\n" +
-                        "";
+                        "881f12ae17fffff\t1\n" +
+                                "881f12aee1fffff\t1\n" +
+                                "881f12ae91fffff\t1\n" +
+                                "881f12aebbfffff\t1\n" +
+                                "881f12aea7fffff\t1\n" +
+                                "881f12ac1dfffff\t1\n" +
+                                "881f12acc5fffff\t1\n" +
+                                "881f12acc3fffff\t1\n" +
+                                "8819420147fffff\t1\n" +
+                                "8819420169fffff\t1\n" +
+                                "8819421897fffff\t1\n" +
+                                "88194218b3fffff\t1\n" +
+                                "8819421895fffff\t1\n" +
+                                "8819421993fffff\t1\n" +
+                                "8819420a0bfffff\t1\n" +
+                                "8819420a29fffff\t1\n" +
+                                "87182ca9bffffff\t3\n" +
+                                "88182ca981fffff\t1\n" +
+                                "88182ca98dfffff\t1\n" +
+                                "88182ca9c7fffff\t1\n" +
+                                "88182ca9d3fffff\t1\n" +
+                                "88182ca9c5fffff\t1\n" +
+                                "862da5367ffffff\t4\n" +
+                                "862da536fffffff\t4\n" +
+                                "861f4481fffffff\t2\n" +
+                                "861f44817ffffff\t2\n" +
+                                "861f448a7ffffff\t2\n" +
+                                "861f448afffffff\t2\n" +
+                                "8639567b7ffffff\t4\n" +
+                                "8639567a7ffffff\t4";
         String filePath = String.format("%s/%d【坐标】", resultPath, System.currentTimeMillis());
         List<List<String>> groupTable = StringUtils.toTableList(groupStr);
 

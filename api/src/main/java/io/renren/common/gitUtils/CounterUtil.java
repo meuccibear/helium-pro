@@ -20,6 +20,8 @@ public abstract class CounterUtil {
     public abstract boolean check(Object execute);
 
     public Object run(Object data) {
+        log.info("run:frequency:{}",frequency);
+
         if (frequency > 0) {
 
             if (frequency == 1) {
@@ -37,8 +39,8 @@ public abstract class CounterUtil {
                 frequency--;
                 return run(data);
             }
-            return execute;
 
+            return execute;
         } else {
             return null;
         }
@@ -46,8 +48,8 @@ public abstract class CounterUtil {
 
     public void networkErr() {
         try {
-            Thread.sleep(1000 * 60 * 60);
-            log.info("休息了 1000 * 60 * 60 毫秒~~");
+            Thread.sleep(1000 * 5);
+            log.info("休息了 1000毫秒 * 5  ~~");
         } catch (InterruptedException e) {
             log.error("休息错误~~", e);
         }

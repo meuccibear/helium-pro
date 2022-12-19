@@ -85,8 +85,7 @@ public class HotspottyDataListener implements ReadListener<HotspottyData> {
      */
     private void saveData() {
         log.info("{}条数据，开始存储数据库！", cachedDataList.size());
-        List<BusinessDevice> businessDeviceEntities = BeanUtils.toJavaObject(cachedDataList, new TypeReference<List<BusinessDevice>>() {});
-        businessDeviceService.insertOrUpdate(businessDeviceEntities);
+        businessDeviceService.insertOrUpdate(BeanUtils.toJavaObject(cachedDataList, new TypeReference<List<BusinessDevice>>() {}));
         log.info("存储数据库成功！");
     }
 }

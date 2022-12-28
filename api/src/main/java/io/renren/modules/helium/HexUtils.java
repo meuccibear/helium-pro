@@ -46,7 +46,7 @@ public class HexUtils {
 //        h3Core.h3ToCenterChild("85180cdbfffffff", 8);
 //        {"lat":-0.002408089057290397,"lng":-6.898403577189072E-4}
 //        System.out.println(JSON.toJSONString(h3.h3ToGeo("88309c4b5dfffff")));
-//        System.out.println(JSON.toJSONString(h3.geoToH3Address(30.6735023718096, 117.48017871304, 8)));
+        System.out.println(h3.geoToH3Address(33.997985, -117.852996, 8));
 //        System.out.println(JSON.toJSONString(h3.h3ToGeo("88318b72b5fffff")));
 
 //        H3Core h3 = H3Core.newInstance();

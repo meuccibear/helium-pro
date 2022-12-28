@@ -11,7 +11,9 @@ import com.alibaba.fastjson.JSON;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
 //import io.renren.common.HeliumHttpUtils;
+import io.renren.modules.business.service.BusinessG5DeviceService;
 import io.renren.modules.helium.HeliumUtils;
+import io.renren.modules.sys.api.HeliumApi;
 import io.renren.modules.sys.service.GlobalDeviceService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -40,11 +42,18 @@ public class HeliumDBTest {
     @Autowired
     GlobalDeviceService globalDeviceService;
 
-//    @SneakyThrows
-//    @Test
-//    public void run() {
+    @Autowired
+    HeliumApi heliumApi;
+    @Autowired
+    private BusinessG5DeviceService businessG5DeviceService;
+
+    @SneakyThrows
+    @Test
+    public void run() {
 //        System.out.println(JSON.toJSONString(heliumHttpUtils.getCHexsByHex("8565010ffffffff", 5)));
-//    }
+        businessG5DeviceService.updateAddress();
+//        heliumApi.getG5Devices("11QMM7ggrqP1aN9Hn1i3Jv7sinxu7XYEAvxVYE7a5S1YU3hVNhE");
+    }
 
     /**
      * @title 查询尸体

@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.renren.modules.business.dao.BusinessGatewayMapper">
+  <resultMap id="BaseResultMap" type="io.renren.modules.business.entity.BusinessGateway">
+    <!--@mbg.generated-->
+    <!--@Table business_gateway-->
+    <id column="gateway_id" jdbcType="CHAR" property="gatewayId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="alis" jdbcType="VARCHAR" property="alis" />
+    <result column="private_ip" jdbcType="VARCHAR" property="privateIp" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="hex" jdbcType="CHAR" property="hex" />
+    <result column="internel" jdbcType="INTEGER" property="internel" />
+    <result column="miner_connected" jdbcType="INTEGER" property="minerConnected" />
+    <result column="miner_version" jdbcType="CHAR" property="minerVersion" />
+    <result column="download" jdbcType="DOUBLE" property="download" />
+    <result column="upload" jdbcType="DOUBLE" property="upload" />
+    <result column="agw_version" jdbcType="VARCHAR" property="agwVersion" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    gateway_id, `name`, alis, private_ip, address, hex, internel, miner_connected, miner_version, 
+    download, upload, agw_version, `status`, create_time, update_time, remarks
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from business_gateway
+    where gateway_id = #{gatewayId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--@mbg.generated-->
+    delete from business_gateway
+    where gateway_id = #{gatewayId,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" keyColumn="gateway_id" keyProperty="gatewayId" parameterType="io.renren.modules.business.entity.BusinessGateway" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into business_gateway (`name`, alis, private_ip, 
+      address, hex, internel, 
+      miner_connected, miner_version, download, 
+      upload, agw_version, `status`, 
+      create_time, update_time, remarks
+      )
+    values (#{name,jdbcType=VARCHAR}, #{alis,jdbcType=VARCHAR}, #{privateIp,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{hex,jdbcType=CHAR}, #{internel,jdbcType=INTEGER}, 
+      #{minerConnected,jdbcType=INTEGER}, #{minerVersion,jdbcType=CHAR}, #{download,jdbcType=DOUBLE}, 
+      #{upload,jdbcType=DOUBLE}, #{agwVersion,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="gateway_id" keyProperty="gatewayId" parameterType="io.renren.modules.business.entity.BusinessGateway" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into business_gateway
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="alis != null">
+        alis,
+      </if>
+      <if test="privateIp != null">
+        private_ip,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="hex != null">
+        hex,
+      </if>
+      <if test="internel != null">
+        internel,
+      </if>
+      <if test="minerConnected != null">
+        miner_connected,
+      </if>
+      <if test="minerVersion != null">
+        miner_version,
+      </if>
+      <if test="download != null">
+        download,
+      </if>
+      <if test="upload != null">
+        upload,
+      </if>
+      <if test="agwVersion != null">
+        agw_version,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="alis != null">
+        #{alis,jdbcType=VARCHAR},
+      </if>
+      <if test="privateIp != null">
+        #{privateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="hex != null">
+        #{hex,jdbcType=CHAR},
+      </if>
+      <if test="internel != null">
+        #{internel,jdbcType=INTEGER},
+      </if>
+      <if test="minerConnected != null">
+        #{minerConnected,jdbcType=INTEGER},
+      </if>
+      <if test="minerVersion != null">
+        #{minerVersion,jdbcType=CHAR},
+      </if>
+      <if test="download != null">
+        #{download,jdbcType=DOUBLE},
+      </if>
+      <if test="upload != null">
+        #{upload,jdbcType=DOUBLE},
+      </if>
+      <if test="agwVersion != null">
+        #{agwVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.business.entity.BusinessGateway">
+    <!--@mbg.generated-->
+    update business_gateway
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="alis != null">
+        alis = #{alis,jdbcType=VARCHAR},
+      </if>
+      <if test="privateIp != null">
+        private_ip = #{privateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="hex != null">
+        hex = #{hex,jdbcType=CHAR},
+      </if>
+      <if test="internel != null">
+        internel = #{internel,jdbcType=INTEGER},
+      </if>
+      <if test="minerConnected != null">
+        miner_connected = #{minerConnected,jdbcType=INTEGER},
+      </if>
+      <if test="minerVersion != null">
+        miner_version = #{minerVersion,jdbcType=CHAR},
+      </if>
+      <if test="download != null">
+        download = #{download,jdbcType=DOUBLE},
+      </if>
+      <if test="upload != null">
+        upload = #{upload,jdbcType=DOUBLE},
+      </if>
+      <if test="agwVersion != null">
+        agw_version = #{agwVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where gateway_id = #{gatewayId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.renren.modules.business.entity.BusinessGateway">
+    <!--@mbg.generated-->
+    update business_gateway
+    set `name` = #{name,jdbcType=VARCHAR},
+      alis = #{alis,jdbcType=VARCHAR},
+      private_ip = #{privateIp,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      hex = #{hex,jdbcType=CHAR},
+      internel = #{internel,jdbcType=INTEGER},
+      miner_connected = #{minerConnected,jdbcType=INTEGER},
+      miner_version = #{minerVersion,jdbcType=CHAR},
+      download = #{download,jdbcType=DOUBLE},
+      upload = #{upload,jdbcType=DOUBLE},
+      agw_version = #{agwVersion,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remarks = #{remarks,jdbcType=VARCHAR}
+    where gateway_id = #{gatewayId,jdbcType=CHAR}
+  </update>
+  <insert id="insertOrUpdate" keyColumn="gateway_id" keyProperty="gatewayId" parameterType="io.renren.modules.business.entity.BusinessGateway" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into business_gateway
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="gatewayId != null">
+        gateway_id,
+      </if>
+      `name`,
+      alis,
+      private_ip,
+      address,
+      hex,
+      internel,
+      miner_connected,
+      miner_version,
+      download,
+      upload,
+      agw_version,
+      `status`,
+      create_time,
+      update_time,
+      remarks,
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="gatewayId != null">
+        #{gatewayId,jdbcType=CHAR},
+      </if>
+      #{name,jdbcType=VARCHAR},
+      #{alis,jdbcType=VARCHAR},
+      #{privateIp,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR},
+      #{hex,jdbcType=CHAR},
+      #{internel,jdbcType=INTEGER},
+      #{minerConnected,jdbcType=INTEGER},
+      #{minerVersion,jdbcType=CHAR},
+      #{download,jdbcType=DOUBLE},
+      #{upload,jdbcType=DOUBLE},
+      #{agwVersion,jdbcType=VARCHAR},
+      #{status,jdbcType=INTEGER},
+      #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP},
+      #{remarks,jdbcType=VARCHAR},
+    </trim>
+    on duplicate key update 
+    <trim suffixOverrides=",">
+      <if test="gatewayId != null">
+        gateway_id = #{gatewayId,jdbcType=CHAR},
+      </if>
+      `name` = #{name,jdbcType=VARCHAR},
+      alis = #{alis,jdbcType=VARCHAR},
+      private_ip = #{privateIp,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      hex = #{hex,jdbcType=CHAR},
+      internel = #{internel,jdbcType=INTEGER},
+      miner_connected = #{minerConnected,jdbcType=INTEGER},
+      miner_version = #{minerVersion,jdbcType=CHAR},
+      download = #{download,jdbcType=DOUBLE},
+      upload = #{upload,jdbcType=DOUBLE},
+      agw_version = #{agwVersion,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remarks = #{remarks,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <insert id="insertOrUpdateSelective" keyColumn="gateway_id" keyProperty="gatewayId" parameterType="io.renren.modules.business.entity.BusinessGateway" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into business_gateway
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="gatewayId != null">
+        gateway_id,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="alis != null">
+        alis,
+      </if>
+      <if test="privateIp != null">
+        private_ip,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="hex != null">
+        hex,
+      </if>
+      <if test="internel != null">
+        internel,
+      </if>
+      <if test="minerConnected != null">
+        miner_connected,
+      </if>
+      <if test="minerVersion != null">
+        miner_version,
+      </if>
+      <if test="download != null">
+        download,
+      </if>
+      <if test="upload != null">
+        upload,
+      </if>
+      <if test="agwVersion != null">
+        agw_version,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="gatewayId != null">
+        #{gatewayId,jdbcType=CHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="alis != null">
+        #{alis,jdbcType=VARCHAR},
+      </if>
+      <if test="privateIp != null">
+        #{privateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="hex != null">
+        #{hex,jdbcType=CHAR},
+      </if>
+      <if test="internel != null">
+        #{internel,jdbcType=INTEGER},
+      </if>
+      <if test="minerConnected != null">
+        #{minerConnected,jdbcType=INTEGER},
+      </if>
+      <if test="minerVersion != null">
+        #{minerVersion,jdbcType=CHAR},
+      </if>
+      <if test="download != null">
+        #{download,jdbcType=DOUBLE},
+      </if>
+      <if test="upload != null">
+        #{upload,jdbcType=DOUBLE},
+      </if>
+      <if test="agwVersion != null">
+        #{agwVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    on duplicate key update 
+    <trim suffixOverrides=",">
+      <if test="gatewayId != null">
+        gateway_id = #{gatewayId,jdbcType=CHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="alis != null">
+        alis = #{alis,jdbcType=VARCHAR},
+      </if>
+      <if test="privateIp != null">
+        private_ip = #{privateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="hex != null">
+        hex = #{hex,jdbcType=CHAR},
+      </if>
+      <if test="internel != null">
+        internel = #{internel,jdbcType=INTEGER},
+      </if>
+      <if test="minerConnected != null">
+        miner_connected = #{minerConnected,jdbcType=INTEGER},
+      </if>
+      <if test="minerVersion != null">
+        miner_version = #{minerVersion,jdbcType=CHAR},
+      </if>
+      <if test="download != null">
+        download = #{download,jdbcType=DOUBLE},
+      </if>
+      <if test="upload != null">
+        upload = #{upload,jdbcType=DOUBLE},
+      </if>
+      <if test="agwVersion != null">
+        agw_version = #{agwVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+<!--auto generated by MybatisCodeHelper on 2022-12-20-->
+  <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from business_gateway
+    </select>
+
+<!--auto generated by MybatisCodeHelper on 2022-12-27-->
+  <select id="selectGatewayIds" resultType="java.lang.String">
+    select gateway_id
+    from business_gateway
+    where ISNULL(address) or address = ''
+  </select>
+
+<!--auto generated by MybatisCodeHelper on 2022-12-27-->
+  <update id="updateAddressByGatewayId">
+    update business_gateway
+    set address=#{updatedAddress,jdbcType=VARCHAR}
+    where gateway_id=#{gatewayId,jdbcType=CHAR}
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2022-12-28-->
+  <update id="updateAddressAndHexByGatewayId">
+    update business_gateway
+    set address=#{updatedAddress,jdbcType=VARCHAR}, hex=#{updatedHex,jdbcType=CHAR}
+    where gateway_id=#{gatewayId,jdbcType=CHAR}
+  </update>
+</mapper>

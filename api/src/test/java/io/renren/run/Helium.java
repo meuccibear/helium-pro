@@ -414,6 +414,14 @@ public class Helium {
         return ObjectUtils.notIsEmpty(result.getData());
     }
 
+    public boolean getDevice(String hex) throws MsgException, URISyntaxException {
+        Result result = heliumHttpUtils.getResult(HeliumHttpUtils.Website.Blockjoy, String.format("v1/hotspots/hex/%s", hex));
+        if (ObjectUtils.isEmpty(result)) {
+            return false;
+        }
+        return ObjectUtils.notIsEmpty(result.getData());
+    }
+
 
     @SneakyThrows
     //@Test

@@ -10,10 +10,7 @@ import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.modules.helium.GeoCoord;
 import io.renren.modules.helium.HexUtils;
 import io.renren.modules.helium.NumUtils;
-import io.renren.modules.helium.domain.Device;
-import io.renren.modules.helium.domain.HotspotsProfit;
-import io.renren.modules.helium.domain.LeanData;
-import io.renren.modules.helium.domain.Result;
+import io.renren.modules.helium.domain.*;
 import io.renren.modules.helium.domain.deviceConfig.activity.RestBean;
 import io.renren.modules.sys.service.WebsiteApiService;
 import lombok.extern.slf4j.Slf4j;
@@ -264,12 +261,25 @@ public class HeliumApi {
      */
     public Boolean existingEquipment(String hex) throws MsgException {
         JSONObject result = (JSONObject) getResultV("existingEquipment", hex);
-//        if(null == result.getData()){
-//            return null;
-//        }
         Boolean aBoolean = ObjectUtils.notIsEmpty(JSONUtils.jsGetData(result, "data"));
         log.info("hex{} {}", hex, aBoolean ? "存在" : "不存在");
         return aBoolean;
+    }
+
+    public List<Device> getDevices(String hex) {
+        JSONObject result = (JSONObject) getResultV("existingEquipment", hex);
+        List<Device> devices = BeanUtils.toJavaObject(JSONUtils.jsGetData(result, "data"), new TypeReference<List<Device>>() {
+        });
+        return devices;
+    }
+    public List<Cell> getG5Devices(String address) {
+        JSONArray jsonArray = (JSONArray) getResultV("cells", address);
+//        String result = (String) getResultV("cells", address);
+//        System.out.println("result: "+result);
+
+        List<Cell> cells = BeanUtils.toJavaObject(jsonArray, new TypeReference<List<Cell>>(){{}});
+        return cells;
+//        return null;
     }
 
     public JSONObject getResultVS(String apiKey, Object... data) throws MsgException {

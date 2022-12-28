@@ -17,7 +17,7 @@
     "axios": "0.17.1",
     "babel-plugin-component": "0.10.1",
     "babel-polyfill": "6.26.0",
-    "echarts": "^5.4.1",
+    "echarts": "^4.2.1",
     "element-ui": "2.15.7",
     "gulp": "4.0.2",
     "gulp-concat": "2.6.1",
@@ -99,5 +99,11 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "main": ".eslintrc.js",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [],
+  "license": "ISC"
 }

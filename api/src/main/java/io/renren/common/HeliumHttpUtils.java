@@ -123,7 +123,7 @@ public class HeliumHttpUtils extends HttpUtils {
         if (ObjectUtils.isEmpty(httpService)) {
             return;
         }
-        httpService.insert(new DataHttp(method.name(), url, JSON.toJSONString(entityParameter), JSON.toJSONString(httpResultData), 1));
+//        httpService.insert(new DataHttp(method.name(), url, JSON.toJSONString(entityParameter), JSON.toJSONString(httpResultData), 1));
     }
 
     /**

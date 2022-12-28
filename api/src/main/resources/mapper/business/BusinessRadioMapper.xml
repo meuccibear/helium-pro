@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.renren.modules.business.dao.BusinessRadioMapper">
+  <resultMap id="BaseResultMap" type="io.renren.modules.business.entity.BusinessRadio">
+    <!--@mbg.generated-->
+    <!--@Table business_radio-->
+    <id column="radio_id" jdbcType="CHAR" property="radioId" />
+    <result column="gateway_id" jdbcType="CHAR" property="gatewayId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="alis" jdbcType="VARCHAR" property="alis" />
+    <result column="model" jdbcType="VARCHAR" property="model" />
+    <result column="gps_stat" jdbcType="INTEGER" property="gpsStat" />
+    <result column="lng" jdbcType="DOUBLE" property="lng" />
+    <result column="lat" jdbcType="DOUBLE" property="lat" />
+    <result column="sas_stat" jdbcType="INTEGER" property="sasStat" />
+    <result column="core_stat" jdbcType="INTEGER" property="coreStat" />
+    <result column="onair" jdbcType="INTEGER" property="onair" />
+    <result column="cell_version" jdbcType="VARCHAR" property="cellVersion" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    radio_id, gateway_id, `name`, alis, model, gps_stat, lng, lat, sas_stat, core_stat, 
+    onair, cell_version, remarks, create_time, update_time, `status`
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from business_radio
+    where radio_id = #{radioId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--@mbg.generated-->
+    delete from business_radio
+    where radio_id = #{radioId,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" keyColumn="radio_id" keyProperty="radioId" parameterType="io.renren.modules.business.entity.BusinessRadio" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into business_radio (gateway_id, `name`, alis, 
+      model, gps_stat, lng, 
+      lat, sas_stat, core_stat, 
+      onair, cell_version, remarks, 
+      create_time, update_time, `status`
+      )
+    values (#{gatewayId,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{alis,jdbcType=VARCHAR}, 
+      #{model,jdbcType=VARCHAR}, #{gpsStat,jdbcType=INTEGER}, #{lng,jdbcType=DOUBLE}, 
+      #{lat,jdbcType=DOUBLE}, #{sasStat,jdbcType=INTEGER}, #{coreStat,jdbcType=INTEGER}, 
+      #{onair,jdbcType=INTEGER}, #{cellVersion,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="radio_id" keyProperty="radioId" parameterType="io.renren.modules.business.entity.BusinessRadio" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into business_radio
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="gatewayId != null">
+        gateway_id,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="alis != null">
+        alis,
+      </if>
+      <if test="model != null">
+        model,
+      </if>
+      <if test="gpsStat != null">
+        gps_stat,
+      </if>
+      <if test="lng != null">
+        lng,
+      </if>
+      <if test="lat != null">
+        lat,
+      </if>
+      <if test="sasStat != null">
+        sas_stat,
+      </if>
+      <if test="coreStat != null">
+        core_stat,
+      </if>
+      <if test="onair != null">
+        onair,
+      </if>
+      <if test="cellVersion != null">
+        cell_version,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="gatewayId != null">
+        #{gatewayId,jdbcType=CHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="alis != null">
+        #{alis,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null">
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="gpsStat != null">
+        #{gpsStat,jdbcType=INTEGER},
+      </if>
+      <if test="lng != null">
+        #{lng,jdbcType=DOUBLE},
+      </if>
+      <if test="lat != null">
+        #{lat,jdbcType=DOUBLE},
+      </if>
+      <if test="sasStat != null">
+        #{sasStat,jdbcType=INTEGER},
+      </if>
+      <if test="coreStat != null">
+        #{coreStat,jdbcType=INTEGER},
+      </if>
+      <if test="onair != null">
+        #{onair,jdbcType=INTEGER},
+      </if>
+      <if test="cellVersion != null">
+        #{cellVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.business.entity.BusinessRadio">
+    <!--@mbg.generated-->
+    update business_radio
+    <set>
+      <if test="gatewayId != null">
+        gateway_id = #{gatewayId,jdbcType=CHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="alis != null">
+        alis = #{alis,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null">
+        model = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="gpsStat != null">
+        gps_stat = #{gpsStat,jdbcType=INTEGER},
+      </if>
+      <if test="lng != null">
+        lng = #{lng,jdbcType=DOUBLE},
+      </if>
+      <if test="lat != null">
+        lat = #{lat,jdbcType=DOUBLE},
+      </if>
+      <if test="sasStat != null">
+        sas_stat = #{sasStat,jdbcType=INTEGER},
+      </if>
+      <if test="coreStat != null">
+        core_stat = #{coreStat,jdbcType=INTEGER},
+      </if>
+      <if test="onair != null">
+        onair = #{onair,jdbcType=INTEGER},
+      </if>
+      <if test="cellVersion != null">
+        cell_version = #{cellVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where radio_id = #{radioId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.renren.modules.business.entity.BusinessRadio">
+    <!--@mbg.generated-->
+    update business_radio
+    set gateway_id = #{gatewayId,jdbcType=CHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      alis = #{alis,jdbcType=VARCHAR},
+      model = #{model,jdbcType=VARCHAR},
+      gps_stat = #{gpsStat,jdbcType=INTEGER},
+      lng = #{lng,jdbcType=DOUBLE},
+      lat = #{lat,jdbcType=DOUBLE},
+      sas_stat = #{sasStat,jdbcType=INTEGER},
+      core_stat = #{coreStat,jdbcType=INTEGER},
+      onair = #{onair,jdbcType=INTEGER},
+      cell_version = #{cellVersion,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      `status` = #{status,jdbcType=INTEGER}
+    where radio_id = #{radioId,jdbcType=CHAR}
+  </update>
+  <insert id="insertOrUpdate" keyColumn="radio_id" keyProperty="radioId" parameterType="io.renren.modules.business.entity.BusinessRadio" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into business_radio
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="radioId != null">
+        radio_id,
+      </if>
+      gateway_id,
+      `name`,
+      alis,
+      model,
+      gps_stat,
+      lng,
+      lat,
+      sas_stat,
+      core_stat,
+      onair,
+      cell_version,
+      remarks,
+      create_time,
+      update_time,
+      `status`,
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="radioId != null">
+        #{radioId,jdbcType=CHAR},
+      </if>
+      #{gatewayId,jdbcType=CHAR},
+      #{name,jdbcType=VARCHAR},
+      #{alis,jdbcType=VARCHAR},
+      #{model,jdbcType=VARCHAR},
+      #{gpsStat,jdbcType=INTEGER},
+      #{lng,jdbcType=DOUBLE},
+      #{lat,jdbcType=DOUBLE},
+      #{sasStat,jdbcType=INTEGER},
+      #{coreStat,jdbcType=INTEGER},
+      #{onair,jdbcType=INTEGER},
+      #{cellVersion,jdbcType=VARCHAR},
+      #{remarks,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP},
+      #{status,jdbcType=INTEGER},
+    </trim>
+    on duplicate key update 
+    <trim suffixOverrides=",">
+      <if test="radioId != null">
+        radio_id = #{radioId,jdbcType=CHAR},
+      </if>
+      gateway_id = #{gatewayId,jdbcType=CHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      alis = #{alis,jdbcType=VARCHAR},
+      model = #{model,jdbcType=VARCHAR},
+      gps_stat = #{gpsStat,jdbcType=INTEGER},
+      lng = #{lng,jdbcType=DOUBLE},
+      lat = #{lat,jdbcType=DOUBLE},
+      sas_stat = #{sasStat,jdbcType=INTEGER},
+      core_stat = #{coreStat,jdbcType=INTEGER},
+      onair = #{onair,jdbcType=INTEGER},
+      cell_version = #{cellVersion,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      `status` = #{status,jdbcType=INTEGER},
+    </trim>
+  </insert>
+  <insert id="insertOrUpdateSelective" keyColumn="radio_id" keyProperty="radioId" parameterType="io.renren.modules.business.entity.BusinessRadio" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into business_radio
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="radioId != null">
+        radio_id,
+      </if>
+      <if test="gatewayId != null">
+        gateway_id,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="alis != null">
+        alis,
+      </if>
+      <if test="model != null">
+        model,
+      </if>
+      <if test="gpsStat != null">
+        gps_stat,
+      </if>
+      <if test="lng != null">
+        lng,
+      </if>
+      <if test="lat != null">
+        lat,
+      </if>
+      <if test="sasStat != null">
+        sas_stat,
+      </if>
+      <if test="coreStat != null">
+        core_stat,
+      </if>
+      <if test="onair != null">
+        onair,
+      </if>
+      <if test="cellVersion != null">
+        cell_version,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="radioId != null">
+        #{radioId,jdbcType=CHAR},
+      </if>
+      <if test="gatewayId != null">
+        #{gatewayId,jdbcType=CHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="alis != null">
+        #{alis,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null">
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="gpsStat != null">
+        #{gpsStat,jdbcType=INTEGER},
+      </if>
+      <if test="lng != null">
+        #{lng,jdbcType=DOUBLE},
+      </if>
+      <if test="lat != null">
+        #{lat,jdbcType=DOUBLE},
+      </if>
+      <if test="sasStat != null">
+        #{sasStat,jdbcType=INTEGER},
+      </if>
+      <if test="coreStat != null">
+        #{coreStat,jdbcType=INTEGER},
+      </if>
+      <if test="onair != null">
+        #{onair,jdbcType=INTEGER},
+      </if>
+      <if test="cellVersion != null">
+        #{cellVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+    on duplicate key update 
+    <trim suffixOverrides=",">
+      <if test="radioId != null">
+        radio_id = #{radioId,jdbcType=CHAR},
+      </if>
+      <if test="gatewayId != null">
+        gateway_id = #{gatewayId,jdbcType=CHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="alis != null">
+        alis = #{alis,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null">
+        model = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="gpsStat != null">
+        gps_stat = #{gpsStat,jdbcType=INTEGER},
+      </if>
+      <if test="lng != null">
+        lng = #{lng,jdbcType=DOUBLE},
+      </if>
+      <if test="lat != null">
+        lat = #{lat,jdbcType=DOUBLE},
+      </if>
+      <if test="sasStat != null">
+        sas_stat = #{sasStat,jdbcType=INTEGER},
+      </if>
+      <if test="coreStat != null">
+        core_stat = #{coreStat,jdbcType=INTEGER},
+      </if>
+      <if test="onair != null">
+        onair = #{onair,jdbcType=INTEGER},
+      </if>
+      <if test="cellVersion != null">
+        cell_version = #{cellVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <!--auto generated by MybatisCodeHelper on 2022-12-26-->
+  <select id="selectAll" resultMap="BaseResultMap">
+      select
+      <include refid="Base_Column_List"/>
+      from business_radio
+  </select>
+
+  <select id="selectNotAddressGatewRadio" resultMap="BaseResultMap">
+    SELECT radio.* FROM business_radio radio
+    LEFT JOIN business_gateway gateway  ON radio.gateway_id = gateway.gateway_id
+    WHERE ISNULL(gateway.address)
+    GROUP BY radio.gateway_id;
+  </select>
+
+<!--auto generated by MybatisCodeHelper on 2022-12-27-->
+  <select id="selectAllByGatewayId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from business_radio
+    where gateway_id=#{gatewayId,jdbcType=CHAR}
+  </select>
+
+<!--auto generated by MybatisCodeHelper on 2022-12-28-->
+  <select id="selectRadioIdByGatewayId" resultType="java.lang.String">
+    select radio_id
+    from business_radio
+    where gateway_id=#{gatewayId,jdbcType=CHAR}
+  </select>
+
+<!--auto generated by MybatisCodeHelper on 2022-12-28-->
+  <update id="updateStatusByRadioId">
+    update business_radio
+    set `status`=#{updatedStatus,jdbcType=INTEGER}
+    where radio_id in
+    <foreach close=")" collection="radioIds" item="radioId" open="(" separator=", ">
+      #{radioId,jdbcType=CHAR}
+    </foreach>
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2022-12-28-->
+  <update id="updateAlisByRadioId">
+    update business_radio
+    set alis=#{updatedAlis,jdbcType=VARCHAR}
+    where radio_id=#{radioId,jdbcType=CHAR}
+  </update>
+  <!--auto generated by MybatisCodeHelper on 2022-12-25-->
+</mapper>

@@ -56,7 +56,11 @@ spring:
                     config:
                         multi-statement-allow: true
             query-timeout: 7
-
+    data:
+        mongodb:
+            host: 127.0.0.1
+            port: 27017
+            database: helium
 
 
 ##多数据源的配置

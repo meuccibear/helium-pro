@@ -12,9 +12,7 @@ import io.renren.common.validator.group.AliyunGroup;
 import io.renren.common.validator.group.QcloudGroup;
 import io.renren.common.validator.group.QiniuGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -167,4 +165,11 @@ public class Constant {
         }
     }
 
+    // 14gqqPV2HEs4PCNNUacKVG7XeAhCUkN553NcBVw4xfwSFcCjhXv
+    // 13y2EqUUzyQhQGtDSoXktz8m5jHNSiwAKLTYnHNxZq2uH5GGGym
+
+    public static Map<String, String> g5DeviceAddress = new HashMap<String, String>(){{
+        put("14gqqPV2HEs4PCNNUacKVG7XeAhCUkN553NcBVw4xfwSFcCjhXv","Bobcat 5G");
+        put("13y2EqUUzyQhQGtDSoXktz8m5jHNSiwAKLTYnHNxZq2uH5GGGym","FreedomFi");
+    }};
 }

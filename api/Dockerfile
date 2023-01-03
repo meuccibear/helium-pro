@@ -1,5 +1,4 @@
-FROM java:1.8-alpine-glibc
-#FROM java:8
+FROM zhuozhuang/java:1.8-glibc
 
 RUN mkdir -p /opt/app
 ENV PROJECT_HOME /opt/app

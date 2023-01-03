@@ -73,51 +73,20 @@ export default {
         if (data && data.code === 0) {
           var legendData = []
           var series = []
-          if (typeId === 1) {
-            series = [
-              {
-                name: 'internel',
-                type: 'bar',
-                data: data.data1,
-                emphasis: {
-                  focus: 'series'
-                },
-                animationDelay: function (idx) {
-                  return idx * 10
-                }
-              }]
-            legendData = ['internel']
-            this.data1 = data.data1
-            this.dataKey = data.dataKey
-          } else {
-            series = [
-              {
-                name: 'core_stat',
-                type: 'bar',
-                data: data.data1,
-                emphasis: {
-                  focus: 'series'
-                },
-                animationDelay: function (idx) {
-                  return idx * 10
-                }
+          for (const col of data.dataCol) {
+            series.push({
+              name: col,
+              type: 'bar',
+              data: data[col],
+              emphasis: {
+                focus: 'series'
               },
-              {
-                name: 'onair',
-                type: 'bar',
-                data: data.data2,
-                emphasis: {
-                  focus: 'series'
-                },
-                animationDelay: function (idx) {
-                  return idx * 10 + 100
-                }
-              }]
-            legendData = ['core_stat', 'onair']
-            this.data1 = data.data1
-            this.data2 = data.data2
-            this.dataKey = data.dataKey
+              animationDelay: function (idx) {
+                return idx * 10
+              }
+            })
           }
+          legendData = data.dataCol
           var option = {
             title: {
               text: '状态历史'

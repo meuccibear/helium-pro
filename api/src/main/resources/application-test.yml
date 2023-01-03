@@ -60,8 +60,10 @@ spring:
             query-timeout: 7
     data:
         mongodb:
-            host: 152.32.253.209
-            port: 3316
+#            host: 152.32.253.209
+            host: 127.0.0.1
+#            port: 3316
+            port: 27017
             database: helium
 
 

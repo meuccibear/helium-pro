@@ -31,7 +31,7 @@ public interface BusinessRadioService {
 
     List<String> selectRadioIdByGatewayId(String gatewayId);
 
-    int selectRadioIdByGatewayId(Integer updatedStatus, String... ids);
+    int updateStatusByRadioId(Integer updatedStatus, String... ids);
 
     int updateAlisByRadioId(String updatedAlis, String radioId);
 }

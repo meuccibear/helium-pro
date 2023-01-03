@@ -41,9 +41,10 @@ public class RadiosDTO {
 
     JSONObject jsonObject = (JSONObject) BeanUtils.toJSON(this);
 
-    Map<Integer, String> radioType = new HashMap<Integer, String>(){{
-        put(2, "sasStat");
-        put(3, "coreStat");
+    public static Map<Integer, String> radioType = new HashMap<Integer, String>(){{
+        put(2, "gpsStat");
+        put(3, "sasStat");
+        put(4, "onair");
     }};
 
 

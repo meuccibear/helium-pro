@@ -1,6 +1,7 @@
 package io.renren.modules.business.service.impl;
 
 import com.alibaba.fastjson.TypeReference;
+import com.uber.h3core.H3Core;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.PageRRVO;
@@ -21,6 +22,8 @@ import io.renren.modules.sys.api.HeliumApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,14 +83,20 @@ public class BusinessG5DeviceServiceImpl implements BusinessG5DeviceService {
         Device device;
         BusinessRadio businessRadio;
 
+        H3Core h3 = null;
+        try {
+            h3 = H3Core.newInstance();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         for (String gatewayId : gatewayIds) {
             List<BusinessRadio> businessRadios = radioService.selectAllByGatewayId(gatewayId);
-            if(ObjectUtils.isEmpty(businessRadios)){
+            if (ObjectUtils.isEmpty(businessRadios)) {
                 continue;
             }
-
             businessRadio = businessRadios.get(0);
-            devices = heliumApi.getDevices(HexUtils.h3.geoToH3Address(businessRadio.getLat().doubleValue(), businessRadio.getLng().doubleValue(), 8));
+            devices = heliumApi.getDevices(h3.geoToH3Address(businessRadio.getLat().doubleValue(), businessRadio.getLng().doubleValue(), 8));
 
             if (ObjectUtils.notIsEmpty(devices)) {
                 if (devices.size() == 1) {
@@ -97,25 +106,29 @@ public class BusinessG5DeviceServiceImpl implements BusinessG5DeviceService {
                     }
                 } else {
                     for (Device device1 : devices) {
-                        List<Cell> cells = heliumApi.getG5Devices(device1.getAddress());
-                        List<String> address = new ArrayList<>();
-                        log.info("cells.size{} businessRadios.size{}", cells.size(), businessRadios.size());
-                        for (Cell cell : cells) {
-                            cell:
-                            for (BusinessRadio radio : businessRadios) {
-                                log.info("radio.for {} {}", cell.getCbsdId(), radio.getRadioId());
-                                if(cell.getCbsdId().indexOf(radio.getRadioId()) > -1){
-                                    radioService.updateAlisByRadioId(cell.getCbsdId(), radio.getRadioId());
-                                    if(!address.contains(cell.getCbsdId())){
-                                        address.add(cell.getCbsdId());
+                        if (Constant.g5DeviceAddress.containsKey(device1.getPayer())) {
+                            List<Cell> cells = heliumApi.getG5Devices(device1.getAddress());
+                            List<String> address = new ArrayList<>();
+                            if (ObjectUtils.notIsEmpty(cells)) {
+                                log.info("cells.size{} businessRadios.size{}", cells.size(), businessRadios.size());
+                                for (Cell cell : cells) {
+                                    cell:
+                                    for (BusinessRadio radio : businessRadios) {
+                                        log.info("radio.for {} {}", cell.getCbsdId(), radio.getRadioId());
+                                        if (cell.getCbsdId().indexOf(radio.getRadioId()) > -1) {
+                                            radioService.updateAlisByRadioId(cell.getCbsdId(), radio.getRadioId());
+                                            if (!address.contains(cell.getCbsdId())) {
+                                                address.add(cell.getCbsdId());
+                                            }
+                                            break cell;
+                                        }
                                     }
-                                    break cell;
+                                }
+                                if (address.size() == businessRadios.size()) {
+                                    gatewayMapper.updateAddressAndHexByGatewayId(device1.getAddress(), device1.getLocation_hex(), gatewayId);
+                                    break;
                                 }
                             }
-                        }
-                        if(address.size() == businessRadios.size()){
-                            gatewayMapper.updateAddressAndHexByGatewayId(device1.getAddress(), device1.getLocation_hex(), gatewayId);
-                            break;
                         }
                     }
 
@@ -126,7 +139,7 @@ public class BusinessG5DeviceServiceImpl implements BusinessG5DeviceService {
     }
 
 
-    public void updateG5DeviceInfo(){
+    public void updateG5DeviceInfo() {
         List<BusinessRadio> businessRadios = radioService.selectAll();
         for (BusinessRadio businessRadio : businessRadios) {
             businessRadio.getAlis();

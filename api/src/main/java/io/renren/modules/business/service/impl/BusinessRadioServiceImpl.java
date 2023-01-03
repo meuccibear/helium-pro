@@ -74,7 +74,7 @@ public class BusinessRadioServiceImpl implements BusinessRadioService {
     }
 
     @Override
-    public int selectRadioIdByGatewayId(Integer updatedStatus, String... ids) {
+    public int updateStatusByRadioId(Integer updatedStatus, String... ids) {
         return businessRadioMapper.updateStatusByRadioId(updatedStatus, ids);
     }
 

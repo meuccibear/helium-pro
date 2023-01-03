@@ -8,18 +8,21 @@ import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.utils.R;
 import io.renren.modules.business.dto.G5LogDTO;
 import io.renren.modules.business.dto.RadiosDTO;
-import io.renren.modules.business.entity.BusinessRadio;
 import io.renren.modules.business.service.BusinessGatewayService;
 import io.renren.modules.business.service.BusinessRadioService;
 import io.renren.modules.business.service.MongoTemplateService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
+
 import io.renren.modules.business.entity.BusinessG5Log;
 import io.renren.modules.business.dao.BusinessG5LogMapper;
 import io.renren.modules.business.service.BusinessG5LogService;
 
 import java.util.*;
 
+@Slf4j
 @Service
 public class BusinessG5LogServiceImpl implements BusinessG5LogService {
 
@@ -73,26 +76,27 @@ public class BusinessG5LogServiceImpl implements BusinessG5LogService {
 
     @Override
     public void log(G5LogDTO g5LogDTO) {
-        Date now  = new Date();
+        Date now = new Date();
         if (ObjectUtils.notIsEmpty(g5LogDTO.getGatewayid())) {
             g5LogDTO.setNow(now);
             mongoTemplateService.insert(g5LogDTO);
             gatewayService.insertOrUpdateSelective(g5LogDTO.toBusinessGateway());
             List<BusinessG5Log> g5Logs = new ArrayList<>();
-            g5Logs.add(g5LogDTO.toBusinessG5Log());
+            g5Logs.addAll(g5LogDTO.toBusinessG5Log(now, 1));
             List<String> radioIds = radioService.selectRadioIdByGatewayId(g5LogDTO.getGatewayid());
 
             if (ObjectUtils.notIsEmpty(g5LogDTO.getRadios())) {
                 for (RadiosDTO radio : g5LogDTO.getRadios()) {
                     radioIds.remove(radio.getSid());
-                    radioService.selectRadioIdByGatewayId(1, radio.getSid());
+                    radioService.updateStatusByRadioId(radio.getOnair() ? 1 : 0, radio.getSid());
                     radioService.insertOrUpdateSelective(radio.toBusinessRadio(g5LogDTO.getGatewayid()));
-                    g5Logs.addAll(radio.toBusinessG5Log(now, 2, 3));
+                    g5Logs.addAll(radio.toBusinessG5Log(now, 2, 3, 4));
                 }
             }
 
-            if(ObjectUtils.notIsEmpty(radioIds) && radioIds.size() > 0){
-                radioService.selectRadioIdByGatewayId(0, BeanUtils.toJavaObject(radioIds, new TypeReference<String[]>(){{}}));
+            if (ObjectUtils.notIsEmpty(radioIds) && radioIds.size() > 0) {
+                radioService.updateStatusByRadioId(0, BeanUtils.toJavaObject(radioIds, new TypeReference<String[]>() {{
+                }}));
             }
             batchInsert(g5Logs);
         } else {
@@ -110,39 +114,76 @@ public class BusinessG5LogServiceImpl implements BusinessG5LogService {
 
         Date now = new Date();
         R r = new R();
-        JSONObject jsonObject;
-        switch (typeId){
+        Map<Integer, String> typeMap = new HashMap<>();
+        switch (typeId) {
             case 1:
-                jsonObject = selectAllByIdAndTypeId(id, 1, now);
-
-                r.put("data1", jsonObject.values().toArray());
-                r.put("dataKey", jsonObject.keySet().toArray());
+                typeMap = G5LogDTO.radioType;
+//                jsonObject = selectAllByIdAndTypeId(id, 1, now);
+//
+//                r.put("data1", jsonObject.values().toArray());
+//                r.put("dataKey", jsonObject.keySet().toArray());
                 break;
             case 2:
-                jsonObject = selectAllByIdAndTypeId(id, 2, now);
-                r.put("data1", jsonObject.values().toArray());
-                r.put("dataKey", jsonObject.keySet().toArray());
-                jsonObject = selectAllByIdAndTypeId(id, 3, now);
-                r.put("data2", jsonObject.values().toArray());
+                typeMap = RadiosDTO.radioType;
+
+//                List<Integer> integers = BeanUtils.toJavaObject(RadiosDTO.radioType.keySet().toArray(), new TypeReference<List<Integer>>() {{
+//                }});
+//                for (int i = 0; i < integers.size(); i++) {
+//                    jsonObject = selectAllByIdAndTypeId(id, i, now);
+//                    if (i == 0) {
+//                        r.put("dataKey", jsonObject.keySet().toArray());
+//                    }
+//                    r.put(RadiosDTO.radioType.get(i), jsonObject.values().toArray());
+//                }
+//                r.put("dataCol", RadiosDTO.radioType.values().toArray());
+
+//                jsonObject = selectAllByIdAndTypeId(id, 2, now);
+//                r.put("data1", jsonObject.values().toArray());
+//                r.put("dataKey", jsonObject.keySet().toArray());
+//                jsonObject = selectAllByIdAndTypeId(id, 3, now);
+//                r.put("data2", jsonObject.values().toArray());
 
                 break;
         }
+        List<BusinessG5Log> g5Logs;
 
+        List<Integer> integers = BeanUtils.toJavaObject(typeMap.keySet().toArray(), new TypeReference<List<Integer>>() {{
+        }});
+        for (int i = 0; i < integers.size(); i++) {
+            g5Logs = selectAllByIdAndTypeId(id, integers.get(i), now);
+            log.info("g5Logs:{}", BeanUtils.toJSON(g5Logs));
+
+            if (i == 0) {
+                List<String> dataKeys = new ArrayList<>();
+                for (BusinessG5Log g5Log : g5Logs) {
+                    dataKeys.add(DateUtils.asStr(7, g5Log.getCreateTime()));
+                }
+                r.put("dataKey", dataKeys);
+            }
+            List<Integer> dataVals = new ArrayList<>();
+            for (BusinessG5Log g5Log : g5Logs) {
+                dataVals.add( g5Log.getStatus() ? 1 : -1);
+            }
+            r.put(typeMap.get(integers.get(i)), dataVals);
+        }
+        r.put("dataCol", typeMap.values().toArray());
         return r;
     }
 
 
-    JSONObject selectAllByIdAndTypeId(String id, Integer typeId, Date now){
+    List<BusinessG5Log> selectAllByIdAndTypeId(String id, Integer typeId, Date now) {
 
-        List<BusinessG5Log> g5Logs = businessG5LogMapper.selectAllByIdAndTypeIdAndCreateTime(id,  now, typeId);
+        List<BusinessG5Log> g5Logs = businessG5LogMapper.selectAllByIdAndTypeIdAndCreateTime(id, now, typeId);
 
-        JSONObject jsonObject = new JSONObject();
-        List<Integer> a = new ArrayList<>();
-        for (BusinessG5Log g5Log : g5Logs) {
-            jsonObject.put(DateUtils.asStr(7, g5Log.getCreateTime()), g5Log.getStatus() ? 1 : -1);
-        }
+//        JSONObject jsonObject = new JSONObject();
+//        List<JSONObject> jsonObjects = new ArrayList<>();
+//        for (BusinessG5Log g5Log : g5Logs) {
+//            jsonObject = new JSONObject();
+//            jsonObject.put(DateUtils.asStr(7, g5Log.getCreateTime()), g5Log.getStatus() ? 1 : -1);
+//            jsonObjects.add(jsonObject);
+//        }
 
-        return jsonObject;
+        return g5Logs;
     }
 }
 

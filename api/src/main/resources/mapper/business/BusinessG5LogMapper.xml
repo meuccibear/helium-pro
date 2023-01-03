@@ -16,7 +16,7 @@
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     <!--@mbg.generated-->
-    select 
+    select
     <include refid="Base_Column_List" />
     from business_g5_log
     where g5_log_id = #{g5LogId,jdbcType=BIGINT}
@@ -28,9 +28,9 @@
   </delete>
   <insert id="insert" keyColumn="g5_log_id" keyProperty="g5LogId" parameterType="io.renren.modules.business.entity.BusinessG5Log" useGeneratedKeys="true">
     <!--@mbg.generated-->
-    insert into business_g5_log (id, type_id, `status`, 
+    insert into business_g5_log (id, type_id, `status`,
       create_time)
-    values (#{id,jdbcType=CHAR}, #{typeId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=CHAR}, #{typeId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER},
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="g5_log_id" keyProperty="g5LogId" parameterType="io.renren.modules.business.entity.BusinessG5Log" useGeneratedKeys="true">
@@ -122,7 +122,7 @@
     <include refid="Base_Column_List"/>
     from business_g5_log
     where id=#{id,jdbcType=CHAR}
-<!--    and create_time <![CDATA[ >= ]]> DATE_SUB(#{createTime,jdbcType=TIMESTAMP},INTERVAL 3 DAY)-->
+    and create_time <![CDATA[ >= ]]> DATE_SUB(#{createTime,jdbcType=TIMESTAMP},INTERVAL 3 DAY)
     and type_id in
     <foreach collection="typeIds" item="typeId" open="(" close=")" separator=",">
       #{typeId,jdbcType=INTEGER}

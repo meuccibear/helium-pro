@@ -1,7 +1,11 @@
-FROM java:8
-EXPOSE 8081
+FROM java:1.8-alpine-glibc
+#FROM java:8
 
-VOLUME /tmp
-ADD /target/helium-fast.jar  /app.jar
-RUN bash -c 'touch /app.jar'
-ENTRYPOINT ["java","-jar","/app.jar"]
+RUN mkdir -p /opt/app
+ENV PROJECT_HOME /opt/app
+COPY /target/helium-fast.jar $PROJECT_HOME/app.jar
+
+WORKDIR $PROJECT_HOME
+EXPOSE 8081
+CMD ["java" ,"-jar","./app.jar"]
+

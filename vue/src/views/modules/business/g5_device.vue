@@ -156,6 +156,7 @@
       row-key="id"
       border
       default-expand-all
+      :row-class-name="tableRowClassName"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
       <el-table-column
         prop="id"
@@ -203,11 +204,19 @@
       </el-table-column>
       <el-table-column label="基站设备信息">
         <el-table-column
-          prop="coreStat"
-          label="core状态">
+          prop="sasStat"
+          label="sas状态">
           <template slot-scope="scope">
-            <el-tag v-if='scope.row.coreStat === true' size="small">正常</el-tag>
-            <el-tag v-if='scope.row.coreStat === false'  size="small" type="danger">不正常</el-tag>
+            <el-tag v-if='scope.row.sasStat === true' size="small">正常</el-tag>
+            <el-tag v-if='scope.row.sasStat === false'  size="small" type="danger">不正常</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="gpsStat"
+          label="gps状态">
+          <template slot-scope="scope">
+            <el-tag v-if='scope.row.gpsStat === true' size="small">正常</el-tag>
+            <el-tag v-if='scope.row.gpsStat === false'  size="small" type="danger">不正常</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -331,6 +340,12 @@ export default {
     this.getDataList()
   },
   methods: {
+    tableRowClassName ({row, rowIndex}) {
+      if (row.typeId === 1) {
+        return 'warning-row'
+      }
+      return ''
+    },
     // 获取数据列表
     getDataList () {
       this.dataListLoading = true
@@ -500,3 +515,12 @@ export default {
   }
 }
 </script>
+<style>
+.el-table .warning-row {
+  background: oldlace;
+}
+
+.el-table .success-row {
+  background: #f0f9eb;
+}
+</style>

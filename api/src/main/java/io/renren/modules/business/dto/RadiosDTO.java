@@ -36,7 +36,7 @@ public class RadiosDTO {
     public BusinessRadio toBusinessRadio(String gatewayid){
         return new BusinessRadio(sid, gatewayid, null, null, model,
                 gpsStat, new BigDecimal(lng), new BigDecimal(lat), "SUCCESS".equals(sasStat),
-                coreStat, onair, cellVersion, "",null, null, 1);
+                coreStat, onair, cellVersion, "",null, null, getOnair() ? 1 : 0);
     }
 
     JSONObject jsonObject = (JSONObject) BeanUtils.toJSON(this);

@@ -159,6 +159,7 @@
       :row-class-name="tableRowClassName"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
       <el-table-column
+        fixed
         prop="id"
         label="编号"
         sortable
@@ -172,10 +173,12 @@
           width="180">
           <template slot-scope="scope">
             <el-link
+              v-if="scope.row.address"
               :href="'https://explorer.helium.com/hotspots/' + scope.row.address + '/5g-statistics'"
               target="_blank"
               type="primary"
-              :underline="false">{{ scope.row.name || scope.row.address }}</el-link>
+              :underline="false">{{ scope.row.name }}</el-link>
+            <span v-else >{{ scope.row.name }}</span>
             <!--          <a :href="'https://explorer.helium.com/hotspots/' + scope.row.address"-->
             <!--             target="_blank"-->
             <!--             class="buttonText">{{ scope.row.name }}</a>-->
@@ -185,13 +188,25 @@
           prop="alis"
           label="别名"
           sortable
-          width="180">
+          width="80">
         </el-table-column>
         <el-table-column
           prop="privateIp"
           label="IP"
           sortable
-          width="180">
+          width="100">
+        </el-table-column>
+        <el-table-column
+          prop="upload"
+          label="上传"
+          sortable
+          width="80">
+        </el-table-column>
+        <el-table-column
+          prop="download"
+          label="下载"
+          sortable
+          width="80">
         </el-table-column>
         <el-table-column
           prop="address"
@@ -204,19 +219,19 @@
       </el-table-column>
       <el-table-column label="基站设备信息">
         <el-table-column
-          prop="sasStat"
-          label="sas状态">
-          <template slot-scope="scope">
-            <el-tag v-if='scope.row.sasStat === true' size="small">正常</el-tag>
-            <el-tag v-if='scope.row.sasStat === false'  size="small" type="danger">不正常</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column
           prop="gpsStat"
           label="gps状态">
           <template slot-scope="scope">
             <el-tag v-if='scope.row.gpsStat === true' size="small">正常</el-tag>
             <el-tag v-if='scope.row.gpsStat === false'  size="small" type="danger">不正常</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="sasStat"
+          label="sas状态">
+          <template slot-scope="scope">
+            <el-tag v-if='scope.row.sasStat === true' size="small">正常</el-tag>
+            <el-tag v-if='scope.row.sasStat === false'  size="small" type="danger">不正常</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -282,38 +297,6 @@ export default {
         online: '',
         depl: ''
       },
-      tableData: [{
-        id: 1,
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        id: 2,
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        id: 3,
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄',
-        children: [{
-          id: 31,
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          id: 32,
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }]
-      }, {
-        id: 4,
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
       pageSizes: sizes,
       dataList: [],
       pageIndex: 1,

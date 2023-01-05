@@ -185,6 +185,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
             device.setUpdateTime(new Date());
             businessDeviceMapper.updateByAddress(device);
         } else {
+            device.setUpdateTime(new Date());
             device.setImportDataTime(new Date());
             businessDeviceMapper.insertSelective(device);
         }

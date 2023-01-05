@@ -88,7 +88,7 @@ public class BusinessG5LogServiceImpl implements BusinessG5LogService {
             if (ObjectUtils.notIsEmpty(g5LogDTO.getRadios())) {
                 for (RadiosDTO radio : g5LogDTO.getRadios()) {
                     radioIds.remove(radio.getSid());
-                    radioService.updateStatusByRadioId(radio.getOnair() ? 1 : 0, radio.getSid());
+//                    radioService.updateStatusByRadioId(radio.getOnair() ? 1 : 0, radio.getSid());
                     radioService.insertOrUpdateSelective(radio.toBusinessRadio(g5LogDTO.getGatewayid()));
                     g5Logs.addAll(radio.toBusinessG5Log(now, 2, 3, 4));
                 }

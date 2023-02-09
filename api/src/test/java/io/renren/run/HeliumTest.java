@@ -190,7 +190,47 @@ public class HeliumTest {
     public void showAvailableHexs1() throws MsgException {
 
         String groupStr =
-                        "874033165ffffff\t1\n" +
+//                "862db199fffffff\t4\n" +
+//                        "862db198fffffff\t3\n" +
+//                        "862db18a7ffffff\t2\n" +
+//                        "861f448a7ffffff\t3\n" +
+//                        "861f448afffffff\t3\n" +
+//                        "861f4481fffffff\t3\n" +
+//                        "861f448dfffffff\t3\n" +
+//                        "861f448cfffffff\t3\n" +
+//                        "861f448c7ffffff\t3\n" +
+//                        "871f12af3ffffff\t2\n" +
+//                        "871f12ac6ffffff\t2\n" +
+//                        "871f12ac5ffffff\t1\n" +
+//                        "871f12af1ffffff\t2\n" +
+//                        "871f12aeeffffff\t2\n" +
+                        "861f106b7ffffff\t3\n" +
+//                        "861f10697ffffff\t3\n" +
+//                        "861f12b4fffffff\t3\n" +
+//                        "862da534fffffff\t3\n" +
+//                        "862da536fffffff\t3\n" +
+                        "862da5367ffffff\t3\n" +
+//                        "8539560bfffffff\t9\n" +
+//                        "853f68c3fffffff\t9\n" +
+//                        "862c2a16fffffff\t5\n" +
+//                        "862c2a14fffffff\t4\n" +
+                        "861ec1607ffffff\t5\n" +
+//                        "861ec1627ffffff\t4\n" +
+//                        "871ec1756ffffff\t2\n" +
+//                        "861ec92afffffff\t4\n" +
+//                        "861ec9287ffffff\t4\n" +
+//                        "871ec92b1ffffff\t2\n" +
+//                        "871ec92b2ffffff\t2\n" +
+//                        "8619420b7ffffff\t4\n" +
+//                        "8719420a2ffffff\t2\n" +
+//                        "8719420a3ffffff\t2\n" +
+//                        "8819421811fffff\t1\n" +
+//                        "8819421819fffff\t1\n" +
+//                        "881942180bfffff\t1\n" +
+//                        "8819421805fffff\t1\n" +
+//                        "861ec10d7ffffff\t4\n" +
+//                        "861ec1727ffffff\t4\n" +
+//                        "861ec172fffffff\t4" +
                                 "";
         String filePath = "../data/result/坐标_" + System.currentTimeMillis();
 
@@ -216,7 +256,7 @@ public class HeliumTest {
     @SneakyThrows
     @Test
     public void getDevice() {
-        String filePath = String.format("%s\\%d", "../data/result/", System.currentTimeMillis());
+        String filePath = String.format("%s\\%d", "../data/result", System.currentTimeMillis());
 //        List<SourceCorpse> sourceCorpses = globalDeviceService.findsourceCorpses5ByLongCountry("US", filePath);
 //        for (SourceCorpse sourceCorps : sourceCorpses) {
 //            FileUtils.writeln(filePath, StringUtils.outStr("\t", sourceCorps.getHex(), sourceCorps.getCityId(), sourceCorps.getAddress(),
@@ -249,7 +289,7 @@ public class HeliumTest {
      */
     @Test
     public void getBobcatMinerJson() throws MsgException {
-        String filePath = String.format("%s\\bobcat_%d", "../data/result/", System.currentTimeMillis());
+        String filePath = String.format("%s\\bobcat_%d", "../data/result", System.currentTimeMillis());
 
         String ips =
                 "192.168.4.47\n" +
@@ -576,7 +616,7 @@ public class HeliumTest {
     @SneakyThrows
     @Test
     public void analysis() {
-        String filePath = String.format("%s\\%d", "../data/result/", System.currentTimeMillis());
+        String filePath = String.format("%s\\%d", "../data/result", System.currentTimeMillis());
         FileUtils.writeln(filePath, StringUtils.outStr("\t", "hex5", "总数", "离线", "在线", "国家", "城市编号", "区域设备",
                         "最低分值", "城市", "离线率"),
                 true, true);

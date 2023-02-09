@@ -1,4 +1,5 @@
 package io.renren.modules.business.dao;
+import io.renren.modules.domain.dto.G5DeviceDTO;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public interface BusinessRadioMapper {
      */
     int updateByPrimaryKey(BusinessRadio record);
 
-    List<BusinessRadio> selectAll();
+    List<BusinessRadio> selectAll(@Param("g5DeviceDTO") G5DeviceDTO g5DeviceDTO);
 
     List<BusinessRadio> selectNotAddressGatewRadio();
 

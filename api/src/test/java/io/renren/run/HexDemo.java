@@ -72,8 +72,8 @@ public class HexDemo {
         List<BusinessDevice> devices = businessDeviceMapper.selectAll();
 
         for (BusinessDevice businessDevice : devices) {
-            if (ObjectUtils.notIsEmpty(businessDevice.getHex())) {
-                businessDevice.setHex5(h3Core.h3ToParentAddress(businessDevice.getHex(), res));
+            if (ObjectUtils.notIsEmpty(businessDevice.getLocationAddress())) {
+                businessDevice.setHex5(h3Core.h3ToParentAddress(businessDevice.getLocationAddress(), res));
             }
         }
 
@@ -98,7 +98,7 @@ public class HexDemo {
             jsons.addAll(depley(line, res, k));
         }
 
-        String[] keys = new String[]{"status", "corePoint", "hex5", "depllist", "twoLevelName", "ip",  "address", "total24h"};
+        String[] keys = new String[]{"status", "corePoint", "hex5", "depllist", "twoLevelName", "manageName", "publicIp", "ip",  "address", "total24h", "usesig", "group", "online"};
         List<String> strings = BeanUtils.toJavaObject(keys, new TypeReference<List<String>>() {{
         }});
         JSONUtils.toCsvTitle(path, strings);
@@ -172,7 +172,12 @@ public class HexDemo {
     }
 
     List<JSONObject> depley(String address, int res, int k) {
+        List<JSONObject> jsons = new ArrayList<>();
+
         Device device = heliumApi.getHotspotsByAddress(address);
+        if(ObjectUtils.isEmpty(device) || ObjectUtils.isEmpty(device.getLocation_hex())){
+            return jsons;
+        }
         String hexR = h3Core.h3ToParentAddress(device.getLocation_hex(), res);
         log.info("中心点:{}", hexR);
         List<String> strings = h3Core.kRing(hexR, k);
@@ -180,7 +185,7 @@ public class HexDemo {
         List<BusinessDevice> devices = businessDeviceMapper.selectAllByHex5(strings);
         JSONObject jsonObject;
 
-        List<JSONObject> jsons = new ArrayList<>();
+
         for (BusinessDevice businessDevice : devices) {
             jsonObject = JSONUtils.toJSONObject(businessDevice);
             jsonObject.put("corePoint", address);

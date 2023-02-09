@@ -1,24 +1,14 @@
 package io.renren.modules.business.dao;
 
 import io.renren.modules.business.entity.BusinessDevice;
-
 import java.math.BigDecimal;
 import java.util.List;
-
 import io.renren.modules.domain.dto.DeviceDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface BusinessDeviceMapper {
-    /**
-     * delete by primary key
-     *
-     * @param address primaryKey
-     * @return deleteCount
-     */
-    int deleteByPrimaryKey(String address);
-
     /**
      * insert record to table
      *
@@ -27,10 +17,6 @@ public interface BusinessDeviceMapper {
      */
     int insert(BusinessDevice record);
 
-    int insertOrUpdate(BusinessDevice record);
-
-    int insertOrUpdateSelective(BusinessDevice record);
-
     /**
      * insert record to table selective
      *
@@ -38,6 +24,20 @@ public interface BusinessDeviceMapper {
      * @return insert count
      */
     int insertSelective(BusinessDevice record);
+
+    int batchInsert(@Param("list") List<BusinessDevice> list);
+
+    /**
+     * delete by primary key
+     *
+     * @param address primaryKey
+     * @return deleteCount
+     */
+    int deleteByPrimaryKey(String address);
+
+    int insertOrUpdate(BusinessDevice record);
+
+    int insertOrUpdateSelective(BusinessDevice record);
 
     /**
      * select by primary key
@@ -67,8 +67,6 @@ public interface BusinessDeviceMapper {
 
     int updateBatchSelective(@Param("list") List<BusinessDevice> list);
 
-    int batchInsert(@Param("list") List<BusinessDevice> list);
-
     List<BusinessDevice> selectAllPaging(@Param("deviceDTO") DeviceDTO deviceDTO);
 
     List<BusinessDevice> selectFilterable(@Param("deviceDTO") DeviceDTO deviceDTO);
@@ -96,5 +94,4 @@ public interface BusinessDeviceMapper {
     int updateDepllistByAddress(@Param("updatedDepllist") Integer updatedDepllist, @Param("addresss") List<String> addresss);
 
     int updateTotal24hByAddress(@Param("updatedTotal24h") BigDecimal updatedTotal24h, @Param("addresss") List<String> addresss);
-
 }

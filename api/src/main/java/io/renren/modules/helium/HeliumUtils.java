@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.uber.h3core.H3Core;
-import io.renren.business.domin.device.CompletedRewardsBean;
 import io.renren.common.gitUtils.*;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
@@ -15,7 +13,6 @@ import io.renren.modules.helium.domain.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -73,23 +70,23 @@ public class HeliumUtils {
 
         JSONObject jsonObject = getJSONObject(url, parameter);
 //        if (null != jsonObject) {
-            JSONArray jsonArray = (JSONArray) JSONUtils.jsGetData(jsonObject, "data");
+        JSONArray jsonArray = (JSONArray) JSONUtils.jsGetData(jsonObject, "data");
 
-            List<HotspotsProfit> hotspotsProfits = BeanUtils.toJavaObject(jsonArray, new TypeReference<List<HotspotsProfit>>() {
-            });
+        List<HotspotsProfit> hotspotsProfits = BeanUtils.toJavaObject(jsonArray, new TypeReference<List<HotspotsProfit>>() {
+        });
 //        System.out.println("------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ");
-            double total = 0.0;
-            LocalDateTime date = hotspotsProfits.get(0).getTimestamp();
-            date = date.minusDays(1);
+        double total = 0.0;
+        LocalDateTime date = hotspotsProfits.get(0).getTimestamp();
+        date = date.minusDays(1);
 //        System.out.println(DateUtils.asStr(4, date));
-            for (HotspotsProfit hotspotsProfit : hotspotsProfits) {
-                if (date.compareTo(hotspotsProfit.getTimestamp()) < 0) {
-                    total += hotspotsProfit.getTotal();
+        for (HotspotsProfit hotspotsProfit : hotspotsProfits) {
+            if (date.compareTo(hotspotsProfit.getTimestamp()) < 0) {
+                total += hotspotsProfit.getTotal();
 //                System.out.println(DateUtils.asStr(4, hotspotsProfit.getTimestamp()) + " " + hotspotsProfit.getSum() + " " + hotspotsProfit.getTotal());
-                }
             }
+        }
 //        System.out.println(total);
-            return total;
+        return total;
 //        }
 //
 //        return -1;
@@ -172,7 +169,7 @@ public class HeliumUtils {
         log.info("httpResultData:{}{}", url, JSON.toJSONString(httpResultData));
 
 //        if (200 != httpResultData.getStatus()) {
-            return JSON.parseObject(httpResultData.getResult());
+        return JSON.parseObject(httpResultData.getResult());
 //        }
 //        return null;
     }
@@ -299,11 +296,11 @@ public class HeliumUtils {
 ////        FileUtils.write("../data/locations", JSON.toJSONString(locations));
 //    }
 
-    public static List<Role> roles(String hotspotsId, String cursorNo, int index) throws MsgException {
+    public static List<Role> roles(String hotspotsId, Boolean isDevice, String cursorNo, int index) throws MsgException {
         JSONObject rolesJ = null;
         List<Role> roleL = new ArrayList<>();
         for (int i = 0; i < index; i++) {
-            rolesJ = roles(hotspotsId, null, cursorNo);
+            rolesJ = roles(hotspotsId, isDevice, null, cursorNo);
             Object data = JSONUtils.jsGetData(rolesJ, "data");
             if (ObjectUtils.notIsEmpty(data)) {
                 for (Role role : BeanUtils.toJavaObject(data, new TypeReference<List<Role>>() {
@@ -312,7 +309,7 @@ public class HeliumUtils {
                     roleL.add(role);
                 }
             }
-            cursorNo = (String) JSONUtils.jsGetData(rolesJ, "cursors");
+            cursorNo = (String) JSONUtils.jsGetData(rolesJ, isDevice ? "cursor" : "");
         }
         return roleL;
     }
@@ -322,18 +319,14 @@ public class HeliumUtils {
         if (cursor.containsKey(hotspotsId)) {
             cursorNo = cursor.get(hotspotsId);
         } else {
-            JSONObject json = roles(hotspotsId, "", null);
+            JSONObject json = roles(hotspotsId, true, "", null);
             if (json.containsKey("cursors")) {
                 cursor.put(hotspotsId, (String) json.get("cursors"));
                 cursorNo = cursor.get(hotspotsId);
             }
         }
 
-//        return roles(hotspotsId, cursorNo);
-        return roles(hotspotsId, cursorNo, 4);
-//        JSONObject roles = roles(hotspotsId, null, cursorNo);
-//        return BeanUtils.toJavaObject(roles, new TypeReference<RestBean>() {});
-
+        return roles(hotspotsId, true, cursorNo, 4);
     }
 
     /**
@@ -344,8 +337,8 @@ public class HeliumUtils {
      * @param cursor      当前页序列码
      * @return
      */
-    public static JSONObject roles(String hotspotsId, String filterTypes, String cursor) {
-        String url = String.format("%sv1/hotspots/%s/roles", WWW, hotspotsId);
+    public static JSONObject roles(String hotspotsId, Boolean isDevice, String filterTypes, String cursor) {
+        String url = String.format("%sv1/%s/%s/roles", WWW, isDevice ? "hotspots" : "accounts", hotspotsId);
 
         Map<String, String> parameter = new HashMap<>();
         if (null != filterTypes) {
@@ -357,6 +350,9 @@ public class HeliumUtils {
 
         return getJSONO(url, parameter);
     }
+
+// https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/transactions/meRhw1VqjWJAuYlxhGxPKT88_hPvcJaV9rwDwXyl1lQ?
+// actor=13Vv51BgPVMr5gz4vMeTLYk2voZhD8VYssEZV3GgrJjhA8pRuDS
 
     public static String roleTransactions(Role role) {
         JSONObject json = transactions(role.getHotspottyId(), role.getHash());
@@ -388,6 +384,8 @@ public class HeliumUtils {
         return JSONObject.parseObject(getStr(url, parameter).getResult());
     }
 
+    static boolean logS = false;
+
     @SneakyThrows
     public static HttpResultData getStr(String url, Map<String, String> parameter) {
         System.out.println(String.format("=============>>\n get %s \n %s", url, JSON.toJSONString(parameter)));
@@ -395,8 +393,10 @@ public class HeliumUtils {
         String headStr = "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36\n";
         HttpResultData httpResultData = HttpUtilsx.get(url, parameter, headStr);
 
-        System.out.println(String.format("<<=============\n %s", JSON.toJSONString(httpResultData.getResult())));
-        System.out.println(String.format("<<=============\n %s", JSON.toJSONString(JSONUtils.jsGetData(httpResultData.getResult(), "data"))));
+        if (logS) {
+            System.out.println(String.format("<<=============\n %s", JSON.toJSONString(httpResultData.getResult())));
+//            System.out.println(String.format("<<=============\n %s", JSON.toJSONString(JSONUtils.jsGetData(httpResultData.getResult(), "data"))));
+        }
         return httpResultData;
     }
 
@@ -485,6 +485,33 @@ public class HeliumUtils {
 
 
     public static void main(String[] args) throws MsgException {
-        showRoles("112Qg8YJPzAhiVvuMS6HKtr5t2ttYDFSrUz9CYr7dqW2CpUZFBzA");
+//        showRoles("13Vv51BgPVMr5gz4vMeTLYk2voZhD8VYssEZV3GgrJjhA8pRuDS");
+//        https://ugxlyxnlrg9udfdyzwnrvghlu2vydmvycg.blockjoy.com/v1/accounts/13Vv51BgPVMr5gz4vMeTLYk2voZhD8VYssEZV3GgrJjhA8pRuDS
+//        /roles?filter_types=rewards_v1%2Crewards_v2%2Crewards_v3%2Csubnetwork_rewards_v1
+
+        String hotspotsId = "13Vv51BgPVMr5gz4vMeTLYk2voZhD8VYssEZV3GgrJjhA8pRuDS";
+        JSONObject roles = roles(hotspotsId, false, "rewards_v1,rewards_v2,rewards_v3,subnetwork_rewards_v1", "");
+        log.info("cursor:{}", roles.get("cursor"));
+        roles = roles(hotspotsId, false, "", (String) roles.get("cursor"));
+
+        log.info("{}", getTransactionsAmount(hotspotsId, (String) JSONUtils.jsGetData(roles, "data.0.hash")));
+
     }
+
+    //(String) JSONUtils.jsGetData(roles, "data.0.hash")
+    static Long getTransactionsAmount(String hotspotsId, String hash) {
+        JSONObject json = transactions(hotspotsId, hash);
+        JSONArray o = (JSONArray) JSONUtils.jsGetData(json, "data.rewards");
+        JSONObject jsonObject = null;
+        for (int i = 0; i < o.size(); i++) {
+            jsonObject = o.getJSONObject(i);
+            if (hotspotsId.equals(jsonObject.get("account"))) {
+                break;
+            }
+        }
+//        log.info("{}", jsonObject.get("amount"));
+        return jsonObject.getLong("amount");
+    }
+
+
 }

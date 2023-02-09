@@ -241,6 +241,9 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         EasyExcel.read(file.getInputStream(), HotspottyData.class, new HotspottyDataListener(this)).sheet(1).doRead();
     }
 
+
+    int res = 5;
+
     @Override
     @Async("updateDeviceInfoTask")
     public void updateDeviceInfoTask(Map<String, String> makersDictionary, List<List<String>> lists, int index) {
@@ -277,7 +280,8 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
                     deviceEntity.setCountry(device.getGeocode().getLong_country());
                     deviceEntity.setCity(StringUtils.outStr(" ", device.getGeocode().getLong_city(), device.getGeocode().getLong_state()));
                     deviceEntity.setStreet(device.getGeocode().getLong_street());
-                    deviceEntity.setHex(device.getLocation_hex());
+                    deviceEntity.setHex5(HexUtils.h3.h3ToParentAddress(device.getLocation_hex(), res));
+                    deviceEntity.setLocationAddress(device.getLocation_hex());
                     deviceEntity.setOwner(device.getOwner());
                     deviceEntity.setScale(device.getReward_scale());
                     deviceEntity.setPingpai(makersDictionary.get(device.getPayer()));
@@ -287,6 +291,42 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
 
                 log.info("【updateByAddress】{}", JSON.toJSONString(deviceEntity));
                 businessDeviceMapper.updateByAddress(deviceEntity);
+            }
+        }
+        log.info("任务结束：hash值：{} 线程序号：{} 查询{}台设备 所消耗的时间{}", addresss.hashCode(), index, addresss.size(), DateUtils.calculationTimeConsuming(now));
+
+    }
+
+
+    @Override
+    @Async("updateHeartbeatTask")
+    public void updateHeartbeatTask( List<List<String>> lists, int index) {
+        List<String> addresss = lists.get(index);
+        log.info(String.format("开始执行任务：hash值：%s 线程序号：%d任务量：%d", addresss.hashCode(), index, addresss.size()));
+
+        LocalDateTime now = LocalDateTime.now();
+        BusinessDevice deviceEntity = null;
+        String address = null;
+
+        JSONObject cl;
+        for (int i = 0; i < addresss.size(); i++) {
+            address = addresss.get(i);
+            log.info(String.format("hash值：%s 线程序号：%d任务量：%d 开始查询第%d个设备信息 设备地址：%s", addresss.hashCode(), index, addresss.size(), i, addresss.get(i)));
+            if (ObjectUtils.notIsEmpty(address)) {
+
+                cl = new HeliumHttpUtils().client(address);
+
+                if (ObjectUtils.notIsEmpty(cl)) {
+                    deviceEntity = new BusinessDevice();
+                    deviceEntity.setAddress(address);
+                    deviceEntity.setUsesig((String) JSONUtils.jsGetData(cl, "client.usesig"));
+                    deviceEntity.setGroup((String) JSONUtils.jsGetData(cl, "client.group"));
+                    log.info("【updateByAddress】{}", JSON.toJSONString(deviceEntity));
+                    if(ObjectUtils.notIsEmpty(deviceEntity.getUsesig()) && ObjectUtils.notIsEmpty(deviceEntity.getGroup())){
+                        businessDeviceMapper.updateByAddress(deviceEntity);
+                    }
+                }
+
             }
         }
         log.info("任务结束：hash值：{} 线程序号：{} 查询{}台设备 所消耗的时间{}", addresss.hashCode(), index, addresss.size(), DateUtils.calculationTimeConsuming(now));
@@ -576,7 +616,13 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         return businessDeviceMapper.updateByPrimaryKey(record);
     }
 
+    @Override
+    public int batchInsert(List<BusinessDevice> list) {
+        return businessDeviceMapper.batchInsert(list);
+    }
 }
+
+
 
 
 

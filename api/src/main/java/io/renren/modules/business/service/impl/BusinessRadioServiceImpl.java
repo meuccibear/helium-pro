@@ -1,5 +1,7 @@
 package io.renren.modules.business.service.impl;
 
+import io.renren.modules.domain.dto.G5DeviceDTO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import io.renren.modules.business.dao.BusinessRadioMapper;
@@ -55,8 +57,8 @@ public class BusinessRadioServiceImpl implements BusinessRadioService {
     }
 
     @Override
-    public List<BusinessRadio> selectAll() {
-        return businessRadioMapper.selectAll();
+    public List<BusinessRadio> selectAll( G5DeviceDTO g5DeviceDTO) {
+        return businessRadioMapper.selectAll(g5DeviceDTO);
     }
 
     @Override

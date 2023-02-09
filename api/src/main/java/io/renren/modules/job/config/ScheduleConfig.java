@@ -8,6 +8,7 @@
 
 package io.renren.modules.job.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
@@ -22,6 +23,10 @@ import java.util.Properties;
  */
 @Configuration
 public class ScheduleConfig {
+
+    //是否设置自动启动，默认为 true  true开启   false关闭
+    @Value("${spring.scheduler.autoStartup: false}")
+    private boolean autoStartup;
 
     @Bean
     public SchedulerFactoryBean schedulerFactoryBean(DataSource dataSource) {
@@ -59,8 +64,8 @@ public class ScheduleConfig {
         //可选，QuartzScheduler 启动时更新己存在的Job，这样就不用每次修改targetObject后删除qrtz_job_details表对应记录了
         factory.setOverwriteExistingJobs(true);
         //设置自动启动，默认为 true
+        factory.setAutoStartup(autoStartup);
 //        factory.setAutoStartup(false);
-        factory.setAutoStartup(false);
 
         return factory;
     }

@@ -1,135 +1,70 @@
 <template>
   <div class="mod-config">
-<!--    <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">-->
-<!--      <el-row>-->
+    <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
+      <el-row>
 <!--        <el-form-item-->
 <!--          v-if="isAuth('business:businessdevice:oneLevelName')">-->
 <!--          <el-input v-model="dataForm.key" placeholder="模糊搜索客户名" clearable></el-input>-->
 <!--        </el-form-item>-->
-<!--        <el-form-item-->
-<!--          v-if="isAuth('business:businessdevice:oneLevelName')">-->
-<!--          <el-select-->
-<!--            v-model="dataForm.oneLevelName"-->
-<!--            placeholder="一级客户名称"-->
-<!--            clearable-->
-<!--            filterable-->
-<!--            :value="dataForm.oneLevelName">-->
-<!--            <el-option-->
-<!--              v-for="item in oneLevelNames"-->
-<!--              :key="item.value"-->
-<!--              :label="item.label"-->
-<!--              :value="item.value">-->
-<!--            </el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item>-->
-<!--          <el-select-->
-<!--            v-model="dataForm.twoLevelName"-->
-<!--            :placeholder="isAuth('business:businessdevice:oneLevelName') ? '二级客户名称' : '客户名称'"-->
-<!--            clearable-->
-<!--            filterable-->
-<!--            :value="dataForm.twoLevelName">-->
-<!--            <el-option-->
-<!--              v-for="item in twoLevelNames"-->
-<!--              :key="item.value"-->
-<!--              :label="item.label"-->
-<!--              :value="item.value">-->
-<!--            </el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item-->
-<!--          v-if="isAuth('business:businessdevice:manage')"-->
-<!--        >-->
-<!--          <el-select-->
-<!--            v-model="dataForm.manageName"-->
-<!--            placeholder="管理机"-->
-<!--            clearable-->
-<!--            filterable-->
-<!--            :value="dataForm.manageName">-->
-<!--            <el-option-->
-<!--              v-for="item in manageNames"-->
-<!--              :key="item.value"-->
-<!--              :label="item.label"-->
-<!--              :value="item.value">-->
-<!--            </el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item>-->
-<!--          <el-select-->
-<!--            v-model="dataForm.groupName"-->
-<!--            placeholder="分组"-->
-<!--            clearable-->
-<!--            filterable-->
-<!--            :value="dataForm.groupName">-->
-<!--            <el-option-->
-<!--              v-for="item in groupNames"-->
-<!--              :key="item.value"-->
-<!--              :label="item.label"-->
-<!--              :value="item.value">-->
-<!--            </el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item>-->
-<!--          <el-select-->
-<!--            v-model="dataForm.country"-->
-<!--            placeholder="国家"-->
-<!--            clearable-->
-<!--            filterable-->
-<!--            :value="dataForm.country">-->
-<!--            <el-option-->
-<!--              v-for="item in countrys"-->
-<!--              :key="item.value"-->
-<!--              :label="item.label"-->
-<!--              :value="item.value">-->
-<!--            </el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item>-->
-<!--          <el-select-->
-<!--            v-model="dataForm.city"-->
-<!--            placeholder="城市"-->
-<!--            clearable-->
-<!--            filterable-->
-<!--            :value="dataForm.city">-->
-<!--            <el-option-->
-<!--              v-for="item in citys"-->
-<!--              :key="item.value"-->
-<!--              :label="item.label"-->
-<!--              :value="item.value">-->
-<!--            </el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item>-->
-<!--          <el-select-->
-<!--            v-model="dataForm.online"-->
-<!--            placeholder="设备状态"-->
-<!--            clearable-->
-<!--            :value="dataForm.online">-->
-<!--            <el-option-->
-<!--              v-for="item in onlines"-->
-<!--              :key="item.value"-->
-<!--              :label="item.label"-->
-<!--              :value="item.value">-->
-<!--            </el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item>-->
-<!--          <el-select-->
-<!--            v-model="dataForm.depl"-->
-<!--            placeholder="黑名单"-->
-<!--            clearable-->
-<!--            :value="dataForm.depl">-->
-<!--            <el-option-->
-<!--              v-for="item in depllists"-->
-<!--              :key="item.value"-->
-<!--              :label="item.label"-->
-<!--              :value="item.value">-->
-<!--            </el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item>-->
-<!--          <el-button @click="getDataList()">查询</el-button>-->
-<!--        </el-form-item>-->
+        <el-form-item>
+          <el-select
+            v-model="dataForm.internel"
+            placeholder="Gateway 网络"
+            clearable
+            :value="dataForm.internel">
+            <el-option
+              v-for="item in internel"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select
+            v-model="dataForm.gpsStat"
+            placeholder="GPS"
+            clearable
+            :value="dataForm.gpsStat">
+            <el-option
+              v-for="item in gpsStat"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select
+            v-model="dataForm.sasStat"
+            placeholder="Sas"
+            clearable
+            :value="dataForm.sasStat">
+            <el-option
+              v-for="item in sasStat"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select
+            v-model="dataForm.status"
+            placeholder="状态"
+            clearable
+            :value="dataForm.status">
+            <el-option
+              v-for="item in status"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="getDataList()">查询</el-button>
+        </el-form-item>
 <!--        <el-form-item>-->
 <!--          <el-upload-->
 <!--            v-if="isAuth('business:businessdevice:importData')"-->
@@ -148,8 +83,8 @@
 <!--            size="small"-->
 <!--            plain>下载日报</el-button>-->
 <!--        </el-form-item>-->
-<!--      </el-row>-->
-<!--    </el-form>-->
+      </el-row>
+    </el-form>
     <el-table
       :data="dataList"
       style="width: 100%;margin-bottom: 20px;"
@@ -160,30 +95,38 @@
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
       <el-table-column
         fixed
-        prop="id"
         label="编号"
         sortable
         width="220">
+        <template slot-scope="scope">
+          <el-link
+            v-if="scope.row.address"
+            :href="'https://explorer.helium.com/hotspots/' + scope.row.address + '/5g-statistics'"
+            target="_blank"
+            type="primary"
+            :underline="false">{{ scope.row.id }}</el-link>
+          <span v-else >{{ scope.row.id }}</span>
+        </template>
       </el-table-column>
       <el-table-column label="网关设信息信息">
-        <el-table-column
-          prop="name"
-          label="名称"
-          sortable
-          width="180">
-          <template slot-scope="scope">
-            <el-link
-              v-if="scope.row.address"
-              :href="'https://explorer.helium.com/hotspots/' + scope.row.address + '/5g-statistics'"
-              target="_blank"
-              type="primary"
-              :underline="false">{{ scope.row.name }}</el-link>
-            <span v-else >{{ scope.row.name }}</span>
-            <!--          <a :href="'https://explorer.helium.com/hotspots/' + scope.row.address"-->
-            <!--             target="_blank"-->
-            <!--             class="buttonText">{{ scope.row.name }}</a>-->
-          </template>
-        </el-table-column>
+<!--        <el-table-column-->
+<!--          prop="name"-->
+<!--          label="名称"-->
+<!--          sortable-->
+<!--          width="180">-->
+<!--          <template slot-scope="scope">-->
+<!--            <el-link-->
+<!--              v-if="scope.row.address"-->
+<!--              :href="'https://explorer.helium.com/hotspots/' + scope.row.address + '/5g-statistics'"-->
+<!--              target="_blank"-->
+<!--              type="primary"-->
+<!--              :underline="false">{{ scope.row.name }}</el-link>-->
+<!--            <span v-else >{{ scope.row.name }}</span>-->
+<!--            &lt;!&ndash;          <a :href="'https://explorer.helium.com/hotspots/' + scope.row.address"&ndash;&gt;-->
+<!--            &lt;!&ndash;             target="_blank"&ndash;&gt;-->
+<!--            &lt;!&ndash;             class="buttonText">{{ scope.row.name }}</a>&ndash;&gt;-->
+<!--          </template>-->
+<!--        </el-table-column>-->
         <el-table-column
           prop="alis"
           label="别名"
@@ -194,7 +137,15 @@
           prop="privateIp"
           label="IP"
           sortable
+          :sort-method="sortByIP"
           width="100">
+          <template slot-scope="scope">
+            <el-link
+              :href="'http://' + scope.row.privateIp"
+              target="_blank"
+              type="primary"
+              :underline="false">{{ scope.row.privateIp }}</el-link>
+          </template>
         </el-table-column>
         <el-table-column
           prop="upload"
@@ -209,7 +160,31 @@
           width="80">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="minerVersion"
+          label="Miner版本"
+          sortable
+          width="120">
+        </el-table-column>
+        <el-table-column
+          prop="agwVersion"
+          label="Agw版本"
+          sortable
+          width="110">
+        </el-table-column>
+        <el-table-column
+          prop="todayEarnings"
+          label="今日收益"
+          sortable
+          width="130">
+        </el-table-column>
+        <el-table-column
+          prop="yesterdayEarnings"
+          label="昨日收益"
+          sortable
+          width="130">
+        </el-table-column>
+        <el-table-column
+          width="66"
           label="网络">
           <template slot-scope="scope">
             <el-tag v-if='scope.row.internel === true' size="small">正常</el-tag>
@@ -220,7 +195,7 @@
       <el-table-column label="基站设备信息">
         <el-table-column
           prop="gpsStat"
-          label="gps状态">
+          label="GPS状态">
           <template slot-scope="scope">
             <el-tag v-if='scope.row.gpsStat === true' size="small">正常</el-tag>
             <el-tag v-if='scope.row.gpsStat === false'  size="small" type="danger">不正常</el-tag>
@@ -228,7 +203,7 @@
         </el-table-column>
         <el-table-column
           prop="sasStat"
-          label="sas状态">
+          label="SAS状态">
           <template slot-scope="scope">
             <el-tag v-if='scope.row.sasStat === true' size="small">正常</el-tag>
             <el-tag v-if='scope.row.sasStat === false'  size="small" type="danger">不正常</el-tag>
@@ -242,11 +217,21 @@
             <el-tag v-if='scope.row.onair === false'  size="small" type="danger">不正常</el-tag>
           </template>
         </el-table-column>
+        <el-table-column
+          prop="cellVersion"
+          label="Cell版本"
+          sortable
+          :show-overflow-tooltip="true"
+          width="110">
+        </el-table-column>
       </el-table-column>
       <el-table-column
         prop="status"
         header-align="center"
         align="center"
+        sortable
+        width="80"
+        :sort-method="sortByStatus"
         label="状态">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status === 0" size="small" type="danger">离线</el-tag>
@@ -295,7 +280,11 @@ export default {
         country: '',
         city: '',
         online: '',
-        depl: ''
+        depl: '',
+        sasStat: null,
+        gpsStat: null,
+        internel: null,
+        status: null
       },
       pageSizes: sizes,
       dataList: [],
@@ -305,7 +294,10 @@ export default {
       dataListLoading: false,
       dataListSelections: [],
       addOrUpdateVisible: false,
-      depllists: [],
+      sasStat: [],
+      gpsStat: [],
+      internel: [],
+      status: [],
       groupNames: [],
       // locations:[] data.location,
       countrys: [],
@@ -340,17 +332,17 @@ export default {
           'page': this.pageIndex,
           'limit': this.pageSize,
           'key': this.dataForm.key,
-          'oneLevelName': this.dataForm.oneLevelName,
-          'twoLevelName': this.dataForm.twoLevelName,
-          'manageName': this.dataForm.manageName,
-          'groupName': this.dataForm.groupName,
-          'country': this.dataForm.country,
-          'city': this.dataForm.city,
-          'online': this.dataForm.online,
-          'depllist': this.dataForm.depl
+          'sasStat': this.dataForm.sasStat,
+          'gpsStat': this.dataForm.gpsStat,
+          'internel': this.dataForm.internel,
+          'status': this.dataForm.status
         })
       }).then(({data}) => {
         if (data && data.code === 0) {
+          this.sasStat = data.sasStat
+          this.gpsStat = data.gpsStat
+          this.internel = data.internel
+          this.status = data.status
           this.dataList = data.page.list
           this.totalPage = data.page.totalCount
         } else {
@@ -469,17 +461,41 @@ export default {
         a.click()
       })
     },
+    filterTag (value, row) {
+      console.log('id:', row.id)
+      return row.status === value
+    },
+    sortByStatus (obj1, obj2) {
+      if (!obj1.statusNum && !obj2.statusNum) {
+        obj1.statusNum = 0
+        obj2.statusNum = 0
+        obj1.children.forEach(function (data, index) {
+          if (data.status === 0) {
+            obj1.statusNum = obj1.statusNum + 1
+          }
+        })
+        obj2.children.forEach(function (data, index) {
+          if (data.status === 0) {
+            obj2.statusNum = obj2.statusNum + 1
+          }
+        })
+        console.log(obj1.id, ' is ', obj1.statusNum, '>', obj2.id, ' is ', obj2.statusNum)
+        return obj1.statusNum - obj2.statusNum
+      } else {
+        return obj1.statusNum - obj2.statusNum
+      }
+    },
     sortByIP (obj1, obj2) {
       if (
-        obj1.publicIp !== '' &&
-        obj1.publicIp !== null &&
-        obj1.publicIp !== undefined &&
-        obj2.publicIp !== '' &&
-        obj2.publicIp !== null &&
-        obj2.publicIp !== undefined
+        obj1.privateIp !== '' &&
+        obj1.privateIp !== null &&
+        obj1.privateIp !== undefined &&
+        obj2.privateIp !== '' &&
+        obj2.privateIp !== null &&
+        obj2.privateIp !== undefined
       ) {
-        let array1 = obj1.publicIp.split('.')
-        let array2 = obj2.publicIp.split('.')
+        let array1 = obj1.privateIp.split('.')
+        let array2 = obj2.privateIp.split('.')
         if (array1[0] === array2[0]) {
           if (array1[1] === array2[1]) {
             if (array1[2] === array2[2]) {

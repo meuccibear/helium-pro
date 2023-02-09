@@ -41,6 +41,8 @@ spring:
                 wall:
                     config:
                         multi-statement-allow: true
+    scheduler:
+        autoStartup: false
 
 
 ##多数据源的配置

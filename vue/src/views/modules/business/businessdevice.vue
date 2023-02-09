@@ -507,14 +507,14 @@
           :show-overflow-tooltip="true"
           label="最后心跳时间">
         </el-table-column>
-        <el-table-column
-          prop="updateTime"
-          header-align="center"
-          align="center"
-          fixed="right"
-          width="160"
-          label="更新时间">
-        </el-table-column>
+<!--        <el-table-column-->
+<!--          prop="updateTime"-->
+<!--          header-align="center"-->
+<!--          align="center"-->
+<!--          fixed="right"-->
+<!--          width="160"-->
+<!--          label="更新时间">-->
+<!--        </el-table-column>-->
         <el-table-column
           prop="importDataTime"
           header-align="center"

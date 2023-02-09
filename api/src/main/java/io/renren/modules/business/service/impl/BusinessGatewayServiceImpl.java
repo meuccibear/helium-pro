@@ -1,5 +1,6 @@
 package io.renren.modules.business.service.impl;
 
+import io.renren.modules.domain.dto.G5DeviceDTO;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import io.renren.modules.business.dao.BusinessGatewayMapper;
@@ -57,9 +58,14 @@ public class BusinessGatewayServiceImpl implements BusinessGatewayService {
 
     @Override
     public List<BusinessGateway> selectAll() {
-        return businessGatewayMapper.selectAll();
+        return businessGatewayMapper.selectAll(new G5DeviceDTO());
     }
 }
+
+
+
+
+
 
 
 

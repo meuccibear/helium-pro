@@ -62,10 +62,87 @@
         console.log(id, typeId)
         this.dataForm.id = id || 0
         this.visible = true
-        this.lineChartData = {
-          id: id,
-          typeId: typeId
-        }
+        // this.lineChartData = {
+        //   id: id,
+        //   typeId: typeId
+        // }
+        this.$http({
+          url: this.$http.adornUrl('/business/businessG5device/info'),
+          method: 'get',
+          params: this.$http.adornParams({
+            'typeId': typeId,
+            'id': id
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.lineChartData = data
+            console.log('data:', data)
+          } else {
+            this.chart.setOption({
+              'title': {
+                'text': '状态历史'
+              },
+              'legend': {
+                'data': [
+                  'internel'
+                ]
+              },
+              'toolbox': {
+                'feature': {
+                  'magicType': {
+                    'type': [
+                      'stack'
+                    ]
+                  },
+                  'dataView': {
+
+                  },
+                  'saveAsImage': {
+                    'pixelRatio': 2
+                  }
+                }
+              },
+              'dataZoom': [
+                {
+                  'type': 'inside',
+                  'start': 0,
+                  'end': 100
+                },
+                {
+                  'start': 0,
+                  'end': 100
+                }
+              ],
+              'tooltip': {
+
+              },
+              'xAxis': {
+                'data': [
+
+                ],
+                'splitLine': {
+                  'show': false
+                }
+              },
+              'yAxis': {
+
+              },
+              'series': [
+                {
+                  'name': 'internel',
+                  'type': 'bar',
+                  'data': [
+
+                  ],
+                  'emphasis': {
+                    'focus': 'series'
+                  }
+                }
+              ],
+              'animationEasing': 'elasticOut'
+            })
+          }
+        })
       }
     }
   }

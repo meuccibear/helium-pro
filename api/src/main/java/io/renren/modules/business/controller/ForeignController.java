@@ -21,8 +21,12 @@ public class ForeignController extends AbstractController {
 
     @PostMapping("/log")
     public R log(@RequestBody G5LogDTO g5LogDTO) {
-        g5LogService.log(g5LogDTO);
-        return R.ok();
+        try {
+            g5LogService.log(g5LogDTO);
+            return R.ok();
+        }catch (Exception e){
+            return R.error(e.getMessage());
+        }
     }
 
 }

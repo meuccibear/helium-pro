@@ -53,7 +53,7 @@ public class G5LogDTO implements Serializable {
 		gateway.setDownload(download.doubleValue());
 		gateway.setUpload(upload.doubleValue());
 		gateway.setAgwVersion(agwVersion);
-		gateway.setStatus(1);
+		gateway.setStatus(internel ? 1: 0);
 
 		return gateway;
 //		new BusinessGateway(gatewayid, minerName, cname, ip,  internel, minerConnected,

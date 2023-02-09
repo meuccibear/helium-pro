@@ -179,8 +179,8 @@ public class HeliumMapTest {
         List<JSONObject> jsonObjects = ExcelUtils.readFile("../data/hotspotty.txt");
         JSONObject jsonObject;
         boolean de;
-//        String filePath = String.format("%s\\%d.txt", "../data/result/", System.currentTimeMillis());
-        String filePath = String.format("%s\\hotspottyInfo_%d", "../data/result/", System.currentTimeMillis());
+//        String filePath = String.format("%s\\%d.txt", "../data/result", System.currentTimeMillis());
+        String filePath = String.format("%s\\hotspottyInfo_%d", "../data/result", System.currentTimeMillis());
         String address;
         String ip;
         String str = "old-key1\t14WbEvba7SjLS7Ja6jMiT8UbK9MuTpSdMUeZ338wBw2Mzfy67vg\n" +

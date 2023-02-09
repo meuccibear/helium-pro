@@ -44,7 +44,10 @@ public interface BusinessDeviceService {
 
     void updateDeviceInfoTask(Map<String, String> makersDictionary, List<List<String>> lists, int index);
 
-    void updateDeviceProfitInfoTask( List<List<String>> lists, int index);
+    @Async("updateDeviceInfoTask")
+    void updateHeartbeatTask( List<List<String>> lists, int index);
+
+    void updateDeviceProfitInfoTask(List<List<String>> lists, int index);
 
     void updateDevicedeBlackListInfoTask(List<List<String>> lists, int index);
 
@@ -66,7 +69,10 @@ public interface BusinessDeviceService {
 
     int updateByPrimaryKey(BusinessDevice record);
 
+    int batchInsert(List<BusinessDevice> list);
 }
+
+
 
 
 

@@ -4,7 +4,6 @@
   <resultMap id="BaseResultMap" type="io.renren.modules.business.entity.BusinessDevice">
     <!--@mbg.generated-->
     <!--@Table business_device-->
-    <id column="address" jdbcType="VARCHAR" property="address" />
     <result column="id" jdbcType="BIGINT" property="id" />
     <result column="one_level_name" jdbcType="VARCHAR" property="oneLevelName" />
     <result column="two_level_name" jdbcType="VARCHAR" property="twoLevelName" />
@@ -15,6 +14,7 @@
     <result column="public_ip" jdbcType="VARCHAR" property="publicIp" />
     <result column="mac" jdbcType="VARCHAR" property="mac" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="owner" jdbcType="VARCHAR" property="owner" />
     <result column="disk" jdbcType="DOUBLE" property="disk" />
     <result column="total24h" jdbcType="DOUBLE" property="total24h" />
@@ -32,6 +32,8 @@
     <result column="location_address" jdbcType="VARCHAR" property="locationAddress" />
     <result column="date" jdbcType="TIMESTAMP" property="date" />
     <result column="re" jdbcType="VARCHAR" property="re" />
+    <result column="usesig" jdbcType="CHAR" property="usesig" />
+    <result column="group" jdbcType="CHAR" property="group" />
     <result column="ip" jdbcType="VARCHAR" property="ip" />
     <result column="devtype" jdbcType="VARCHAR" property="devtype" />
     <result column="loratm" jdbcType="TIMESTAMP" property="loratm" />
@@ -52,12 +54,12 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    address, id, one_level_name, two_level_name, en, manage_name, group_name, pingpai,
-    public_ip, mac, `name`, `owner`, `disk`, total24h, total7d, total30d, `online`, country,
-    city, street, depllist, `scale`, Hex, Hex5, active_time, location_address, `date`,
-    re, ip, devtype, loratm, witnesstm, muxtm, minerver, minerstat, ver, grpcfaild, beacontm,
-    import_data_time, update_status_time, hearttm, `status`, err_status, update_time,
-    remark
+    id, one_level_name, two_level_name, en, manage_name, group_name, pingpai, public_ip, 
+    mac, `name`, address, `owner`, `disk`, total24h, total7d, total30d, `online`, country, 
+    city, street, depllist, `scale`, Hex, Hex5, active_time, location_address, `date`, 
+    re, usesig, `group`, ip, devtype, loratm, witnesstm, muxtm, minerver, minerstat, 
+    ver, grpcfaild, beacontm, import_data_time, update_status_time, hearttm, `status`, 
+    err_status, update_time, remark
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     <!--@mbg.generated-->
@@ -73,44 +75,43 @@
   </delete>
   <insert id="insert" parameterType="io.renren.modules.business.entity.BusinessDevice">
     <!--@mbg.generated-->
-    insert into business_device (address, id, one_level_name,
-      two_level_name, en, manage_name,
-      group_name, pingpai, public_ip,
-      mac, `name`, `owner`, `disk`,
-      total24h, total7d, total30d,
-      `online`, country, city,
-      street, depllist, `scale`,
-      Hex, Hex5, active_time,
-      location_address, `date`, re,
-      ip, devtype, loratm,
-      witnesstm, muxtm, minerver,
-      minerstat, ver, grpcfaild,
-      beacontm, import_data_time, update_status_time,
-      hearttm, `status`, err_status,
-      update_time, remark)
-    values (#{address,jdbcType=VARCHAR}, #{id,jdbcType=BIGINT}, #{oneLevelName,jdbcType=VARCHAR},
-      #{twoLevelName,jdbcType=VARCHAR}, #{en,jdbcType=VARCHAR}, #{manageName,jdbcType=VARCHAR},
-      #{groupName,jdbcType=VARCHAR}, #{pingpai,jdbcType=VARCHAR}, #{publicIp,jdbcType=VARCHAR},
-      #{mac,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR}, #{disk,jdbcType=DOUBLE},
-      #{total24h,jdbcType=DOUBLE}, #{total7d,jdbcType=DOUBLE}, #{total30d,jdbcType=DOUBLE},
-      #{online,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR},
-      #{street,jdbcType=VARCHAR}, #{depllist,jdbcType=INTEGER}, #{scale,jdbcType=DOUBLE},
-      #{hex,jdbcType=VARCHAR}, #{hex5,jdbcType=VARCHAR}, #{activeTime,jdbcType=TIMESTAMP},
-      #{locationAddress,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, #{re,jdbcType=VARCHAR},
-      #{ip,jdbcType=VARCHAR}, #{devtype,jdbcType=VARCHAR}, #{loratm,jdbcType=TIMESTAMP},
-      #{witnesstm,jdbcType=TIMESTAMP}, #{muxtm,jdbcType=TIMESTAMP}, #{minerver,jdbcType=VARCHAR},
-      #{minerstat,jdbcType=VARCHAR}, #{ver,jdbcType=VARCHAR}, #{grpcfaild,jdbcType=INTEGER},
-      #{beacontm,jdbcType=TIMESTAMP}, #{importDataTime,jdbcType=TIMESTAMP}, #{updateStatusTime,jdbcType=INTEGER},
-      #{hearttm,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{errStatus,jdbcType=INTEGER},
-      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+    insert into business_device (id, one_level_name, two_level_name, 
+      en, manage_name, group_name, 
+      pingpai, public_ip, mac, 
+      `name`, address, `owner`, 
+      `disk`, total24h, total7d, 
+      total30d, `online`, country, 
+      city, street, depllist, 
+      `scale`, Hex, Hex5, active_time, 
+      location_address, `date`, re, 
+      usesig, `group`, ip, devtype, 
+      loratm, witnesstm, muxtm, 
+      minerver, minerstat, ver, 
+      grpcfaild, beacontm, import_data_time, 
+      update_status_time, hearttm, `status`, 
+      err_status, update_time, remark
+      )
+    values (#{id,jdbcType=BIGINT}, #{oneLevelName,jdbcType=VARCHAR}, #{twoLevelName,jdbcType=VARCHAR}, 
+      #{en,jdbcType=VARCHAR}, #{manageName,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, 
+      #{pingpai,jdbcType=VARCHAR}, #{publicIp,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR}, 
+      #{disk,jdbcType=DOUBLE}, #{total24h,jdbcType=DOUBLE}, #{total7d,jdbcType=DOUBLE}, 
+      #{total30d,jdbcType=DOUBLE}, #{online,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{street,jdbcType=VARCHAR}, #{depllist,jdbcType=INTEGER}, 
+      #{scale,jdbcType=DOUBLE}, #{hex,jdbcType=VARCHAR}, #{hex5,jdbcType=VARCHAR}, #{activeTime,jdbcType=TIMESTAMP}, 
+      #{locationAddress,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, #{re,jdbcType=VARCHAR}, 
+      #{usesig,jdbcType=CHAR}, #{group,jdbcType=CHAR}, #{ip,jdbcType=VARCHAR}, #{devtype,jdbcType=VARCHAR}, 
+      #{loratm,jdbcType=TIMESTAMP}, #{witnesstm,jdbcType=TIMESTAMP}, #{muxtm,jdbcType=TIMESTAMP}, 
+      #{minerver,jdbcType=VARCHAR}, #{minerstat,jdbcType=VARCHAR}, #{ver,jdbcType=VARCHAR}, 
+      #{grpcfaild,jdbcType=INTEGER}, #{beacontm,jdbcType=TIMESTAMP}, #{importDataTime,jdbcType=TIMESTAMP}, 
+      #{updateStatusTime,jdbcType=INTEGER}, #{hearttm,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{errStatus,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="io.renren.modules.business.entity.BusinessDevice">
     <!--@mbg.generated-->
     insert into business_device
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="address != null">
-        address,
-      </if>
       <if test="id != null">
         id,
       </if>
@@ -140,6 +141,9 @@
       </if>
       <if test="name != null">
         `name`,
+      </if>
+      <if test="address != null">
+        address,
       </if>
       <if test="owner != null">
         `owner`,
@@ -191,6 +195,12 @@
       </if>
       <if test="re != null">
         re,
+      </if>
+      <if test="usesig != null">
+        usesig,
+      </if>
+      <if test="group != null">
+        `group`,
       </if>
       <if test="ip != null">
         ip,
@@ -245,9 +255,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="address != null">
-        #{address,jdbcType=VARCHAR},
-      </if>
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
@@ -277,6 +284,9 @@
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
       </if>
       <if test="owner != null">
         #{owner,jdbcType=VARCHAR},
@@ -328,6 +338,12 @@
       </if>
       <if test="re != null">
         #{re,jdbcType=VARCHAR},
+      </if>
+      <if test="usesig != null">
+        #{usesig,jdbcType=CHAR},
+      </if>
+      <if test="group != null">
+        #{group,jdbcType=CHAR},
       </if>
       <if test="ip != null">
         #{ip,jdbcType=VARCHAR},
@@ -1121,30 +1137,31 @@
   <insert id="batchInsert" parameterType="map">
     <!--@mbg.generated-->
     insert into business_device
-    (address, id, one_level_name, two_level_name, en, manage_name, group_name, pingpai,
-      public_ip, mac, `name`, `owner`, `disk`, total24h, total7d, total30d, `online`,
-      country, city, street, depllist, `scale`, Hex, Hex5, active_time, location_address,
-      `date`, re, ip, devtype, loratm, witnesstm, muxtm, minerver, minerstat, ver, grpcfaild,
-      beacontm, import_data_time, update_status_time, hearttm, `status`, err_status,
-      update_time, remark)
+    (id, one_level_name, two_level_name, en, manage_name, group_name, pingpai, public_ip, 
+      mac, `name`, address, `owner`, `disk`, total24h, total7d, total30d, `online`, country, 
+      city, street, depllist, `scale`, Hex, Hex5, active_time, location_address, `date`, 
+      re, usesig, `group`, ip, devtype, loratm, witnesstm, muxtm, minerver, minerstat, 
+      ver, grpcfaild, beacontm, import_data_time, update_status_time, hearttm, `status`, 
+      err_status, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.address,jdbcType=VARCHAR}, #{item.id,jdbcType=BIGINT}, #{item.oneLevelName,jdbcType=VARCHAR},
-        #{item.twoLevelName,jdbcType=VARCHAR}, #{item.en,jdbcType=VARCHAR}, #{item.manageName,jdbcType=VARCHAR},
-        #{item.groupName,jdbcType=VARCHAR}, #{item.pingpai,jdbcType=VARCHAR}, #{item.publicIp,jdbcType=VARCHAR},
-        #{item.mac,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.owner,jdbcType=VARCHAR},
-        #{item.disk,jdbcType=DOUBLE}, #{item.total24h,jdbcType=DOUBLE}, #{item.total7d,jdbcType=DOUBLE},
-        #{item.total30d,jdbcType=DOUBLE}, #{item.online,jdbcType=VARCHAR}, #{item.country,jdbcType=VARCHAR},
-        #{item.city,jdbcType=VARCHAR}, #{item.street,jdbcType=VARCHAR}, #{item.depllist,jdbcType=INTEGER},
-        #{item.scale,jdbcType=DOUBLE}, #{item.hex,jdbcType=VARCHAR}, #{item.hex5,jdbcType=VARCHAR},
-        #{item.activeTime,jdbcType=TIMESTAMP}, #{item.locationAddress,jdbcType=VARCHAR},
-        #{item.date,jdbcType=TIMESTAMP}, #{item.re,jdbcType=VARCHAR}, #{item.ip,jdbcType=VARCHAR},
-        #{item.devtype,jdbcType=VARCHAR}, #{item.loratm,jdbcType=TIMESTAMP}, #{item.witnesstm,jdbcType=TIMESTAMP},
-        #{item.muxtm,jdbcType=TIMESTAMP}, #{item.minerver,jdbcType=VARCHAR}, #{item.minerstat,jdbcType=VARCHAR},
-        #{item.ver,jdbcType=VARCHAR}, #{item.grpcfaild,jdbcType=INTEGER}, #{item.beacontm,jdbcType=TIMESTAMP},
-        #{item.importDataTime,jdbcType=TIMESTAMP}, #{item.updateStatusTime,jdbcType=INTEGER},
-        #{item.hearttm,jdbcType=TIMESTAMP}, #{item.status,jdbcType=INTEGER}, #{item.errStatus,jdbcType=INTEGER},
-        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
+      (#{item.id,jdbcType=BIGINT}, #{item.oneLevelName,jdbcType=VARCHAR}, #{item.twoLevelName,jdbcType=VARCHAR}, 
+        #{item.en,jdbcType=VARCHAR}, #{item.manageName,jdbcType=VARCHAR}, #{item.groupName,jdbcType=VARCHAR}, 
+        #{item.pingpai,jdbcType=VARCHAR}, #{item.publicIp,jdbcType=VARCHAR}, #{item.mac,jdbcType=VARCHAR}, 
+        #{item.name,jdbcType=VARCHAR}, #{item.address,jdbcType=VARCHAR}, #{item.owner,jdbcType=VARCHAR}, 
+        #{item.disk,jdbcType=DOUBLE}, #{item.total24h,jdbcType=DOUBLE}, #{item.total7d,jdbcType=DOUBLE}, 
+        #{item.total30d,jdbcType=DOUBLE}, #{item.online,jdbcType=VARCHAR}, #{item.country,jdbcType=VARCHAR}, 
+        #{item.city,jdbcType=VARCHAR}, #{item.street,jdbcType=VARCHAR}, #{item.depllist,jdbcType=INTEGER}, 
+        #{item.scale,jdbcType=DOUBLE}, #{item.hex,jdbcType=VARCHAR}, #{item.hex5,jdbcType=VARCHAR}, 
+        #{item.activeTime,jdbcType=TIMESTAMP}, #{item.locationAddress,jdbcType=VARCHAR}, 
+        #{item.date,jdbcType=TIMESTAMP}, #{item.re,jdbcType=VARCHAR}, #{item.usesig,jdbcType=CHAR}, 
+        #{item.group,jdbcType=CHAR}, #{item.ip,jdbcType=VARCHAR}, #{item.devtype,jdbcType=VARCHAR}, 
+        #{item.loratm,jdbcType=TIMESTAMP}, #{item.witnesstm,jdbcType=TIMESTAMP}, #{item.muxtm,jdbcType=TIMESTAMP}, 
+        #{item.minerver,jdbcType=VARCHAR}, #{item.minerstat,jdbcType=VARCHAR}, #{item.ver,jdbcType=VARCHAR}, 
+        #{item.grpcfaild,jdbcType=INTEGER}, #{item.beacontm,jdbcType=TIMESTAMP}, #{item.importDataTime,jdbcType=TIMESTAMP}, 
+        #{item.updateStatusTime,jdbcType=INTEGER}, #{item.hearttm,jdbcType=TIMESTAMP}, 
+        #{item.status,jdbcType=INTEGER}, #{item.errStatus,jdbcType=INTEGER}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="insertOrUpdate" parameterType="io.renren.modules.business.entity.BusinessDevice">
@@ -1743,14 +1760,6 @@
 
   </select>
 
-  <!--    &amp;amp;amp;amp;amp;amp;amp;lt;select id="selectAllCount" resultType="java.lang.Integer"&amp;amp;amp;amp;amp;amp;amp;gt;-->
-  <!--        select count(*)-->
-  <!--        from business_device-->
-  <!--        &amp;amp;amp;amp;amp;amp;amp;lt;where&amp;amp;amp;amp;amp;amp;amp;gt;-->
-  <!--            &amp;amp;amp;amp;amp;amp;amp;lt;include refid="selectCondition"/&amp;amp;amp;amp;amp;amp;amp;gt;-->
-  <!--        &amp;amp;amp;amp;amp;amp;amp;lt;/where&amp;amp;amp;amp;amp;amp;amp;gt;-->
-  <!--    &amp;amp;amp;amp;amp;amp;amp;lt;/select&amp;amp;amp;amp;amp;amp;amp;gt;-->
-
   <select id="selectFilterable" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -1829,9 +1838,9 @@
       <if test="updated.name != null">
         name = #{updated.name,jdbcType=VARCHAR},
       </if>
-      <if test="updated.address != null">
-        address = #{updated.address,jdbcType=VARCHAR},
-      </if>
+<!--      <if test="updated.address != null">-->
+<!--        address = #{updated.address,jdbcType=VARCHAR},-->
+<!--      </if>-->
       <if test="updated.owner != null">
         owner = #{updated.owner,jdbcType=VARCHAR},
       </if>
@@ -1885,6 +1894,12 @@
       </if>
       <if test="updated.re != null">
         re = #{updated.re,jdbcType=VARCHAR},
+      </if>
+      <if test="updated.usesig != null">
+        usesig = #{updated.usesig,jdbcType=CHAR},
+      </if>
+      <if test="updated.group != null">
+        `group` = #{updated.group,jdbcType=CHAR},
       </if>
       <if test="updated.ip != null">
         ip = #{updated.ip,jdbcType=VARCHAR},
@@ -1948,7 +1963,7 @@
 <!--auto generated by MybatisCodeHelper on 2022-11-01-->
   <select id="selectAll" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         from business_device
     </select>
 
@@ -1965,7 +1980,7 @@
 <!--auto generated by MybatisCodeHelper on 2022-11-02-->
   <select id="selectAllByHex5" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from business_device
     where Hex5 in
     <foreach close=")" collection="hex5s" item="hex5" open="(" separator=",">
@@ -1988,6 +2003,12 @@
       </if>
       <if test="showCol == 'total24h'">
         and total24h is null
+      </if>
+      <if test="showCol == 'usesig'">
+        and usesig is null
+      </if>
+      <if test="showCol == 'group'">
+        and `group` is null
       </if>
     </where>
   </select>

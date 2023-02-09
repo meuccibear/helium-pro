@@ -11,8 +11,12 @@ package io.renren.modules.job.task;
 import com.alibaba.fastjson.TypeReference;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.ObjectUtils;
+import io.renren.modules.business.dao.BusinessGatewayMapper;
+import io.renren.modules.business.entity.BusinessGateway;
 import io.renren.modules.business.service.BusinessDeviceService;
+import io.renren.modules.business.service.BusinessG5DeviceService;
 import io.renren.modules.business.service.MakersService;
+import io.renren.modules.domain.dto.G5DeviceDTO;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,12 @@ import java.util.Map;
 @Component("DeviceErrTask")
 @Slf4j
 public class DeviceErrTask implements ITask {
+
+    @Autowired
+    BusinessGatewayMapper gatewayMapper;
+
+    @Autowired
+    private BusinessG5DeviceService businessG5DeviceService;
 
     @Autowired
     private BusinessDeviceService businessDeviceService;
@@ -73,6 +83,29 @@ public class DeviceErrTask implements ITask {
                 }
             }
         }
+
+        lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(businessDeviceService.findErrDevices("group"), ObjectUtils.toInt(params, 5)), new TypeReference<List<List<String>>>() {{
+        }});
+        if (ObjectUtils.notIsEmpty(lists)) {
+            for (int i = 0; i < lists.size(); i++) {
+                if (lists.get(i).size() > 0) {
+                    businessDeviceService.updateHeartbeatTask(lists, i);
+                }
+            }
+        }
+
+        lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(businessDeviceService.findErrDevices("usesig"), ObjectUtils.toInt(params, 5)), new TypeReference<List<List<String>>>() {{
+        }});
+        if (ObjectUtils.notIsEmpty(lists)) {
+            for (int i = 0; i < lists.size(); i++) {
+                if (lists.get(i).size() > 0) {
+                    businessDeviceService.updateHeartbeatTask(lists, i);
+                }
+            }
+        }
+
+        businessG5DeviceService.incomeTask(gatewayMapper.selectEarnings("todayEarnings"));
+        businessG5DeviceService.incomeTask(gatewayMapper.selectEarnings("yesterdayEarnings"));
 
     }
 

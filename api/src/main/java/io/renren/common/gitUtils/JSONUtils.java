@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +69,13 @@ public class JSONUtils {
                     return null;
                 }
             } else {
-                resultData = get((JSONObject) resultData, colNames[i]);
+//                System.out.println(resultData.getClass());
+//                System.out.println(JSO);
+                if (resultData instanceof JSONArray) {
+//                    log.info("resultData:{}", resultData);
+                } else {
+                    resultData = get((JSONObject) resultData, colNames[i]);
+                }
             }
         }
         return resultData;
@@ -91,7 +98,7 @@ public class JSONUtils {
         return value;
     }
 
-    public static void toCsv(String filePath,List<String> keys, Object... datas) {
+    public static void toCsv(String filePath, List<String> keys, Object... datas) {
         if (ObjectUtils.notIsEmpty(datas)) {
             for (Object data : datas) {
                 toCsv(filePath, data, keys);
@@ -233,8 +240,8 @@ public class JSONUtils {
     }
 
     /**
-     *
      * 废弃
+     *
      * @param jsonObject
      * @param str
      * @return

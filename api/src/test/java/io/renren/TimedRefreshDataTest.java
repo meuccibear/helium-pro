@@ -87,7 +87,7 @@ public class TimedRefreshDataTest {
     @SneakyThrows
     @Test
     public void getDevice1() {
-        String filePath = String.format("%s\\%d", "../data/result/", System.currentTimeMillis());
+        String filePath = String.format("%s\\%d", "../data/result", System.currentTimeMillis());
         List<SourceCorpse> sourceCorpses = globalDeviceService.findsourceCorpses5ByLongCountry("China", filePath);
         for (SourceCorpse sourceCorps : sourceCorpses) {
             FileUtils.writeln(filePath, StringUtils.outStr("\t", sourceCorps.getHex(), sourceCorps.getCityId(), sourceCorps.getAddress(),
@@ -107,7 +107,7 @@ public class TimedRefreshDataTest {
     @SneakyThrows
     @Test
     public void getDevice() {
-        String filePath = String.format("%s\\%d", "../data/result/", System.currentTimeMillis());
+        String filePath = String.format("%s\\%d", "../data/result", System.currentTimeMillis());
 //        List<SourceCorpse> sourceCorpses = globalDeviceService.findsourceCorpses5ByLongCountry("US", filePath);
 //        for (SourceCorpse sourceCorps : sourceCorpses) {
 //            FileUtils.writeln(filePath, StringUtils.outStr("\t", sourceCorps.getHex(), sourceCorps.getCityId(), sourceCorps.getAddress(),
@@ -137,7 +137,7 @@ public class TimedRefreshDataTest {
     @SneakyThrows
     @Test
     public void dashboard() {
-        String filePath = String.format("%s\\%d", "../data/result/", System.currentTimeMillis());
+        String filePath = String.format("%s\\%d", "../data/result", System.currentTimeMillis());
 //        List<String> sourceCorpses = globalDeviceService.selectHex5ByLongCountry("China");
         List<String> sourceCorpses = FileUtils.readLines("../data/hex5s");
 
@@ -201,7 +201,7 @@ public class TimedRefreshDataTest {
 
         String[] countrys = new String[]{"China"};
 
-        String filePath = String.format("%s\\%d", "../data/result/", System.currentTimeMillis());
+        String filePath = String.format("%s\\%d", "../data/result", System.currentTimeMillis());
         List<String> cityids = locationsMapper.findCityidByLongcountry(countrys);
         log.info("查询到了{}条数据", cityids.size());
         Map<String, String> mm = new HashMap<>();

@@ -9,6 +9,9 @@
     <result column="alis" jdbcType="VARCHAR" property="alis" />
     <result column="private_ip" jdbcType="VARCHAR" property="privateIp" />
     <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="owner" jdbcType="CHAR" property="owner" />
+    <result column="today_earnings" jdbcType="DECIMAL" property="todayEarnings" />
+    <result column="yesterday_earnings" jdbcType="DECIMAL" property="yesterdayEarnings" />
     <result column="hex" jdbcType="CHAR" property="hex" />
     <result column="internel" jdbcType="INTEGER" property="internel" />
     <result column="miner_connected" jdbcType="INTEGER" property="minerConnected" />
@@ -23,8 +26,9 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    gateway_id, `name`, alis, private_ip, address, hex, internel, miner_connected, miner_version, 
-    download, upload, agw_version, `status`, create_time, update_time, remarks
+    gateway_id, `name`, alis, private_ip, address, `owner`, today_earnings, yesterday_earnings, 
+    hex, internel, miner_connected, miner_version, download, upload, agw_version, `status`, 
+    create_time, update_time, remarks
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     <!--@mbg.generated-->
@@ -41,13 +45,15 @@
   <insert id="insert" keyColumn="gateway_id" keyProperty="gatewayId" parameterType="io.renren.modules.business.entity.BusinessGateway" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into business_gateway (`name`, alis, private_ip, 
-      address, hex, internel, 
+      address, `owner`, today_earnings, 
+      yesterday_earnings, hex, internel, 
       miner_connected, miner_version, download, 
       upload, agw_version, `status`, 
       create_time, update_time, remarks
       )
     values (#{name,jdbcType=VARCHAR}, #{alis,jdbcType=VARCHAR}, #{privateIp,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{hex,jdbcType=CHAR}, #{internel,jdbcType=INTEGER}, 
+      #{address,jdbcType=VARCHAR}, #{owner,jdbcType=CHAR}, #{todayEarnings,jdbcType=DECIMAL}, 
+      #{yesterdayEarnings,jdbcType=DECIMAL}, #{hex,jdbcType=CHAR}, #{internel,jdbcType=INTEGER}, 
       #{minerConnected,jdbcType=INTEGER}, #{minerVersion,jdbcType=CHAR}, #{download,jdbcType=DOUBLE}, 
       #{upload,jdbcType=DOUBLE}, #{agwVersion,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}
@@ -68,6 +74,15 @@
       </if>
       <if test="address != null">
         address,
+      </if>
+      <if test="owner != null">
+        `owner`,
+      </if>
+      <if test="todayEarnings != null">
+        today_earnings,
+      </if>
+      <if test="yesterdayEarnings != null">
+        yesterday_earnings,
       </if>
       <if test="hex != null">
         hex,
@@ -115,6 +130,15 @@
       </if>
       <if test="address != null">
         #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null">
+        #{owner,jdbcType=CHAR},
+      </if>
+      <if test="todayEarnings != null">
+        #{todayEarnings,jdbcType=DECIMAL},
+      </if>
+      <if test="yesterdayEarnings != null">
+        #{yesterdayEarnings,jdbcType=DECIMAL},
       </if>
       <if test="hex != null">
         #{hex,jdbcType=CHAR},
@@ -167,6 +191,15 @@
       <if test="address != null">
         address = #{address,jdbcType=VARCHAR},
       </if>
+      <if test="owner != null">
+        `owner` = #{owner,jdbcType=CHAR},
+      </if>
+      <if test="todayEarnings != null">
+        today_earnings = #{todayEarnings,jdbcType=DECIMAL},
+      </if>
+      <if test="yesterdayEarnings != null">
+        yesterday_earnings = #{yesterdayEarnings,jdbcType=DECIMAL},
+      </if>
       <if test="hex != null">
         hex = #{hex,jdbcType=CHAR},
       </if>
@@ -210,6 +243,9 @@
       alis = #{alis,jdbcType=VARCHAR},
       private_ip = #{privateIp,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
+      `owner` = #{owner,jdbcType=CHAR},
+      today_earnings = #{todayEarnings,jdbcType=DECIMAL},
+      yesterday_earnings = #{yesterdayEarnings,jdbcType=DECIMAL},
       hex = #{hex,jdbcType=CHAR},
       internel = #{internel,jdbcType=INTEGER},
       miner_connected = #{minerConnected,jdbcType=INTEGER},
@@ -234,6 +270,9 @@
       alis,
       private_ip,
       address,
+      `owner`,
+      today_earnings,
+      yesterday_earnings,
       hex,
       internel,
       miner_connected,
@@ -255,6 +294,9 @@
       #{alis,jdbcType=VARCHAR},
       #{privateIp,jdbcType=VARCHAR},
       #{address,jdbcType=VARCHAR},
+      #{owner,jdbcType=CHAR},
+      #{todayEarnings,jdbcType=DECIMAL},
+      #{yesterdayEarnings,jdbcType=DECIMAL},
       #{hex,jdbcType=CHAR},
       #{internel,jdbcType=INTEGER},
       #{minerConnected,jdbcType=INTEGER},
@@ -276,6 +318,9 @@
       alis = #{alis,jdbcType=VARCHAR},
       private_ip = #{privateIp,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
+      `owner` = #{owner,jdbcType=CHAR},
+      today_earnings = #{todayEarnings,jdbcType=DECIMAL},
+      yesterday_earnings = #{yesterdayEarnings,jdbcType=DECIMAL},
       hex = #{hex,jdbcType=CHAR},
       internel = #{internel,jdbcType=INTEGER},
       miner_connected = #{minerConnected,jdbcType=INTEGER},
@@ -307,6 +352,15 @@
       </if>
       <if test="address != null">
         address,
+      </if>
+      <if test="owner != null">
+        `owner`,
+      </if>
+      <if test="todayEarnings != null">
+        today_earnings,
+      </if>
+      <if test="yesterdayEarnings != null">
+        yesterday_earnings,
       </if>
       <if test="hex != null">
         hex,
@@ -359,6 +413,15 @@
       <if test="address != null">
         #{address,jdbcType=VARCHAR},
       </if>
+      <if test="owner != null">
+        #{owner,jdbcType=CHAR},
+      </if>
+      <if test="todayEarnings != null">
+        #{todayEarnings,jdbcType=DECIMAL},
+      </if>
+      <if test="yesterdayEarnings != null">
+        #{yesterdayEarnings,jdbcType=DECIMAL},
+      </if>
       <if test="hex != null">
         #{hex,jdbcType=CHAR},
       </if>
@@ -410,6 +473,15 @@
       <if test="address != null">
         address = #{address,jdbcType=VARCHAR},
       </if>
+      <if test="owner != null">
+        `owner` = #{owner,jdbcType=CHAR},
+      </if>
+      <if test="todayEarnings != null">
+        today_earnings = #{todayEarnings,jdbcType=DECIMAL},
+      </if>
+      <if test="yesterdayEarnings != null">
+        yesterday_earnings = #{yesterdayEarnings,jdbcType=DECIMAL},
+      </if>
       <if test="hex != null">
         hex = #{hex,jdbcType=CHAR},
       </if>
@@ -448,10 +520,33 @@
 
 <!--auto generated by MybatisCodeHelper on 2022-12-20-->
   <select id="selectAll" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from business_gateway
-    </select>
+    select
+    <include refid="Base_Column_List" />
+    from business_gateway
+    <where>
+      <include refid="selectCondition" />
+    </where>
+  </select>
+
+  <sql id="selectCondition">
+    <if test="'未知' != g5DeviceDTO.internel and null != g5DeviceDTO.internel  and g5DeviceDTO.internel != ''">
+      and internel = #{g5DeviceDTO.internel}
+    </if>
+  </sql>
+
+  <select id="selectEarnings" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from business_gateway
+    <where>
+      <if test="showCol == 'todayEarnings'">
+        and today_earnings is null
+      </if>
+      <if test="showCol == 'yesterdayEarnings'">
+        and yesterday_earnings is null
+      </if>
+    </where>
+  </select>
 
 <!--auto generated by MybatisCodeHelper on 2022-12-27-->
   <select id="selectGatewayIds" resultType="java.lang.String">
@@ -472,5 +567,22 @@
     update business_gateway
     set address=#{updatedAddress,jdbcType=VARCHAR}, hex=#{updatedHex,jdbcType=CHAR}
     where gateway_id=#{gatewayId,jdbcType=CHAR}
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2023-01-29-->
+  <update id="updateYesterdayEarningsAndTodayEarningsByAddress">
+    update business_gateway
+    set yesterday_earnings=#{updatedYesterdayEarnings,jdbcType=DECIMAL},
+    today_earnings=#{updatedTodayEarnings,jdbcType=DECIMAL}
+    where address=#{address,jdbcType=VARCHAR}
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2023-01-29-->
+  <update id="updateYesterdayEarningsAndTodayEarningsAndOwnerByAddress">
+    update business_gateway
+    set yesterday_earnings=#{gateway.yesterdayEarnings,jdbcType=DECIMAL},
+    today_earnings=#{gateway.todayEarnings,jdbcType=DECIMAL},
+    `owner`=#{gateway.owner,jdbcType=CHAR}
+    where address=#{gateway.address,jdbcType=VARCHAR}
   </update>
 </mapper>

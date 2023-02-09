@@ -1,13 +1,14 @@
 package io.renren.modules.business.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.uber.h3core.H3Core;
-import io.renren.common.gitUtils.BeanUtils;
-import io.renren.common.gitUtils.ObjectUtils;
-import io.renren.common.gitUtils.PageRRVO;
+import io.renren.common.gitUtils.*;
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.R;
 import io.renren.modules.business.dao.BusinessGatewayMapper;
+import io.renren.modules.business.dao.Select;
 import io.renren.modules.business.entity.BusinessGateway;
 import io.renren.modules.business.entity.BusinessRadio;
 import io.renren.modules.business.service.BusinessG5DeviceService;
@@ -15,7 +16,7 @@ import io.renren.modules.business.service.BusinessRadioService;
 import io.renren.modules.domain.dto.G5DeviceDTO;
 import io.renren.modules.domain.vo.BusinessRadioVO;
 import io.renren.modules.domain.vo.G5DeviceVO;
-import io.renren.modules.helium.HexUtils;
+import io.renren.modules.helium.HeliumUtils;
 import io.renren.modules.helium.domain.Cell;
 import io.renren.modules.helium.domain.Device;
 import io.renren.modules.sys.api.HeliumApi;
@@ -24,8 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -41,8 +44,9 @@ public class BusinessG5DeviceServiceImpl implements BusinessG5DeviceService {
     HeliumApi heliumApi;
 
     public R getAll(G5DeviceDTO g5DeviceDTO) {
-        List<BusinessGateway> gateways = gatewayMapper.selectAll();
-        List<BusinessRadio> businessRadios = radioService.selectAll();
+        log.info("{}", g5DeviceDTO);
+        List<BusinessGateway> gateways = gatewayMapper.selectAll(g5DeviceDTO);
+        List<BusinessRadio> businessRadios = radioService.selectAll(g5DeviceDTO);
 
         List<G5DeviceVO> g5DeviceVOS = new ArrayList<>();
 
@@ -61,15 +65,100 @@ public class BusinessG5DeviceServiceImpl implements BusinessG5DeviceService {
                     children.add(radioVO);
                 }
             }
+
             build.setChildren(children);
-            g5DeviceVOS.add(build);
+
+            if ((ObjectUtils.notIsEmpty(g5DeviceDTO.getGpsStat()) || ObjectUtils.notIsEmpty(g5DeviceDTO.getSasStat()) || ObjectUtils.notIsEmpty(g5DeviceDTO.getStatus())) && children.size() > 0) {
+                g5DeviceVOS.add(build);
+            } else if (ObjectUtils.isEmpty(g5DeviceDTO.getGpsStat()) && ObjectUtils.isEmpty(g5DeviceDTO.getSasStat()) && ObjectUtils.isEmpty(g5DeviceDTO.getStatus())) {
+                g5DeviceVOS.add(build);
+            }
         }
 
         PageRRVO pageUtils = PageRRVO.build(g5DeviceDTO, g5DeviceVOS, g5DeviceVOS.size());
         R r = R.ok();
+        r.putAll(findGatewaySelect(g5DeviceVOS));
         r.put("page", pageUtils);
-
         return r;
+    }
+
+    /**
+     * 添加并计数
+     *
+     * @param oneLevelName
+     */
+    void putCount(Map<Object, JSONObject> data, Object oneLevelName) {
+        oneLevelName = ObjectUtils.notIsEmpty(oneLevelName) ? oneLevelName : "未知";
+        JSONObject jsonObject;
+        if (data.containsKey(oneLevelName)) {
+            jsonObject = data.get(oneLevelName);
+            jsonObject.put("num", jsonObject.getInteger("num") + 1);
+        } else {
+            jsonObject = new JSONObject() {{
+                put("num", 1);
+            }};
+            data.put(oneLevelName, jsonObject);
+        }
+    }
+
+    private Map<String, Object> findGatewaySelect(List<G5DeviceVO> g5DeviceVOS) {
+//        if (ObjectUtils.isEmpty(g5DeviceVOS)) {
+//            return new HashMap<>();
+//        }
+        Map<String, Object> result = new HashMap<>();
+
+        Map<Object, JSONObject> sasStat = new HashMap<>();
+        Map<Object, JSONObject> gpsStat = new HashMap<>();
+        Map<Object, JSONObject> status = new HashMap<>();
+        Map<Object, JSONObject> internel = new HashMap<>();
+
+        for (G5DeviceVO g5DeviceVO : g5DeviceVOS) {
+            putCount(internel, g5DeviceVO.getInternel());
+//            if(ObjectUtils.notIsEmpty(g5DeviceVO.getChildren())){
+            for (BusinessRadioVO child : g5DeviceVO.getChildren()) {
+                putCount(sasStat, child.getSasStat());
+                putCount(gpsStat, child.getGpsStat());
+                putCount(status, child.getStatus());
+            }
+//            }
+        }
+
+        result.put("sasStat", toSelect(sasStat, new HashMap<Object, String>() {{
+            put(true, "正常");
+            put(false, "不正常");
+        }}));
+        result.put("gpsStat", toSelect(gpsStat, new HashMap<Object, String>() {{
+            put(true, "正常");
+            put(false, "不正常");
+        }}));
+        result.put("status", toSelect(status, new HashMap<Object, String>() {{
+            put(1, "正常");
+            put(0, "不正常");
+        }}));
+        result.put("internel", toSelect(internel, new HashMap<Object, String>() {{
+            put(true, "正常");
+            put(false, "不正常");
+        }}));
+
+        return result;
+    }
+
+    public List<Select> toSelect(Map<Object, JSONObject> oneLevelName) {
+        return toSelect(oneLevelName, null);
+    }
+
+    public List<Select> toSelect(Map<Object, JSONObject> oneLevelName, Map<Object, String> aliasM) {
+
+        List<Select> selects = new ArrayList<>();
+        for (Object o : oneLevelName.keySet().toArray()) {
+            List<Select> son = null;
+            if (oneLevelName.get(o).containsKey("son")) {
+                Map<Object, JSONObject> data = (Map<Object, JSONObject>) oneLevelName.get(o).get("son");
+                son = toSelect(data, aliasM);
+            }
+            selects.add(new Select(null == o ? "未知" : (null == aliasM ? o : aliasM.get(o)) + " 【" + oneLevelName.get(o).get("num") + "】", o.toString(), son));
+        }
+        return selects;
     }
 
     @Override
@@ -138,9 +227,110 @@ public class BusinessG5DeviceServiceImpl implements BusinessG5DeviceService {
 
     }
 
+    @Override
+    public void incomeTask(List<BusinessGateway> gateways) {
+
+        for (BusinessGateway gateway : gateways) {
+
+            if (ObjectUtils.notIsEmpty(gateway.getAddress())) {
+                BusinessGateway gateway1 = new BusinessGateway();
+                gateway1.setGatewayId(gateway.getGatewayId());
+                gateway1.setOwner(gateway.getOwner());
+                gateway1.setAddress(gateway.getAddress());
+                try {
+                    income(gateway1);
+                } catch (Exception e) {
+                    log.error("incomeTask:", e);
+                }
+                gatewayMapper.updateYesterdayEarningsAndTodayEarningsAndOwnerByAddress(gateway1);
+            }
+        }
+
+    }
+
+
+    @Override
+    public void income(BusinessGateway gateway) {
+        Device device;
+        String owner;
+//            BusinessGateway gateway1 = new BusinessGateway();
+//            gateway1.setGatewayId(gateway.getGatewayId());
+
+        if (ObjectUtils.isEmpty(gateway.getOwner())) {
+            device = (Device) new CounterUtil() {
+                @Override
+                public boolean check(Object execute) {
+                    return execute == null;
+                }
+
+                @Override
+                public Object execute(Object data) {
+                    return heliumApi.getHotspotsByAddress((String) data);
+                }
+            }.run(gateway.getAddress());
+            owner = device.getOwner();
+            gateway.setOwner(owner);
+        } else {
+            owner = gateway.getOwner();
+        }
+
+        JSONObject roles = HeliumUtils.roles(owner, false, "rewards_v1,rewards_v2,rewards_v3,subnetwork_rewards_v1", "");
+        roles = HeliumUtils.roles(owner, false, "", (String) roles.get("cursor"));
+        JSONArray data = roles.getJSONArray("data");
+
+        if (ObjectUtils.notIsEmpty(data)) {
+
+            JSONArray jsonArray = (JSONArray) JSONUtils.jsGetData(roles, "data");
+            for (int i = 0; i < 5; i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (jsonObject.containsKey("time")) {
+
+                }
+
+                log.info("hash:{} time:{}", jsonObject.getString("hash"), jsonObject.getString("time"));
+            }
+
+            gateway.setTodayEarnings(getTransactionsAmount(owner, roles, 0));
+            gateway.setYesterdayEarnings(getTransactionsAmount(owner, roles, 1));
+
+        }
+
+    }
+
+    //(String) JSONUtils.jsGetData(roles, "data.0.hash")
+    BigDecimal getTransactionsAmount(String hotspotsId, JSONObject roles, int index) {
+        JSONObject role = (JSONObject) JSONUtils.jsGetData(roles, "data." + index);
+        String hash = role.getString("hash");
+        LocalDate localDate = LocalDate.now();
+        if (index == 1) {
+            localDate = localDate.minusDays(1);
+        }
+        String nowTime = DateUtils.asStr(1, DateUtils.asDate(localDate));
+        String time = null;
+        if (role.containsKey("time")) {
+            time = DateUtils.asStr(1, new Date(1000 * role.getLong("time")));
+        }
+
+        log.info("hash:{} {}=={}", hash, nowTime, time);
+
+        if (nowTime.equals(time)) {
+            JSONObject json = HeliumUtils.transactions(hotspotsId, hash);
+            JSONArray o = (JSONArray) JSONUtils.jsGetData(json, "data.rewards");
+            JSONObject jsonObject = null;
+            for (int i = 0; i < o.size(); i++) {
+                jsonObject = o.getJSONObject(i);
+                if (hotspotsId.equals(jsonObject.get("account"))) {
+                    break;
+                }
+            }
+            return jsonObject.getBigDecimal("amount").divide(new BigDecimal(100000000), 8, BigDecimal.ROUND_HALF_UP);
+        }
+
+        return null;
+    }
 
     public void updateG5DeviceInfo() {
-        List<BusinessRadio> businessRadios = radioService.selectAll();
+        List<BusinessRadio> businessRadios = radioService.selectAll(new G5DeviceDTO());
         for (BusinessRadio businessRadio : businessRadios) {
             businessRadio.getAlis();
 

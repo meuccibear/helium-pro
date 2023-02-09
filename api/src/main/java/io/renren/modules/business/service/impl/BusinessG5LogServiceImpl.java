@@ -31,8 +31,10 @@ public class BusinessG5LogServiceImpl implements BusinessG5LogService {
 
     final
     MongoTemplateService mongoTemplateService;
+
     final
     BusinessGatewayService gatewayService;
+
     final
     BusinessRadioService radioService;
 
@@ -41,7 +43,6 @@ public class BusinessG5LogServiceImpl implements BusinessG5LogService {
         this.gatewayService = gatewayService;
         this.radioService = radioService;
     }
-
 
     @Override
     public int deleteByPrimaryKey(Long g5LogId) {
@@ -73,13 +74,12 @@ public class BusinessG5LogServiceImpl implements BusinessG5LogService {
         return businessG5LogMapper.updateByPrimaryKey(record);
     }
 
-
     @Override
     public void log(G5LogDTO g5LogDTO) {
-        Date now = new Date();
-        if (ObjectUtils.notIsEmpty(g5LogDTO.getGatewayid())) {
+        mongoTemplateService.insert(g5LogDTO);
+        if (ObjectUtils.notIsEmpty(g5LogDTO.getGatewayid()) && !"Unkown".equals(g5LogDTO.getGatewayid())) {
+            Date now = new Date();
             g5LogDTO.setNow(now);
-            mongoTemplateService.insert(g5LogDTO);
             gatewayService.insertOrUpdateSelective(g5LogDTO.toBusinessGateway());
             List<BusinessG5Log> g5Logs = new ArrayList<>();
             g5Logs.addAll(g5LogDTO.toBusinessG5Log(now, 1));
@@ -118,31 +118,9 @@ public class BusinessG5LogServiceImpl implements BusinessG5LogService {
         switch (typeId) {
             case 1:
                 typeMap = G5LogDTO.radioType;
-//                jsonObject = selectAllByIdAndTypeId(id, 1, now);
-//
-//                r.put("data1", jsonObject.values().toArray());
-//                r.put("dataKey", jsonObject.keySet().toArray());
                 break;
             case 2:
                 typeMap = RadiosDTO.radioType;
-
-//                List<Integer> integers = BeanUtils.toJavaObject(RadiosDTO.radioType.keySet().toArray(), new TypeReference<List<Integer>>() {{
-//                }});
-//                for (int i = 0; i < integers.size(); i++) {
-//                    jsonObject = selectAllByIdAndTypeId(id, i, now);
-//                    if (i == 0) {
-//                        r.put("dataKey", jsonObject.keySet().toArray());
-//                    }
-//                    r.put(RadiosDTO.radioType.get(i), jsonObject.values().toArray());
-//                }
-//                r.put("dataCol", RadiosDTO.radioType.values().toArray());
-
-//                jsonObject = selectAllByIdAndTypeId(id, 2, now);
-//                r.put("data1", jsonObject.values().toArray());
-//                r.put("dataKey", jsonObject.keySet().toArray());
-//                jsonObject = selectAllByIdAndTypeId(id, 3, now);
-//                r.put("data2", jsonObject.values().toArray());
-
                 break;
         }
         List<BusinessG5Log> g5Logs;
@@ -150,7 +128,8 @@ public class BusinessG5LogServiceImpl implements BusinessG5LogService {
         List<Integer> integers = BeanUtils.toJavaObject(typeMap.keySet().toArray(), new TypeReference<List<Integer>>() {{
         }});
         for (int i = 0; i < integers.size(); i++) {
-            g5Logs = selectAllByIdAndTypeId(id, integers.get(i), now);
+//            g5Logs = selectAllByIdAndTypeId(id, integers.get(i), now);
+            g5Logs = businessG5LogMapper.selectAllByIdAndTypeIdAndCreateTime(id, now, integers.get(i));
             log.info("g5Logs:{}", BeanUtils.toJSON(g5Logs));
 
             if (i == 0) {
@@ -171,20 +150,12 @@ public class BusinessG5LogServiceImpl implements BusinessG5LogService {
     }
 
 
-    List<BusinessG5Log> selectAllByIdAndTypeId(String id, Integer typeId, Date now) {
-
-        List<BusinessG5Log> g5Logs = businessG5LogMapper.selectAllByIdAndTypeIdAndCreateTime(id, now, typeId);
-
-//        JSONObject jsonObject = new JSONObject();
-//        List<JSONObject> jsonObjects = new ArrayList<>();
-//        for (BusinessG5Log g5Log : g5Logs) {
-//            jsonObject = new JSONObject();
-//            jsonObject.put(DateUtils.asStr(7, g5Log.getCreateTime()), g5Log.getStatus() ? 1 : -1);
-//            jsonObjects.add(jsonObject);
-//        }
-
-        return g5Logs;
-    }
+//    List<BusinessG5Log> selectAllByIdAndTypeId(String id, Integer typeId, Date now) {
+//
+//        List<BusinessG5Log> g5Logs = businessG5LogMapper.selectAllByIdAndTypeIdAndCreateTime(id, now, typeId);
+//
+//        return g5Logs;
+//    }
 }
 
 

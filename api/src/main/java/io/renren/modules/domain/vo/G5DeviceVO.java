@@ -6,6 +6,7 @@ import io.renren.modules.business.entity.BusinessRadio;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +40,18 @@ public class G5DeviceVO {
     private String privateIp;
 
     private String address;
+
+    /**
+     * 今天收益
+     */
+    @ApiModelProperty(value = "今天收益")
+    private BigDecimal todayEarnings;
+
+    /**
+     * 昨天收益
+     */
+    @ApiModelProperty(value = "昨天收益")
+    private BigDecimal yesterdayEarnings;
 
     /**
      * 网络是否通畅

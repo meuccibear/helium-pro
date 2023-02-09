@@ -1,6 +1,7 @@
 package io.renren.modules.business.service;
 
 import io.renren.modules.business.entity.BusinessRadio;
+import io.renren.modules.domain.dto.G5DeviceDTO;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface BusinessRadioService {
 
     int insertOrUpdateSelective(BusinessRadio record);
 
-    List<BusinessRadio> selectAll();
+    List<BusinessRadio> selectAll(G5DeviceDTO g5DeviceDTO);
 
 
     List<BusinessRadio> selectNotAddressGatewRadio();

@@ -74,7 +74,7 @@ public class Helium {
     @SneakyThrows
     //@Test
     public void getDevice() {
-        String filePath = String.format("%s\\%d", "../data/result/", System.currentTimeMillis());
+        String filePath = String.format("%s\\%d", "../data/result", System.currentTimeMillis());
 //        List<SourceCorpse> sourceCorpses = globalDeviceService.findsourceCorpses5ByLongCountry("US", filePath);
 //        for (SourceCorpse sourceCorps : sourceCorpses) {
 //            FileUtils.writeln(filePath, StringUtils.outStr("\t", sourceCorps.getHex(), sourceCorps.getCityId(), sourceCorps.getAddress(),
@@ -108,7 +108,7 @@ public class Helium {
      */
     //@Test
     public void getBobcatMinerJson() throws MsgException {
-        String filePath = String.format("%s\\bobcat_%d", "../data/result/", System.currentTimeMillis());
+        String filePath = String.format("%s\\bobcat_%d", "../data/result", System.currentTimeMillis());
 
         String ips =
                 "192.168.4.47\n" +
@@ -456,7 +456,7 @@ public class Helium {
     @SneakyThrows
     //@Test
     public void analysis() {
-        String filePath = String.format("%s\\%d", "../data/result/", System.currentTimeMillis());
+        String filePath = String.format("%s\\%d", "../data/result", System.currentTimeMillis());
         FileUtils.writeln(filePath, StringUtils.outStr("\t", "hex5", "总数", "离线", "在线", "国家", "城市编号", "区域设备",
                         "最低分值", "城市", "离线率"),
                 true, true);

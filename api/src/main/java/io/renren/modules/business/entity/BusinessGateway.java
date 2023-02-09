@@ -3,6 +3,7 @@ package io.renren.modules.business.entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,6 +48,24 @@ public class BusinessGateway implements Serializable {
     private String address;
 
     /**
+     * 钱包
+     */
+    @ApiModelProperty(value = "钱包")
+    private String owner;
+
+    /**
+     * 今天收益
+     */
+    @ApiModelProperty(value = "今天收益")
+    private BigDecimal todayEarnings;
+
+    /**
+     * 昨天收益
+     */
+    @ApiModelProperty(value = "昨天收益")
+    private BigDecimal yesterdayEarnings;
+
+    /**
      * 坐标
      */
     @ApiModelProperty(value = "坐标")
@@ -89,9 +108,9 @@ public class BusinessGateway implements Serializable {
     private String agwVersion;
 
     /**
-     * 状态  0：禁用   1：正常
+     * 状态  0：离线   1：正常
      */
-    @ApiModelProperty(value = "状态  0：禁用   1：正常")
+    @ApiModelProperty(value = "状态  0：离线   1：正常")
     private Integer status;
 
     /**

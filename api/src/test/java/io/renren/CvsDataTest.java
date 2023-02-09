@@ -1,13 +1,18 @@
 package io.renren;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.uber.h3core.H3Core;
 import io.renren.common.gitUtils.*;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
+import io.renren.modules.business.entity.BusinessGateway;
 import io.renren.modules.business.service.BusinessDeviceService;
+import io.renren.modules.business.service.BusinessG5DeviceService;
 import io.renren.modules.helium.GeoCoord;
+import io.renren.modules.helium.HeliumUtils;
 import io.renren.modules.helium.HexUtils;
 import io.renren.modules.helium.domain.Device;
 import io.renren.modules.helium.domain.LeanData;
@@ -27,6 +32,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,6 +56,10 @@ import java.util.Map;
 public class CvsDataTest {
     @Autowired
     private LocationsMapper locationsMapper;
+
+    @Autowired
+    BusinessG5DeviceService g5DeviceService;
+
 
     @Autowired
     private BusinessDeviceService businessDeviceService;
@@ -111,7 +121,7 @@ public class CvsDataTest {
 
         };
 
-        String filePath = String.format("%s\\%d", "../data/result/", System.currentTimeMillis());
+        String filePath = String.format("%s\\%d", "../data/result", System.currentTimeMillis());
         List<String> cityids = locationsMapper.findCityidByLongcountry(countrys);
         log.info("查询到了{}条数据", cityids.size());
         Map<String, String> mm = new HashMap<>();
@@ -123,7 +133,8 @@ public class CvsDataTest {
         }});
         log.info("查询到了{}条数据", cityids.size());
 
-        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(cityids, 200), new TypeReference<List<List<String>>>() {{}});
+        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(cityids, 200), new TypeReference<List<List<String>>>() {{
+        }});
 
         for (int i = 0; i < lists.size(); i++) {
             updateData1(lists, i, filePath);
@@ -203,7 +214,7 @@ public class CvsDataTest {
                         "861ec96dfffffff\t8\n" +
                         "861ec9a9fffffff\t8";
         String group = "分组";
-        String filePath = String.format("%s\\picklocationTest_%d", "../data/result/", System.currentTimeMillis());
+        String filePath = String.format("%s\\picklocationTest_%d", "../data/result", System.currentTimeMillis());
         List<List<GeoCoord>> geoCoordss = heliumApi.picklocations(groupStr);
         Map<String, String> hash = new HashMap<>();
         for (int i = 0; i < geoCoordss.size(); i++) {
@@ -220,7 +231,7 @@ public class CvsDataTest {
     @Test
     public void findCorpse() {
         String location = "eXVuY2hlbmcgc2hpc2hhbnhpIHNoZW5nY2hpbmE";
-        String filePath = String.format("%s\\picklocationTest_%d", "../data/result/", System.currentTimeMillis());
+        String filePath = String.format("%s\\picklocationTest_%d", "../data/result", System.currentTimeMillis());
         List<Device> devices = heliumApi.getHotspotsByCities(location);
         List<SourceCorpse> sourceCorpses = corpseUtil.checkDevice(devices, 5);
 
@@ -275,8 +286,6 @@ public class CvsDataTest {
     }
 
 
-
-
     public void surroundingSquaress(String hex) throws MsgException {
 //        int res = H3C.h3GetResolution(hex);
 //
@@ -303,5 +312,22 @@ public class CvsDataTest {
         });
     }
 
+
+    @Test
+    public void asd() {
+        BusinessGateway gateway = new BusinessGateway();
+        gateway.setGatewayId("HL-2221-00023146");
+        gateway.setAddress("112bVsPwQXFAZdiSYhc5bqK1xVg6yAdFk8EvDRPLbProemh2j1z5");
+
+//        gateway.setGatewayId("HL-2221-00023146");
+//        gateway.setAddress("112RMRGV9R8NqbCMLxbc7sTWyE3TKwZSdxWNJ5gsbNXfCXgn84n9");
+
+//        gateway.setGatewayId("HL-2221-00023119");
+//        gateway.setAddress("112NyouASkDR7e2sjABpDJ7EBV23eg5MKp3dqCdAyYRsRuYsBwKm");
+//        gateway.setOwner("13UTFy2QrNJEZLVd3gmiYjEY73AU5xbfRCJ4dVsWQYnYBsSpJtb");
+        g5DeviceService.income(gateway);
+
+        log.info("{}", JSONObject.toJSONString(gateway));
+    }
 
 }

@@ -19,6 +19,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class G5DeviceDTO extends PageRRDTO {
 
+    Object internel;
+
+    Object sasStat;
+
+    Object gpsStat;
+
+    Object status;
+
     String name;
 
 }

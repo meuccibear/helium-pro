@@ -17,12 +17,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BusinessDevice implements Serializable {
     /**
-     * 设备地址
-     */
-    @ApiModelProperty(value = "设备地址")
-    private String address;
-
-    /**
      * 序号
      */
     @ApiModelProperty(value = "序号")
@@ -81,6 +75,12 @@ public class BusinessDevice implements Serializable {
      */
     @ApiModelProperty(value = "设备名称")
     private String name;
+
+    /**
+     * 设备地址
+     */
+    @ApiModelProperty(value = "设备地址")
+    private String address;
 
     /**
      * 设备钱包
@@ -183,6 +183,12 @@ public class BusinessDevice implements Serializable {
      */
     @ApiModelProperty(value = "备注")
     private String re;
+
+    @ApiModelProperty(value = "")
+    private String usesig;
+
+    @ApiModelProperty(value = "")
+    private String group;
 
     /**
      * ip

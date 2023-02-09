@@ -1,8 +1,8 @@
 package io.renren.modules.business.dao;
-import org.apache.ibatis.annotations.Param;
+import java.math.BigDecimal;
 
 import io.renren.modules.business.entity.BusinessGateway;
-import org.apache.ibatis.annotations.Mapper;import java.util.List;
+import io.renren.modules.domain.dto.G5DeviceDTO;import org.apache.ibatis.annotations.Mapper;import org.apache.ibatis.annotations.Param;import java.util.List;
 
 @Mapper
 public interface BusinessGatewayMapper {
@@ -50,6 +50,15 @@ public interface BusinessGatewayMapper {
      */
     int updateByPrimaryKeySelective(BusinessGateway record);
 
+
+//    gateway1.setGatewayId(gateway.getGatewayId());
+//                gateway1.setOwner(gateway.getOwner());
+//                gateway1.setAddress(gateway.getAddress());
+
+    int updateYesterdayEarningsAndTodayEarningsByAddress(@Param("updatedYesterdayEarnings")BigDecimal updatedYesterdayEarnings,@Param("updatedTodayEarnings")BigDecimal updatedTodayEarnings,@Param("address")String address);
+
+    int updateYesterdayEarningsAndTodayEarningsAndOwnerByAddress(@Param("gateway") BusinessGateway gateway);
+
     /**
      * update record
      *
@@ -58,12 +67,13 @@ public interface BusinessGatewayMapper {
      */
     int updateByPrimaryKey(BusinessGateway record);
 
-    List<BusinessGateway> selectAll();
+    List<BusinessGateway> selectAll(@Param("g5DeviceDTO") G5DeviceDTO g5DeviceDTO);
+
+    List<BusinessGateway> selectEarnings(@Param("showCol")String showCol);
 
     List<String> selectGatewayIds();
 
-    int updateAddressByGatewayId(@Param("updatedAddress")String updatedAddress,@Param("gatewayId")String gatewayId);
+    int updateAddressByGatewayId(@Param("updatedAddress") String updatedAddress, @Param("gatewayId") String gatewayId);
 
-    int updateAddressAndHexByGatewayId(@Param("updatedAddress")String updatedAddress,@Param("updatedHex")String updatedHex,@Param("gatewayId")String gatewayId);
-
+    int updateAddressAndHexByGatewayId(@Param("updatedAddress") String updatedAddress, @Param("updatedHex") String updatedHex, @Param("gatewayId") String gatewayId);
 }

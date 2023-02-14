@@ -273,21 +273,28 @@ public class BusinessG5DeviceServiceImpl implements BusinessG5DeviceService {
         } else {
             owner = gateway.getOwner();
         }
-
+        JSONArray data = new JSONArray();
         JSONObject roles = HeliumUtils.roles(owner, false, "rewards_v1,rewards_v2,rewards_v3,subnetwork_rewards_v1", "");
+        data.addAll(roles.getJSONArray("data"));
         roles = HeliumUtils.roles(owner, false, "", (String) roles.get("cursor"));
-        JSONArray data = roles.getJSONArray("data");
+        data.addAll(roles.getJSONArray("data"));
+//        JSONArray data = roles.getJSONArray("data");
+
 
         if (ObjectUtils.notIsEmpty(data)) {
-
             JSONArray jsonArray = (JSONArray) JSONUtils.jsGetData(roles, "data");
-            for (int i = 0; i < 5; i++) {
+            List<JSONObject> rmJson = new ArrayList<>();
+            for (int i = 0; i < jsonArray.size(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                if (jsonObject.containsKey("time")) {
-
+                if(!jsonObject.getString("type").equals("subnetwork_rewards_v1")){
+                    rmJson.add(jsonObject);
+                    continue;
                 }
+                log.info("hash:{} time:{}", jsonObject.getString("hash"), DateUtils.asStr(4, new Date(1000 * jsonObject.getLong("time"))));
+            }
 
-                log.info("hash:{} time:{}", jsonObject.getString("hash"), jsonObject.getString("time"));
+            for (JSONObject jsonObject : rmJson) {
+                jsonArray.remove(jsonObject);
             }
 
             gateway.setTodayEarnings(getTransactionsAmount(owner, roles, 0));

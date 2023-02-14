@@ -15,6 +15,7 @@ import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
 import io.renren.common.gitUtils.map.NumMap;
 import io.renren.modules.business.service.BusinessDeviceService;
+import io.renren.modules.business.service.BusinessG5DeviceService;
 import io.renren.modules.business.service.MakersService;
 import io.renren.modules.helium.*;
 import io.renren.modules.helium.domain.Device;
@@ -69,6 +70,8 @@ public class HeliumTest {
     @Autowired
     MakersService makersService;
 
+    @Autowired
+    private BusinessG5DeviceService businessG5DeviceService;
 
     //        String groupStr =
 //                "8519518ffffffff\t13\n" +
@@ -256,7 +259,7 @@ public class HeliumTest {
     @SneakyThrows
     @Test
     public void getDevice() {
-        String filePath = String.format("%s\\%d", "../data/result", System.currentTimeMillis());
+        String filePath = String.format("%s/%d", "../data/result", System.currentTimeMillis());
 //        List<SourceCorpse> sourceCorpses = globalDeviceService.findsourceCorpses5ByLongCountry("US", filePath);
 //        for (SourceCorpse sourceCorps : sourceCorpses) {
 //            FileUtils.writeln(filePath, StringUtils.outStr("\t", sourceCorps.getHex(), sourceCorps.getCityId(), sourceCorps.getAddress(),
@@ -657,4 +660,5 @@ public class HeliumTest {
             System.out.println(device.getAddress());
         }
     }
+
 }

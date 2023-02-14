@@ -90,6 +90,7 @@ public class HexDemo {
      */
     @Test
     public void getAroundDevice() {
+
         List<String> lines = FileUtils.readLines("../data/aroundDevice.txt");
         int k = 2;
         String path = String.format("%s/%d【周围设备】", resultPath, System.currentTimeMillis()) ;

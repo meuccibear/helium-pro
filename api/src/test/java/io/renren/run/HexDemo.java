@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.uber.h3core.H3Core;
-import io.renren.common.gitUtils.BeanUtils;
-import io.renren.common.gitUtils.JSONUtils;
-import io.renren.common.gitUtils.ObjectUtils;
-import io.renren.common.gitUtils.StringUtils;
+import io.renren.common.gitUtils.*;
 import io.renren.common.gitUtils.http.FileUtils;
 import io.renren.modules.business.dao.BusinessDeviceMapper;
 import io.renren.modules.business.entity.BusinessDevice;
@@ -92,14 +89,14 @@ public class HexDemo {
     public void getAroundDevice() {
 
         List<String> lines = FileUtils.readLines("../data/aroundDevice.txt");
-        int k = 2;
+        int k = 1;
         String path = String.format("%s/%d【周围设备】", resultPath, System.currentTimeMillis()) ;
         List<JSONObject> jsons = new ArrayList<>();
         for (String line : lines) {
             jsons.addAll(depley(line, res, k));
         }
 
-        String[] keys = new String[]{"status", "corePoint", "hex5", "depllist", "twoLevelName", "manageName", "publicIp", "ip",  "address", "total24h", "usesig", "group", "online"};
+        String[] keys = new String[]{"status", "corePoint", "hex5", "depllist", "oneLevelName", "twoLevelName", "manageName", "publicIp", "ip",  "address", "total24h", "usesig", "group", "online"};
         List<String> strings = BeanUtils.toJavaObject(keys, new TypeReference<List<String>>() {{
         }});
         JSONUtils.toCsvTitle(path, strings);
@@ -135,36 +132,7 @@ public class HexDemo {
     public void showAvailableHexs() {
 
         String groupStr =
-                        "881f12ae17fffff\t1\n" +
-                                "881f12aee1fffff\t1\n" +
-                                "881f12ae91fffff\t1\n" +
-                                "881f12aebbfffff\t1\n" +
-                                "881f12aea7fffff\t1\n" +
-                                "881f12ac1dfffff\t1\n" +
-                                "881f12acc5fffff\t1\n" +
-                                "881f12acc3fffff\t1\n" +
-                                "8819420147fffff\t1\n" +
-                                "8819420169fffff\t1\n" +
-                                "8819421897fffff\t1\n" +
-                                "88194218b3fffff\t1\n" +
-                                "8819421895fffff\t1\n" +
-                                "8819421993fffff\t1\n" +
-                                "8819420a0bfffff\t1\n" +
-                                "8819420a29fffff\t1\n" +
-                                "87182ca9bffffff\t3\n" +
-                                "88182ca981fffff\t1\n" +
-                                "88182ca98dfffff\t1\n" +
-                                "88182ca9c7fffff\t1\n" +
-                                "88182ca9d3fffff\t1\n" +
-                                "88182ca9c5fffff\t1\n" +
-                                "862da5367ffffff\t4\n" +
-                                "862da536fffffff\t4\n" +
-                                "861f4481fffffff\t2\n" +
-                                "861f44817ffffff\t2\n" +
-                                "861f448a7ffffff\t2\n" +
-                                "861f448afffffff\t2\n" +
-                                "8639567b7ffffff\t4\n" +
-                                "8639567a7ffffff\t4";
+                        "851ec933fffffff\t8";
         String filePath = String.format("%s/%d【坐标】", resultPath, System.currentTimeMillis());
         List<List<String>> groupTable = StringUtils.toTableList(groupStr);
 
@@ -194,6 +162,24 @@ public class HexDemo {
         }
 
         return jsons;
+    }
+
+
+
+    @Test
+    public void getHotspotsTotal(){
+        Double hotspotsTotal = (Double) new CounterUtil() {
+            @Override
+            public boolean check(Object execute) {
+                return execute == null;
+            }
+
+            @Override
+            public Object execute(Object data) throws Exception {
+                return heliumApi.getHotspotsTotal(1, (String) data);
+            }
+        }.run("112MTwKvKVhrGrWLNDLTQCnNT5UF1wbr19gMbrt1bAYK6GpfNziJ");
+        System.out.println(hotspotsTotal);
     }
 
 }

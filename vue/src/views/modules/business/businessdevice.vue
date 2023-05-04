@@ -208,7 +208,7 @@
           label="设备名称">
           <template slot-scope="scope">
             <el-link
-              :href="'https://explorer.helium.com/hotspots/' + scope.row.address"
+              :href="'https://app.hotspotty.net/hotspots/' + scope.row.address + '/rewards'"
               target="_blank"
               type="primary"
               :underline="false">{{ scope.row.name || scope.row.address }}</el-link>

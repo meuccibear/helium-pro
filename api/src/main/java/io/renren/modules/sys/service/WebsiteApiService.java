@@ -4,7 +4,6 @@ import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
 import io.renren.modules.sys.entity.WebsiteApi;
-
 import java.util.Map;
 
 public interface WebsiteApiService  {

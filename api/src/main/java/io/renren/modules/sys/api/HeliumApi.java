@@ -1,5 +1,6 @@
 package io.renren.modules.sys.api;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
@@ -15,10 +16,10 @@ import io.renren.modules.helium.domain.deviceConfig.activity.RestBean;
 import io.renren.modules.sys.service.WebsiteApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -70,7 +71,10 @@ public class HeliumApi {
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("address", address);
         parameter.put("min_time", "-30 day");
-        parameter.put("max_time", DateUtils.asStr(LocalDateTime.now(ZoneOffset.UTC), "UTC"));
+        LocalDateTime maxTime = LocalDateTime.now(ZoneOffset.UTC);
+        maxTime = maxTime.withSecond(0);
+        maxTime = maxTime.withMinute(0);
+        parameter.put("max_time", DateUtils.asStr(maxTime, "UTC"));
         parameter.put("bucket", "day");
         switch (typeId) {
             case 1:
@@ -83,20 +87,28 @@ public class HeliumApi {
 //        JSONArray jsonArray = (JSONArray) JSONUtils.jsGetData(jsonObject, "data");
         JSONArray jsonArray = BeanUtils.toJavaObject(result.getData(), new TypeReference<JSONArray>() {{
         }});
-
-        List<HotspotsProfit> hotspotsProfits = BeanUtils.toJavaObject(jsonArray, new TypeReference<List<HotspotsProfit>>() {
-        });
-//        System.out.println("------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ");
         Double total = 0.0;
-        LocalDateTime date = hotspotsProfits.get(0).getTimestamp();
-        date = date.minusDays(1);
-//        System.out.println(DateUtils.asStr(4, date));
-        for (HotspotsProfit hotspotsProfit : hotspotsProfits) {
-            if (date.compareTo(hotspotsProfit.getTimestamp()) < 0) {
-                total += hotspotsProfit.getTotal();
-//                System.out.println(DateUtils.asStr(4, hotspotsProfit.getTimestamp()) + " " + hotspotsProfit.getSum() + " " + hotspotsProfit.getTotal());
-            }
+
+        for (int i = 0; i < (jsonArray.size() > 24 ? 24 : jsonArray.size()); i++) {
+//            log.info("{}\t{}\t{}", jsonArray.getJSONObject(i).getDouble("total"), jsonArray.getJSONObject(i).get("timestamp"), i);
+            total += jsonArray.getJSONObject(i).getDouble("total");
         }
+
+        log.info(String.valueOf(total));
+//        List<HotspotsProfit> hotspotsProfits = BeanUtils.toJavaObject(jsonArray, new TypeReference<List<HotspotsProfit>>() {
+//        });
+//        System.out.println("------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ------------------- ");
+//        Double total = 0.0;
+//        LocalDateTime date = LocalDateTime.now();
+//        date = date.minusDays(1);
+//        date = date.withMinute(0);
+//        date = date.withSecond(0);
+//        for (HotspotsProfit hotspotsProfit : hotspotsProfits) {
+//            log.info("{}\t{}\t{}\t{}", DateUtils.asStr(4, date), DateUtils.asStr(4, hotspotsProfit.getTimestamp()), String.valueOf(hotspotsProfit.getTotal()), date.compareTo(hotspotsProfit.getTimestamp()));
+//            if (date.compareTo(hotspotsProfit.getTimestamp()) < 0) {
+//                total += hotspotsProfit.getTotal();
+//            }
+//        }
 //        System.out.println(total);
         return total;
     }

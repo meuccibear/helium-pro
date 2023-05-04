@@ -6,7 +6,7 @@ spring:
             # 数据库连接驱动
             driver-class-name: com.mysql.cj.jdbc.Driver
             url: jdbc:mysql://103.149.26.144:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
-#            url: jdbc:mysql://103.149.26.144:3356/helium_pro_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false&zeroDateTimeBehavior=convertToNull
+#            url: jdbc:mysql://103.149.26.144:3356/helium_pro_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
 #            url: jdbc:mysql://152.32.253.209:3316/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false&useSSL=no
 #            url: jdbc:mysql://152.32.253.209:3306/helium_pro?serverTimezone=Asia/Shanghai&useSSL=false&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
             username: root
@@ -66,7 +66,7 @@ spring:
             port: 27017
             database: helium
     scheduler:
-        autoStartup: false
+        autoStartup: true
 
 
 ##多数据源的配置

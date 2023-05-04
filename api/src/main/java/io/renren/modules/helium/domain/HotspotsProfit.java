@@ -37,4 +37,9 @@ public class HotspotsProfit {
         }
         return (LocalDateTime) timestamp;
     }
+
+    public Boolean contrast(LocalDateTime dateTime) {
+        LocalDateTime timestamp = getTimestamp();
+        return timestamp.compareTo(dateTime) > 0 ;
+    }
 }

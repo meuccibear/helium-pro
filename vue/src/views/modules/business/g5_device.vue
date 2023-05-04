@@ -101,7 +101,7 @@
         <template slot-scope="scope">
           <el-link
             v-if="scope.row.address"
-            :href="'https://explorer.helium.com/hotspots/' + scope.row.address + '/5g-statistics'"
+            :href="'https://app.hotspotty.net/hotspots/' + scope.row.address + '/rewards'"
             target="_blank"
             type="primary"
             :underline="false">{{ scope.row.id }}</el-link>
@@ -127,6 +127,12 @@
 <!--            &lt;!&ndash;             class="buttonText">{{ scope.row.name }}</a>&ndash;&gt;-->
 <!--          </template>-->
 <!--        </el-table-column>-->
+        <el-table-column
+          prop="name"
+          label="名称"
+          sortable
+          width="180">
+        </el-table-column>
         <el-table-column
           prop="alis"
           label="别名"

@@ -357,7 +357,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
 
                     @Override
                     public Object execute(Object data) throws Exception {
-                        return heliumApi.getHotspotsTotal(2, (String) data);
+                        return heliumApi.getHotspotsTotal(1, (String) data);
                     }
                 }.run(address);
 

@@ -174,6 +174,39 @@ public class DateUtils {
         return localDateTime.format(DateTimeFormatter.ofPattern(pattern));
     }
 
+    public static String asStr(Integer typeId, LocalDate localDateTime) {
+        if (ObjectUtils.isEmpty(localDateTime)) {
+            return "";
+        }
+        String pattern;
+        switch (typeId) {
+            case 1:
+                pattern = "yyyy-MM-dd";
+                break;
+            case 2:
+                pattern = "HH:mm:ss";
+                break;
+            case 3:
+                pattern = "yyyyMMddHHmmss";
+                break;
+            case 4:
+                pattern = "yyyy-MM-dd HH:mm:ss";
+                break;
+            case 5:
+                pattern = "yyyy-MM-ddHH:mm-ss";
+                break;
+            case 6:
+                pattern = "yyyyMMddHH";
+                break;
+            case 7:
+                pattern = "MM-dd\nHH:mm:ss";
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + typeId);
+        }
+        return localDateTime.format(DateTimeFormatter.ofPattern(pattern));
+    }
+
     /**
      * 传入Data类型日期，返回字符串类型时间（ISO8601标准时间）
      * @param typeId

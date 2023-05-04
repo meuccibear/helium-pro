@@ -1,27 +1,19 @@
 package io.renren.modules.sys.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import io.renren.common.gitUtils.BeanUtils;
-import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.StringUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
 import io.renren.common.gitUtils.kdl.AuthFactory;
-import io.renren.modules.sys.entity.DataHttp;
 import io.renren.modules.sys.service.DataHttpService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tools.ant.taskdefs.condition.Http;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
-
 import io.renren.modules.sys.dao.WebsiteApiMapper;
 import io.renren.modules.sys.entity.WebsiteApi;
 import io.renren.modules.sys.service.WebsiteApiService;
-
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,7 +133,6 @@ public class WebsiteApiServiceImpl extends HttpUtils implements WebsiteApiServic
 
     @Override
     public Object sendBefore(Method method, String url, Object entityParameter, Map<String, String> headers, HttpResultData httpResultData, Long time) {
-
         return null;
     }
 

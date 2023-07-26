@@ -10,8 +10,12 @@ package io.renren.modules.job.task;
 
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
+import io.renren.common.HeliumHttpUtils;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.ObjectUtils;
+import io.renren.common.gitUtils.http.HttpResultData;
+import io.renren.common.gitUtils.http.HttpUtils;
+import io.renren.modules.business.entity.BusinessDevice;
 import io.renren.modules.business.service.BusinessDeviceService;
 import io.renren.modules.business.service.MakersService;
 import lombok.SneakyThrows;
@@ -45,15 +49,29 @@ public class DevicedeBlackListInfoTask implements ITask {
     public void run(String params) {
         log.info("MultithreadingDeviceTask定时任务正在执行，参数为：{}", params);
 
-        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(businessDeviceService.findAll(), ObjectUtils.toInt(params, 5)), new TypeReference<List<List<String>>>() {{
-        }});
-        if (ObjectUtils.notIsEmpty(lists)) {
-            for (int i = 0; i < lists.size(); i++) {
-                if (lists.get(i).size() > 0) {
-                    businessDeviceService.updateDevicedeBlackListInfoTask(lists, i);
-                }
-            }
+        HttpResultData httpResultData = new HeliumHttpUtils().send(HttpUtils.Method.GET, "https://raw.githubusercontent.com/helium/denylist/main/denylist.csv");
+        List<String> deviceIds = BeanUtils.toJavaObject(httpResultData.getResult().split(",\n"), new TypeReference<List<String>>() {
+        });
+
+        List<String> dbDeviceIds = businessDeviceService.findAll();
+        List<BusinessDevice> devices = new ArrayList<>();
+        BusinessDevice device;
+        for (String dbDeviceId : dbDeviceIds) {
+            device = new BusinessDevice();
+            device.setAddress(dbDeviceId);
+            device.setDepllist(deviceIds.contains(dbDeviceId)?1:0);
+            devices.add(device);
         }
+
+        businessDeviceService.updateDepllist(devices);
+
+//        if (ObjectUtils.notIsEmpty(lists)) {
+//            for (int i = 0; i < lists.size(); i++) {
+//                if (lists.get(i).size() > 0) {
+//                    businessDeviceService.updateDevicedeBlackListInfoTask(lists, i);
+//                }
+//            }
+//        }
     }
 
 }

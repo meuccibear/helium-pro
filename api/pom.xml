@@ -42,6 +42,7 @@
         <hutool.version>4.1.1</hutool.version>
         <lombok.version>1.18.4</lombok.version>
         <xiaoymin.knife4j.version>2.0.5</xiaoymin.knife4j.version>
+<!--        <xiaoymin.knife4j.version>3.0.3</xiaoymin.knife4j.version>-->
 
         <!--wagon plugin 配置-->
         <service-path>/work/renren</service-path>
@@ -51,22 +52,23 @@
         <remote-passwd>123456</remote-passwd>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-dependencies</artifactId>
-                <version>${xiaoymin.knife4j.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+<!--    <dependencyManagement>-->
+<!--        <dependencies>-->
+<!--            <dependency>-->
+<!--                <groupId>com.github.xiaoymin</groupId>-->
+<!--                <artifactId>knife4j-dependencies</artifactId>-->
+<!--                <version>${xiaoymin.knife4j.version}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
+<!--            </dependency>-->
+<!--        </dependencies>-->
+<!--    </dependencyManagement>-->
 
     <dependencies>
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
+            <version>${xiaoymin.knife4j.version}</version>
         </dependency>
 
         <dependency>
@@ -83,12 +85,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <artifactId>spring-boot-starter-validation</artifactId>-->
-<!--                    <groupId>org.springframework.boot</groupId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
+            <!--            <exclusions>-->
+            <!--                <exclusion>-->
+            <!--                    <artifactId>spring-boot-starter-validation</artifactId>-->
+            <!--                    <groupId>org.springframework.boot</groupId>-->
+            <!--                </exclusion>-->
+            <!--            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

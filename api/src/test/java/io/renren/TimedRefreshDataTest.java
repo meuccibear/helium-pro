@@ -238,16 +238,16 @@ public class TimedRefreshDataTest {
 //            }
 //        }
 
-        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(businessDeviceService.findErrDevices("depllist"), ObjectUtils.toInt("200", 5)), new TypeReference<List<List<String>>>() {{
-        }});
-
-        if(ObjectUtils.notIsEmpty(lists)){
-            for (int i = 0; i < lists.size(); i++) {
-                if (lists.get(i).size() > 0) {
-                    businessDeviceService.updateDevicedeBlackListInfoTask(lists, i);
-                }
-            }
-        }
+//        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(businessDeviceService.findErrDevices("depllist"), ObjectUtils.toInt("200", 5)), new TypeReference<List<List<String>>>() {{
+//        }});
+//
+//        if(ObjectUtils.notIsEmpty(lists)){
+//            for (int i = 0; i < lists.size(); i++) {
+//                if (lists.get(i).size() > 0) {
+//                    businessDeviceService.updateDevicedeBlackListInfoTask(lists, i);
+//                }
+//            }
+//        }
 
     }
 

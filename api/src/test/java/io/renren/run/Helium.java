@@ -13,6 +13,8 @@ import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.StringUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
+import io.renren.common.gitUtils.http.HttpResultData;
+import io.renren.common.gitUtils.http.HttpUtils;
 import io.renren.common.gitUtils.map.NumMap;
 import io.renren.modules.business.service.BusinessDeviceService;
 import io.renren.modules.business.service.MakersService;
@@ -25,6 +27,7 @@ import io.renren.modules.sys.entity.SourceCorpse;
 import io.renren.modules.sys.service.GlobalDeviceService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -496,5 +499,15 @@ public class Helium {
         for (Device device : walletByAddress) {
             System.out.println(device.getAddress());
         }
+    }
+
+
+    @Test
+    public void asd() {
+        HttpResultData httpResultData = new HeliumHttpUtils().send(HttpUtils.Method.GET, "https://raw.githubusercontent.com/helium/denylist/main/denylist.csv");
+        List<String> deviceIds = BeanUtils.toJavaObject(httpResultData.getResult().split(",\n"), new TypeReference<List<String>>() {
+        });
+        System.out.println(String.format("\n\n%d %s", deviceIds.size(), deviceIds.get(deviceIds.size() - 1)));
+        System.out.println(deviceIds.contains("11zzyvVZF5oSVjbcMET3ZGWBQhPBLAsoJ3DTKEK8sb1nDCQ3vUL"));
     }
 }

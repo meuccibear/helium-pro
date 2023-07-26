@@ -49,7 +49,8 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 //这里指定Controller扫描包路径
                 .apis(RequestHandlerSelectors.basePackage("io.renren.modules"))
                 .paths(PathSelectors.any())
-                .build().securitySchemes(security());
+                .build()
+                .securitySchemes(security());
         ;
         return docket;
     }
@@ -66,6 +67,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .description("Dashboard 接口")
                 .termsOfServiceUrl(String.format("http://%s:%d/", host, port))
                 .contact("group@qq.com")
+//                .contact(new Contact("name", "group@qq.com", ""))
                 .version("1.0")
                 .build();
     }

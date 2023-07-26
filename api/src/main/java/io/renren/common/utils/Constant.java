@@ -11,6 +11,7 @@ package io.renren.common.utils;
 import io.renren.common.validator.group.AliyunGroup;
 import io.renren.common.validator.group.QcloudGroup;
 import io.renren.common.validator.group.QiniuGroup;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -20,6 +21,7 @@ import java.util.stream.Stream;
  *
  * @author Mark sunlightcs@gmail.com
  */
+@Component
 public class Constant {
     /**
      * 超级管理员ID

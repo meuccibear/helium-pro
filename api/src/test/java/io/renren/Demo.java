@@ -1,5 +1,9 @@
 package io.renren;
 
+import io.renren.common.gitUtils.exception.MsgException;
+import io.renren.common.gitUtils.http.HttpResultData;
+import io.renren.common.gitUtils.http.HttpUtilsx;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,36 +21,17 @@ import java.net.Socket;
  * @Version 1.0
  **/
 public class Demo {
+
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
         try {
-            ServerSocket server = new ServerSocket(8080);
-            while (true) {
-                Socket socket = server.accept();
-
-                InputStreamReader in = new InputStreamReader(socket.getInputStream());
-                BufferedReader br = new BufferedReader(in);
-                String content;
-                System.out.println(1);
-
-                //while ((content = br.readLine()) != null && content != ""){ //用content != ""或者不判断content是否为空，会导致阻塞
-                while ((content = br.readLine()) != null && !"".equals(content)) {
-                    System.out.println(content);
-                }
-                System.out.println(2);
-                PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-                printWriter.println("HTTP/1.1 200 OK");
-                printWriter.println("Content-Type:text/html;charset=utf-8");
-                String body = "hello,nio1";
-                printWriter.println("Content-Length:" + body.getBytes().length);
-                printWriter.println();
-                printWriter.println(body);
-                printWriter.close();
-                socket.close();
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            System.out.printf(get("https://www.linshiyouxiang.net/mailbox/y6u7i8o98888/646b16ae9db944000798bcc6"));
+        } catch (MsgException e) {
+            throw new RuntimeException(e);
         }
+    }
+    public static String get(String url) throws MsgException {
+        String headersStr = "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36";
+        HttpResultData httpResultData = HttpUtilsx.get( url, HttpUtilsx.getHeadres(headersStr));
+        return httpResultData.getResult();
     }
 }

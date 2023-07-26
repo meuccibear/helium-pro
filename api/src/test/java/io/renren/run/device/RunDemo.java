@@ -134,19 +134,6 @@ public class RunDemo {
     }
 
 
-    @Test
-    public void asd() {
-        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(FileUtils.readLines(PATH + "\\1663634602567\\address.txt"), 200), new TypeReference<List<List<String>>>() {{
-        }});
-
-        for (int i = 0; i < lists.size(); i++) {
-            if (lists.get(i).size() > 0) {
-                businessDeviceService.updateDevicedeBlackListInfo(PATH + "\\", lists, i);
-            }
-        }
-    }
-
-
     @Resource
     private MongoTemplate mongoTemplate;
 

@@ -3,7 +3,12 @@
     :title="!dataForm.hotspottyId ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+    <el-form
+      :model="dataForm"
+      :rules="dataRule"
+      ref="dataForm"
+      @keyup.enter.native="dataFormSubmit()"
+      label-width="80px">
 <!--    <el-form-item label="名称" prop="name">
       <el-input v-model="dataForm.name" placeholder="名称"></el-input>
     </el-form-item>-->

@@ -17,6 +17,7 @@ api/.idea
 # Compiled class file
 *.class
 api/target
+log
 
 # Log file
 *.log

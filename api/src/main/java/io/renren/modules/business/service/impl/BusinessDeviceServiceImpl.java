@@ -417,41 +417,41 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
 
     }
 
-    @Override
-    @Async("taskExecutor")
-    public void updateDevicedeBlackListInfo(String filePath, List<List<String>> lists, int index) {
-        List<String> addresss = lists.get(index);
-        log.info(String.format("开始执行任务：hash值：%s 线程序号：%d任务量：%d", addresss.hashCode(), index, addresss.size()));
-
-        LocalDateTime now = LocalDateTime.now();
-        String address = null;
-
-        for (int i = 0; i < addresss.size(); i++) {
-            address = addresss.get(i);
-            log.info(String.format("hash值：%s 线程序号：%d任务量：%d 开始查询第%d个设备信息 设备地址：%s", addresss.hashCode(), index, addresss.size(), i, addresss.get(i)));
-            if (ObjectUtils.notIsEmpty(address)) {
-                Boolean denylistB = (Boolean) new CounterUtil() {
-                    @Override
-                    public boolean check(Object execute) {
-                        return execute == null;
-                    }
-
-                    @Override
-                    public Object execute(Object data) throws MsgException {
-                        return heliumApi.denylist((String) data);
-                    }
-                }.run(address);
-
-                if (ObjectUtils.notIsEmpty(denylistB)) {
-                    FileUtils.writeln(filePath + "denylist.csv", StringUtils.outStr(",", address, denylistB), true, true);
-                } else {
-                    FileUtils.writeln(filePath + "err", StringUtils.outStr(",", address, denylistB), true, true);
-                }
-            }
-        }
-
-        log.info("任务结束：hash值：{} 线程序号：{} 查询{}台设备 所消耗的时间{}", addresss.hashCode(), index, addresss.size(), DateUtils.calculationTimeConsuming(now));
-    }
+//    @Override
+//    @Async("taskExecutor")
+//    public void updateDevicedeBlackListInfo(String filePath, List<List<String>> lists, int index) {
+//        List<String> addresss = lists.get(index);
+//        log.info(String.format("开始执行任务：hash值：%s 线程序号：%d任务量：%d", addresss.hashCode(), index, addresss.size()));
+//
+//        LocalDateTime now = LocalDateTime.now();
+//        String address = null;
+//
+//        for (int i = 0; i < addresss.size(); i++) {
+//            address = addresss.get(i);
+//            log.info(String.format("hash值：%s 线程序号：%d任务量：%d 开始查询第%d个设备信息 设备地址：%s", addresss.hashCode(), index, addresss.size(), i, addresss.get(i)));
+//            if (ObjectUtils.notIsEmpty(address)) {
+//                Boolean denylistB = (Boolean) new CounterUtil() {
+//                    @Override
+//                    public boolean check(Object execute) {
+//                        return execute == null;
+//                    }
+//
+//                    @Override
+//                    public Object execute(Object data) throws MsgException {
+//                        return heliumApi.denylist((String) data);
+//                    }
+//                }.run(address);
+//
+//                if (ObjectUtils.notIsEmpty(denylistB)) {
+//                    FileUtils.writeln(filePath + "denylist.csv", StringUtils.outStr(",", address, denylistB), true, true);
+//                } else {
+//                    FileUtils.writeln(filePath + "err", StringUtils.outStr(",", address, denylistB), true, true);
+//                }
+//            }
+//        }
+//
+//        log.info("任务结束：hash值：{} 线程序号：{} 查询{}台设备 所消耗的时间{}", addresss.hashCode(), index, addresss.size(), DateUtils.calculationTimeConsuming(now));
+//    }
 
 
     @Override

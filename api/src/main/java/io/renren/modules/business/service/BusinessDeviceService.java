@@ -51,7 +51,7 @@ public interface BusinessDeviceService {
 
     void updateDevicedeBlackListInfoTask(List<List<String>> lists, int index);
 
-    void updateDevicedeBlackListInfo(String filePath, List<List<String>> lists, int index);
+//    void updateDevicedeBlackListInfo(String filePath, List<List<String>> lists, int index);
 
     void getDevice(Map<String, String> makersDictionary, Map<String, String> ownerNo, List<List<String>> lists, int index, String filePath);
 

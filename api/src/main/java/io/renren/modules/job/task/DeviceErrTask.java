@@ -54,15 +54,16 @@ public class DeviceErrTask implements ITask {
         log.info("MultithreadingDeviceTask定时任务正在执行，参数为：{}", params);
         Map<String, String> makersDictionary = makersService.getMakersDictionary();
 
-        List<List<String>> lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(businessDeviceService.findErrDevices("depllist"), ObjectUtils.toInt(params, 5)), new TypeReference<List<List<String>>>() {{
-        }});
-        if (ObjectUtils.notIsEmpty(lists)) {
-            for (int i = 0; i < lists.size(); i++) {
-                if (lists.get(i).size() > 0) {
-                    businessDeviceService.updateDevicedeBlackListInfoTask(lists, i);
-                }
-            }
-        }
+        List<List<String>> lists ;
+//        = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(businessDeviceService.findErrDevices("depllist"), ObjectUtils.toInt(params, 5)), new TypeReference<List<List<String>>>() {{
+//        }});
+//        if (ObjectUtils.notIsEmpty(lists)) {
+//            for (int i = 0; i < lists.size(); i++) {
+//                if (lists.get(i).size() > 0) {
+//                    businessDeviceService.updateDevicedeBlackListInfoTask(lists, i);
+//                }
+//            }
+//        }
 
         lists = BeanUtils.toJavaObject(ObjectUtils.averageAssignPartition(businessDeviceService.findErrDevices("online"), ObjectUtils.toInt(params, 5)), new TypeReference<List<List<String>>>() {{
         }});

@@ -10,7 +10,7 @@ package io.renren;
 import com.alibaba.fastjson.JSON;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
-//import io.renren.common.HeliumHttpUtils;
+//import io.renren.common.apiUtil.HeliumHttpUtils;
 import io.renren.modules.business.service.BusinessG5DeviceService;
 import io.renren.modules.helium.HeliumUtils;
 import io.renren.modules.sys.api.HeliumApi;

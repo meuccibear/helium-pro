@@ -6,7 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.uber.h3core.H3Core;
 import io.renren.Hex;
-import io.renren.common.HeliumHttpUtils;
+import io.renren.common.apiUtil.HeliumHttpUtils;
+import io.renren.common.apiUtil.HotsPottyHttpUtils;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.JSONUtils;
 import io.renren.common.gitUtils.ObjectUtils;
@@ -153,7 +154,7 @@ public class Helium {
     /**
      * 获取坐标周围没有定位的坐标
      */
-    //@Test
+    @Test
     public void showAvailableHex() throws MsgException {
         List<String> hexs = Hex.kRing("8840e274c3fffff", 1);
         List<String> rows = new ArrayList<>();

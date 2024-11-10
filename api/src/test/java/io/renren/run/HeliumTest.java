@@ -6,7 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.uber.h3core.H3Core;
 import io.renren.Hex;
-import io.renren.common.HeliumHttpUtils;
+import io.renren.common.apiUtil.HeliumHttpUtils;
+import io.renren.common.apiUtil.HotsPottyHttpUtils;
 import io.renren.common.gitUtils.BeanUtils;
 import io.renren.common.gitUtils.JSONUtils;
 import io.renren.common.gitUtils.ObjectUtils;
@@ -207,17 +208,17 @@ public class HeliumTest {
 //                        "871f12ac5ffffff\t1\n" +
 //                        "871f12af1ffffff\t2\n" +
 //                        "871f12aeeffffff\t2\n" +
-                        "861f106b7ffffff\t3\n" +
+//                        "861f106b7ffffff\t3\n" +
 //                        "861f10697ffffff\t3\n" +
 //                        "861f12b4fffffff\t3\n" +
 //                        "862da534fffffff\t3\n" +
 //                        "862da536fffffff\t3\n" +
-                        "862da5367ffffff\t3\n" +
+                        "862da5367ffffff\t1\n" +
 //                        "8539560bfffffff\t9\n" +
 //                        "853f68c3fffffff\t9\n" +
 //                        "862c2a16fffffff\t5\n" +
 //                        "862c2a14fffffff\t4\n" +
-                        "861ec1607ffffff\t5\n" +
+//                        "861ec1607ffffff\t5\n" +
 //                        "861ec1627ffffff\t4\n" +
 //                        "871ec1756ffffff\t2\n" +
 //                        "861ec92afffffff\t4\n" +

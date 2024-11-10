@@ -9,10 +9,8 @@
 package io.renren.modules.job.task;
 
 import com.alibaba.fastjson.TypeReference;
-import com.google.common.collect.Lists;
-import io.renren.common.HeliumHttpUtils;
+import io.renren.common.apiUtil.HeliumHttpUtils;
 import io.renren.common.gitUtils.BeanUtils;
-import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
 import io.renren.modules.business.entity.BusinessDevice;
@@ -25,7 +23,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 测试定时任务(演示Demo，可删除)

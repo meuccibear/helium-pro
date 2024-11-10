@@ -1,4 +1,4 @@
-package io.renren.modules.helium;
+package io.renren.common.apiUtil;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -12,7 +12,6 @@ import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
 import io.renren.modules.helium.domain.LeanData;
 import io.renren.modules.helium.domain.Result;
-import io.renren.modules.sys.entity.DataHttp;
 import io.renren.modules.sys.service.DataHttpService;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;

@@ -4,7 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import io.renren.common.HeliumHttpUtils;
+import io.renren.common.apiUtil.HeliumHttpUtils;
 import io.renren.common.gitUtils.*;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;

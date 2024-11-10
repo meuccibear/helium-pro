@@ -46,16 +46,18 @@ public class JSONUtils {
      * @throws MsgException
      */
     public static Object jsGetData(Object jsonObject, String str) {
-        if (!(jsonObject instanceof Map) && ObjectUtils.notIsEmpty(jsonObject)) {
-            jsonObject = JSONUtils.toJSONObject(jsonObject);
+        if (!(jsonObject instanceof Map) || ObjectUtils.notIsEmpty(jsonObject)) {
+            jsonObject = toJSONObject(jsonObject);
         }
 
         String[] colNames = str.split("\\.");
         Object resultData = jsonObject;
-        Integer num = 0;
+        int num = 0;
         JSONArray jsonArray;
         for (int i = 0; i < colNames.length; i++) {
-            if (ObjectUtils.valueVerification("isInteger", colNames[i])) {
+//            log.info("开始key: {}", colNames[i]);
+//            log.info("resultData: {}", resultData);
+            if (ObjectUtils.valueVerification("isInteger", colNames[i]) && resultData instanceof JSONArray) {
                 jsonArray = (JSONArray) resultData;
                 try {
                     num = ObjectUtils.toInt(colNames[i]);
@@ -68,14 +70,11 @@ public class JSONUtils {
                 } else {
                     return null;
                 }
+            } else if (resultData instanceof JSONObject) {
+                resultData = get((JSONObject) resultData, colNames[i]);
             } else {
-//                System.out.println(resultData.getClass());
-//                System.out.println(JSO);
-                if (resultData instanceof JSONArray) {
-//                    log.info("resultData:{}", resultData);
-                } else {
-                    resultData = get((JSONObject) resultData, colNames[i]);
-                }
+                log.info("class: {}", jsonObject.getClass().getName());
+                return null;
             }
         }
         return resultData;

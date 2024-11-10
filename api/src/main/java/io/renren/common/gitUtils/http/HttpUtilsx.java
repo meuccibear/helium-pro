@@ -73,7 +73,7 @@ public class HttpUtilsx {
     //    public static int port = 8866;
 
     public static String proxyAddr = "127.0.0.1:8866";
-    public static boolean isProxy = false;
+    public static boolean isProxy = true;
     public static String scheme = "http";
 
     // HttpClient 三种 Http Basic 验证方式 0、标准模式 1、抢先模式 2、原生 Http Basic 模式
@@ -410,6 +410,11 @@ public class HttpUtilsx {
             add(":method");
             add("Authorization");
             add("Host");
+
+
+//            add(":authority");
+//            add(":path");
+//            add(":scheme");
         }
     };
 

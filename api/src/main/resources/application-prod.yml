@@ -4,8 +4,8 @@ spring:
         type: com.alibaba.druid.pool.DruidDataSource
         druid:
             driver-class-name: com.mysql.cj.jdbc.Driver
-#            url: jdbc:mysql://103.149.26.144:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
-            url: jdbc:mysql://10.7.149.194:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
+            url: jdbc:mysql://103.149.26.144:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
+#            url: jdbc:mysql://10.7.149.194:3356/helium_pro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false
             username: root
             password: Zp1949@@
             # 初始化时建立物理连接的个数

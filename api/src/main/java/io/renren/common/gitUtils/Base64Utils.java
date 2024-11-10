@@ -1,7 +1,5 @@
 package io.renren.common.gitUtils;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -25,14 +23,16 @@ public class Base64Utils {
      * @throws Exception
      */
     public static byte[] decryptBASE64(String key) throws IOException {
-        return (new BASE64Decoder()).decodeBuffer(key);
+//        return (new BASE64Decoder()).decodeBuffer(key);
+        return "".getBytes();
     }
 
     /**
      * BASE64加密
      */
     public static String encryptBASE64(byte[] key) throws Exception {
-        return (new BASE64Encoder()).encodeBuffer(key);
+//        return (new BASE64Encoder()).encodeBuffer(key);
+    return "";
     }
 
 

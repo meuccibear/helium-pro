@@ -10,7 +10,7 @@ import io.renren.common.gitUtils.StringUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 import io.renren.common.gitUtils.http.FileUtils;
 import io.renren.modules.helium.GeoCoord;
-//import io.renren.common.HeliumHttpUtils;
+//import io.renren.common.apiUtil.HeliumHttpUtils;
 import io.renren.modules.helium.HeliumUtils;
 import io.renren.modules.helium.domain.Device;
 import io.renren.modules.sys.api.HeliumApi;

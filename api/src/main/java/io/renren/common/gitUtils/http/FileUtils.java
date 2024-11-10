@@ -6,6 +6,7 @@ import io.renren.common.gitUtils.ObjectUtils;
 import io.renren.common.gitUtils.exception.MsgException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -41,6 +42,12 @@ public class FileUtils {
         return JSONUtils.toJSONObject(readLine(filePath));
     }
 
+    /**
+     * 读取文本
+     *
+     * @param filePath 文件路径
+     * @return
+     */
     public static String readLine(String filePath) {
         List<String> strings = readLines(filePath);
         StringBuffer sb = new StringBuffer();
@@ -84,12 +91,21 @@ public class FileUtils {
 
     /**
      * 获取文件
-     *
-     * @param filePath
-     * @return
-     * @throws MsgException
+     * @param filePath 文件路径
+     * @return 文件
      */
     public static File getFile(String filePath) {
+        return getFile(filePath, true);
+    }
+
+    /**
+     * 获取文件
+     *
+     * @param filePath           文件 路径
+     * @param notExistCreateFile 不存在创建文件
+     * @return 文件
+     */
+    public static File getFile(String filePath, boolean notExistCreateFile) {
         File file = new File(filePath);
 //        System.out.println(file.getPath());
 //        System.out.println(file.getParentFile().getParentFile().getParentFile());
@@ -99,16 +115,22 @@ public class FileUtils {
             exceptionPromptThrown("文件不存在");
         }
 
-        if (isFile(filePath)) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                throw new IllegalArgumentException("IO异常~ " + e.getMessage());
+        // 新建文件
+        if (notExistCreateFile) {
+            if (isFile(filePath)) {
+                try {
+                    if (!file.createNewFile()) {
+                        throw new IllegalArgumentException("创建文件失败！");
+                    }
+                } catch (IOException e) {
+                    throw new IllegalArgumentException("IO异常~ " + e.getMessage());
+                }
+            } else {
+                if (!file.mkdir()) {
+                    throw new IllegalArgumentException("创建文件失败！");
+                }
             }
-        } else {
-            file.mkdir();
         }
-
         return file;
     }
 
@@ -123,6 +145,9 @@ public class FileUtils {
 
 
     public static void createTxt(String path) {
+        if(new File(path).exists()) {
+            return;
+        }
         path = path.replaceAll("\\\\", "/");
         String[] files = path.split("/");
         String createFilder = "";

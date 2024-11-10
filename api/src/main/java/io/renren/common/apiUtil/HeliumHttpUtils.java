@@ -1,6 +1,5 @@
-package io.renren.common;
+package io.renren.common.apiUtil;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.uber.h3core.H3Core;
@@ -8,11 +7,9 @@ import io.renren.common.gitUtils.*;
 import io.renren.common.gitUtils.http.HttpResultData;
 import io.renren.common.gitUtils.http.HttpUtils;
 import io.renren.modules.helium.HexUtils;
-import io.renren.modules.helium.HotsPottyHttpUtils;
 import io.renren.modules.helium.domain.Device;
 import io.renren.modules.helium.domain.LeanData;
 import io.renren.modules.helium.domain.Result;
-import io.renren.modules.sys.entity.DataHttp;
 import io.renren.modules.sys.service.DataHttpService;
 import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
